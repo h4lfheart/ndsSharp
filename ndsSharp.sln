@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ndsSharp.Core", "ndsSharp.Core\ndsSharp.Core.csproj", "{6AF42DF4-A95C-4D02-9FFC-BAE825BAE724}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ndsSharp.Playground", "ndsSharp.Playground\ndsSharp.Playground.csproj", "{797C5D3A-6844-4672-99B3-2E292EB0B08F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6AF42DF4-A95C-4D02-9FFC-BAE825BAE724}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AF42DF4-A95C-4D02-9FFC-BAE825BAE724}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AF42DF4-A95C-4D02-9FFC-BAE825BAE724}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AF42DF4-A95C-4D02-9FFC-BAE825BAE724}.Release|Any CPU.Build.0 = Release|Any CPU
+		{797C5D3A-6844-4672-99B3-2E292EB0B08F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{797C5D3A-6844-4672-99B3-2E292EB0B08F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{797C5D3A-6844-4672-99B3-2E292EB0B08F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{797C5D3A-6844-4672-99B3-2E292EB0B08F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
