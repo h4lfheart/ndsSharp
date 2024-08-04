@@ -6,9 +6,11 @@ public unsafe class AllocationTable
 {
     public List<DataPointer> Pointers = [];
 
-    public AllocationTable(BaseReader reader)
+    public AllocationTable(BaseReader reader, int fileCount = -1)
     {
-        var fileCount = reader.Length / sizeof(DataPointer);
+        if (fileCount == -1)
+            fileCount = reader.Length / sizeof(DataPointer);
+        
         for (var fileIndex = 0; fileIndex < fileCount; fileIndex++)
         {
             Pointers.Add(new DataPointer(reader, DataPointerType.StartEnd));

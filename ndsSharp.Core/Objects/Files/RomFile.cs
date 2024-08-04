@@ -7,11 +7,11 @@ public class RomFile
     public string Path;
     public string Name => Path.Split("/").Last();
 
-    private readonly DataPointer _pointer;
+    public readonly DataPointer Pointer;
 
     public RomFile(string path, DataPointer pointer)
     {
         Path = path;
-        _pointer = pointer;
+        Pointer = pointer;
     }
 }

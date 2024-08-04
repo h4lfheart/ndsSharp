@@ -4,27 +4,30 @@ namespace ndsSharp.Core.Objects.Files;
 
 public class NameTable
 {
-    public ushort FirstID;
+    public ushort FirstId;
     public Dictionary<ushort, string> FilesById = new();
+
+    private int StartOffset;
 
     private const int RootID = 0xF000;
 
     public NameTable(BaseReader reader)
     {
-        FirstID = LoadDirectory(reader);
+        StartOffset = reader.Position;
+        FirstId = LoadDirectory(reader);
     }
     
     protected ushort LoadDirectory(BaseReader reader, int folderId = RootID, string folderName = "", string pathAtThisPoint = "")
     {
         pathAtThisPoint = string.IsNullOrEmpty(folderName) ? pathAtThisPoint : pathAtThisPoint + $"{folderName}/";
         
-        reader.Position = (folderId & 0xFF) * 8;
+        reader.Position = (folderId & 0xFF) * 8 + StartOffset;
         
         var entryOffset = reader.Read<uint>();
         var fileId = reader.Read<ushort>();
         var parentId = reader.Read<ushort>();
 
-        reader.Position = (int) entryOffset;
+        reader.Position = (int) entryOffset + StartOffset;
 
         var currentId = fileId;
         while (true)

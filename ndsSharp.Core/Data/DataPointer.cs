@@ -28,6 +28,17 @@ public struct DataPointer
             }
         }
     }
+
+    public DataPointer(int offset, int length)
+    {
+        Offset = offset;
+        Length = length;
+    }
+
+    public DataPointer TransformWith(int offset)
+    {
+        return this with { Offset = Offset + offset};
+    }
 }
 
 public enum DataPointerType

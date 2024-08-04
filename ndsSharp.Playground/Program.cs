@@ -1,6 +1,7 @@
-﻿using System.Diagnostics;
-using ndsSharp.Core;
-using Newtonsoft.Json;
+﻿using ndsSharp.Core;
+using ndsSharp.Core.Objects.Exports;
+using ndsSharp.Core.Objects.Exports.Archive;
+using ndsSharp.Core.Providers;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -10,8 +11,13 @@ Log.Logger = new LoggerConfiguration()
 var provider = new NdsFileProvider("C:/b2.nds");
 provider.Initialize();
 
-Debug.Assert(provider.Header.LogoCrc16.Matches(provider.Header.NintendoLogo));
-
-Log.Information(JsonConvert.SerializeObject(provider.Header, Formatting.Indented));
-
 Log.Information($"{provider.Files.Count} Files Loaded");
+
+var narcFile = provider.LoadObject<NARC>("skb.narc");
+Log.Information("Loaded NARC skb.narc");
+
+var testFile = narcFile.LoadObject<NdsObject>("0.bin");
+foreach (var block in testFile.Blocks)
+{
+    Log.Information($"File has block {block.ReadMagic}");
+}

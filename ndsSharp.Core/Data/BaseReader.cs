@@ -1,5 +1,7 @@
 using System.Text;
 using GenericReader;
+using ndsSharp.Core.Extensions;
+using ndsSharp.Core.Objects;
 
 namespace ndsSharp.Core.Data;
 
@@ -31,9 +33,11 @@ public class BaseReader : GenericBufferReader
         });
     }
 
-    public string ReadString(int length)
+    public string ReadString(int length, bool flip = false)
     {
-        return ReadString(length, Encoding.UTF8);
+        var str = ReadString(length, Encoding.UTF8);
+        if (flip) str = str.Flip();
+        return str;
     }
     
     // todo infer primitive type from underlying type
@@ -57,9 +61,36 @@ public class BaseReader : GenericBufferReader
         Position = originalPos;
     }
 
-    public string PeekString(int length, int offset)
+    public string PeekString(int length, int offset = -1)
     {
-        Position = offset;
-        return Peek(() => ReadString(4));
+        if (offset >= 0)
+            Position = offset;
+        
+        return Peek(() => ReadString(length));
+    }
+    
+    public T ReadObject<T>() where T : BaseDeserializable
+    {
+        return ReadObject<T>(typeof(T));
+    }
+     
+    public T ReadObject<T>(Action<T> dataModifier) where T : BaseDeserializable
+    {
+        return ReadObject<T>(typeof(T), dataModifier);
+    }
+     
+    public T ReadObject<T>(Type type) where T : BaseDeserializable
+    {
+        var ret = Activator.CreateInstance(type) as T;
+        ret!.Deserialize(this);
+        return ret;
+    }
+     
+    public T ReadObject<T>(Type type, Action<T> dataModifier) where T : BaseDeserializable
+    {
+        var ret = Activator.CreateInstance(type) as T;
+        dataModifier.Invoke(ret);
+        ret.Deserialize(this);
+        return ret;
     }
 }
