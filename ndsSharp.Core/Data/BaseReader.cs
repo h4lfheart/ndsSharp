@@ -7,6 +7,9 @@ namespace ndsSharp.Core.Data;
 
 public class BaseReader : GenericBufferReader
 {
+    public BaseReader? Owner;
+    public int AbsoluteOffset;
+    
     public BaseReader(byte[] buffer, int start, int length) : base(buffer, start, length)
     {
     }
@@ -29,7 +32,10 @@ public class BaseReader : GenericBufferReader
         {
             Position = pointer.Offset;
             var memory = ReadMemory(pointer.Length);
-            return new BaseReader(memory);
+            var pointerReader = new BaseReader(memory);
+            pointerReader.Owner = this;
+            pointerReader.AbsoluteOffset = AbsoluteOffset + Position;
+            return pointerReader;
         });
     }
 

@@ -6,6 +6,7 @@ public class RomFile
 {
     public string Path;
     public string Name => Path.Split("/").Last();
+    public string Type => Path.Split(".").Last();
 
     public readonly DataPointer Pointer;
 

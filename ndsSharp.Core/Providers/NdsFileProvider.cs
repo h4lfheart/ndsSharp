@@ -1,6 +1,7 @@
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Objects;
 using ndsSharp.Core.Objects.Exports;
+using ndsSharp.Core.Objects.Exports.Archive;
 using ndsSharp.Core.Objects.Files;
 using ndsSharp.Core.Objects.Rom;
 using Serilog;
@@ -12,6 +13,8 @@ public class NdsFileProvider : IFileProvider
     public Dictionary<string, RomFile> Files { get; set; } = [];
     
     public RomHeader Header;
+
+    public bool UnpackNARCFiles = false;
 
     private AllocationTable _allocationTable;
     private NameTable _nameTable;
@@ -35,6 +38,24 @@ public class NdsFileProvider : IFileProvider
         _nameTable = new NameTable(_reader.LoadPointer(Header.FntPointer));
         
         Mount(_allocationTable, _nameTable);
+
+        // TODO cleanup logic and make better implementation
+        if (UnpackNARCFiles)
+        {
+            var narcFiles = GetAllFilesOfType<NARC>().ToArray();
+            foreach (var narcFile in narcFiles)
+            {
+                var narc = LoadObject<NARC>(narcFile);
+                var basePath = narcFile.Path.Replace(".narc", string.Empty);
+                foreach (var (path, file) in narc.Files)
+                {
+                    var newPath = basePath + $"/{path}";
+                    Files[newPath] = new RomFile(newPath, file.Pointer.TransformWith(narc.Image.Reader.AbsoluteOffset));
+                }
+                
+                Files.Remove(narcFile.Path);
+            }
+        }
     }
 
     protected void Mount(AllocationTable allocationTable, NameTable nameTable)
@@ -68,6 +89,12 @@ public class NdsFileProvider : IFileProvider
                 Files[fileName] = new RomFile(fileName, pointer);
             }
         }
+    }
+    
+    public IEnumerable<RomFile> GetAllFilesOfType<T>() where T : NdsObject, new()
+    {
+        var accessor = new T();
+        return Files.Values.Where(file => file.Type.Equals(accessor.Magic, StringComparison.OrdinalIgnoreCase));
     }
     
     public T LoadObject<T>(string path) where T : BaseDeserializable, new() => LoadObject<T>(Files[path]);

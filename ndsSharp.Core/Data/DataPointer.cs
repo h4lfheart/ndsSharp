@@ -35,7 +35,7 @@ public struct DataPointer
         Length = length;
     }
 
-    public DataPointer TransformWith(int offset)
+    public readonly DataPointer TransformWith(int offset)
     {
         return this with { Offset = Offset + offset};
     }

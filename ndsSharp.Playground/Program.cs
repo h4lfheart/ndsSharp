@@ -9,14 +9,12 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 var provider = new NdsFileProvider("C:/b2.nds");
+provider.UnpackNARCFiles = true;
 provider.Initialize();
 
 Log.Information($"{provider.Files.Count} Files Loaded");
 
-var narcFile = provider.LoadObject<NARC>("skb.narc");
-Log.Information("Loaded NARC skb.narc");
-
-var testFile = narcFile.LoadObject<NdsObject>("0.bin");
+var testFile = provider.LoadObject<NdsObject>("skb/0.bin");
 foreach (var block in testFile.Blocks)
 {
     Log.Information($"File has block {block.ReadMagic}");
