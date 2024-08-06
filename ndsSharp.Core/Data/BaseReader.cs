@@ -40,9 +40,9 @@ public class BaseReader : GenericBufferReader
         });
     }
 
-    public string ReadString(int length, bool flip = false)
+    public string ReadString(int length, bool flip = false, bool unicode = false)
     {
-        var str = ReadString(length, Encoding.UTF8);
+        var str = ReadString(length, unicode ? Encoding.Unicode : Encoding.UTF8);
         if (flip) str = str.Flip();
         return str.Trim('\0');
     }

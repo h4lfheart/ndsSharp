@@ -13,6 +13,7 @@ public class NdsFileProvider : IFileProvider
     public Dictionary<string, RomFile> Files { get; set; } = [];
     
     public RomHeader Header;
+    public RomBanner Banner;
 
     public bool UnpackNARCFiles = false;
 
@@ -33,6 +34,9 @@ public class NdsFileProvider : IFileProvider
     public void Initialize()
     {
         Header = new RomHeader(_reader);
+
+        _reader.Position = (int) Header.BannerOffset;
+        Banner = new RomBanner(_reader);
 
         _allocationTable = new AllocationTable(_reader.LoadPointer(Header.FatPointer));
         _nameTable = new NameTable(_reader.LoadPointer(Header.FntPointer));

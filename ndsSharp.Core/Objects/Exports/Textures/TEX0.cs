@@ -1,4 +1,12 @@
 using System.Diagnostics;
+using ndsSharp.Core.Conversion.Textures.Colors;
+using ndsSharp.Core.Conversion.Textures.Colors.Types;
+using ndsSharp.Core.Conversion.Textures.Images;
+using ndsSharp.Core.Conversion.Textures.Images.Types;
+using ndsSharp.Core.Conversion.Textures.Palettes;
+using ndsSharp.Core.Conversion.Textures.Pixels;
+using ndsSharp.Core.Conversion.Textures.Pixels.Colored.Types;
+using ndsSharp.Core.Conversion.Textures.Pixels.Indexed.Types;
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Extensions;
 
@@ -6,9 +14,11 @@ namespace ndsSharp.Core.Objects.Exports.Textures;
 
 public class TEX0 : NdsBlock
 {
-    public Dictionary<string, TextureInfo> TextureInfos = [];
-    public Dictionary<string, DataPointer> TexturePointers = [];
-    public Dictionary<string, DataPointer> PalettePointers = [];
+    public List<BaseImage> Textures = [];
+    
+    private readonly Dictionary<string, TextureInfo> _textureInfos = [];
+    private readonly Dictionary<string, DataPointer> _texturePointers = [];
+    private readonly Dictionary<string, DataPointer> _palettePointers = [];
     
     public override string Magic => "TEX0";
     
@@ -54,10 +64,10 @@ public class TEX0 : NdsBlock
             var (textureName, textureInfo) = textureInfos[textureIndex];
 
             var pixelPointer = new DataPointer((int)(textureInfo.TextureOffset * 8 + _textureDataOffset),
-                textureInfo.Width * textureInfo.Height * textureInfo.Format.BitsPerPixel() / 8, reader);
+                (int) (textureInfo.Width * textureInfo.Height * textureInfo.Format.BitsPerPixel() / 8f), reader);
 
-            TextureInfos[textureName] = textureInfo;
-            TexturePointers[textureName] = pixelPointer;
+            _textureInfos[textureName] = textureInfo;
+            _texturePointers[textureName] = pixelPointer;
         }
         
         var paletteInfos = reader.ReadNameList(() =>
@@ -90,12 +100,43 @@ public class TEX0 : NdsBlock
             }
 
             var paletteSize = nextPaletteOffset - paletteOffset;
-            if (paletteSize < 0)
-            {
-                Debugger.Break();
-            }
+            if (paletteSize < 0) throw new ParserException($"Invalid palette size: {paletteSize}");
 
-            PalettePointers[paletteName] = new DataPointer((int) (paletteOffset + _paletteDataOffset), paletteSize, reader);
+            _palettePointers[paletteName] = new DataPointer((int) (paletteOffset + _paletteDataOffset), paletteSize, reader);
+        }
+        
+        for (var textureIndex = 0; textureIndex < _textureInfos.Count; textureIndex++)
+        {
+            var (textureName, texturePointer) = _texturePointers.ElementAt(textureIndex);
+            var textureInfo = _textureInfos[textureName];
+            
+            var (paletteName, palettePointer) = _palettePointers.FirstOrDefault(pair => pair.Key.Equals(textureName + "_pl"), _palettePointers.ElementAt(Math.Min(textureIndex, _palettePointers.Count - 1)));
+            var paletteReader = palettePointer.Load();
+            var palette = new Palette(paletteName, paletteReader.ReadColors<BGR555>());
+            
+            var pixelReader = texturePointer.Load();
+            var pixels = textureInfo.Format switch
+            {
+                TextureFormat.Color4 => pixelReader.ReadPixels<Indexed2>(textureInfo.Width, textureInfo.Height),
+                TextureFormat.Color16 => pixelReader.ReadPixels<Indexed4>(textureInfo.Width, textureInfo.Height),
+                TextureFormat.Color256 => pixelReader.ReadPixels<Indexed8>(textureInfo.Width, textureInfo.Height),
+                TextureFormat.A3I5 => pixelReader.ReadPixels<A3I5>(textureInfo.Width, textureInfo.Height),
+                TextureFormat.A5I3 => pixelReader.ReadPixels<A5I3>(textureInfo.Width, textureInfo.Height),
+                TextureFormat.A1BGR5 => pixelReader.ReadPixels<A1BGR555>(textureInfo.Width, textureInfo.Height)
+            };
+            
+            var meta = new ImageMetaData(textureInfo.Width, textureInfo.Height, textureInfo.Format, 
+                textureInfo.RepeatU, textureInfo.RepeatV, textureInfo.FlipU, textureInfo.FlipV, 
+                textureInfo.FirstColorIsTransparent);
+
+            if (textureInfo.Format.IsIndexed())
+            {
+                Textures.Add(new IndexedPaletteImage(textureName, pixels, [palette], meta));
+            }
+            else
+            {
+                Textures.Add(new ColoredImage(textureName, pixels, meta));
+            }
         }
     }
 }
