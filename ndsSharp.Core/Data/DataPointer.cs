@@ -2,14 +2,15 @@ using System.Runtime.InteropServices;
 
 namespace ndsSharp.Core.Data;
 
-[StructLayout(LayoutKind.Sequential)]
-public struct DataPointer
+public class DataPointer
 {
     public int Offset;
     public int Length;
+    public BaseReader? Owner;
     
     public DataPointer(BaseReader reader, DataPointerType pointerType = DataPointerType.OffsetLength)
     {
+        Owner = reader;
         switch (pointerType)
         {
             case DataPointerType.OffsetLength:
@@ -29,15 +30,22 @@ public struct DataPointer
         }
     }
 
-    public DataPointer(int offset, int length)
+    public DataPointer(int offset, int length, BaseReader? owner = null)
     {
         Offset = offset;
         Length = length;
+
+        Owner = owner;
     }
 
-    public readonly DataPointer TransformWith(int offset)
+    public BaseReader Load()
     {
-        return this with { Offset = Offset + offset};
+        return Owner?.LoadPointer(this) ?? throw new ParserException("Pointer does not have an owner to load from.");
+    }
+
+    public DataPointer GlobalFrom(BaseReader reader)
+    {
+        return new DataPointer(Offset + reader.AbsoluteOffset, Length);
     }
 }
 

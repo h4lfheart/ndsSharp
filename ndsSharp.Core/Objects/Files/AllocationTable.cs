@@ -9,7 +9,7 @@ public unsafe class AllocationTable
     public AllocationTable(BaseReader reader, int fileCount = -1)
     {
         if (fileCount == -1)
-            fileCount = reader.Length / sizeof(DataPointer);
+            fileCount = reader.Length / (sizeof(uint) * 2);
         
         for (var fileIndex = 0; fileIndex < fileCount; fileIndex++)
         {

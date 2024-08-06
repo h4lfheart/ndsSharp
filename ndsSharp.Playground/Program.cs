@@ -1,6 +1,8 @@
-﻿using ndsSharp.Core;
+﻿using ndsSharp.Conversion.Textures;
+using ndsSharp.Core;
 using ndsSharp.Core.Objects.Exports;
 using ndsSharp.Core.Objects.Exports.Archive;
+using ndsSharp.Core.Objects.Exports.Textures;
 using ndsSharp.Core.Providers;
 using Serilog;
 
@@ -14,8 +16,16 @@ provider.Initialize();
 
 Log.Information($"{provider.Files.Count} Files Loaded");
 
-var testFile = provider.LoadObject<NdsObject>("skb/0.bin");
-foreach (var block in testFile.Blocks)
+var textureFiles = provider.GetAllFilesOfType<BTX0>();
+
+foreach (var textureFile in textureFiles)
 {
-    Log.Information($"File has block {block.ReadMagic}");
+    Log.Information($"Exporting {textureFile.Path}");
+    
+    var path = $"C:/Art/B2/{textureFile.Path}";
+    Directory.CreateDirectory(path);
+    var textureContainer = provider.LoadObject<BTX0>(textureFile);
+
+    var exporter = new TextureExporter(textureContainer.TextureData);
+    exporter.Export(path);
 }

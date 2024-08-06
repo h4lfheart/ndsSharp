@@ -50,7 +50,7 @@ public class NdsFileProvider : IFileProvider
                 foreach (var (path, file) in narc.Files)
                 {
                     var newPath = basePath + $"/{path}";
-                    Files[newPath] = new RomFile(newPath, file.Pointer.TransformWith(narc.Image.Reader.AbsoluteOffset));
+                    Files[newPath] = new RomFile(newPath, file.Pointer.GlobalFrom(narc.Image.Reader));
                 }
                 
                 Files.Remove(narcFile.Path);

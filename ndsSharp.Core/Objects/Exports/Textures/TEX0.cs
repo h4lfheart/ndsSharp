@@ -1,0 +1,143 @@
+using System.Diagnostics;
+using ndsSharp.Core.Data;
+using ndsSharp.Core.Extensions;
+
+namespace ndsSharp.Core.Objects.Exports.Textures;
+
+public class TEX0 : NdsBlock
+{
+    public Dictionary<string, TextureInfo> TextureInfos = [];
+    public Dictionary<string, DataPointer> TexturePointers = [];
+    public Dictionary<string, DataPointer> PalettePointers = [];
+    
+    public override string Magic => "TEX0";
+    
+    private uint _textureDataOffset;
+    private ushort _textureDataSize;
+    private ushort _textureInfoOffset;
+    private uint _paletteDataOffset;
+    private uint _paletteDataSize;
+    private uint _paletteInfoOffset;
+
+    public override void Deserialize(BaseReader reader)
+    {
+        base.Deserialize(reader);
+        
+        DeserializeHeader(reader);
+        DeserializeTextures(reader);
+    }
+    
+    private void DeserializeHeader(BaseReader reader)
+    {
+        reader.Position += sizeof(uint); // padding
+        _textureDataSize = reader.Read<ushort>();
+        _textureInfoOffset = reader.Read<ushort>();
+        reader.Position += sizeof(uint); // padding
+        _textureDataOffset = reader.Read<uint>();
+        reader.Position += sizeof(uint); // padding
+        reader.Position += sizeof(ushort); // compressed data size
+        reader.Position += sizeof(ushort); // compressed info offset
+        reader.Position += sizeof(uint); // padding
+        reader.Position += sizeof(uint); // compressed data offset
+        reader.Position += sizeof(uint); // compressed info data offset
+        reader.Position += sizeof(uint); // padding
+        _paletteDataSize = reader.Read<uint>() << 3;
+        _paletteInfoOffset = reader.Read<uint>();
+        _paletteDataOffset = reader.Read<uint>();
+    }
+    
+    private void DeserializeTextures(BaseReader reader)
+    {
+        var textureInfos = reader.ReadNameList<TextureInfo>();
+        for (var textureIndex = 0; textureIndex < textureInfos.Count; textureIndex++)
+        {
+            var (textureName, textureInfo) = textureInfos[textureIndex];
+
+            var pixelPointer = new DataPointer((int)(textureInfo.TextureOffset * 8 + _textureDataOffset),
+                textureInfo.Width * textureInfo.Height * textureInfo.Format.BitsPerPixel() / 8, reader);
+
+            TextureInfos[textureName] = textureInfo;
+            TexturePointers[textureName] = pixelPointer;
+        }
+        
+        var paletteInfos = reader.ReadNameList(() =>
+        {
+            var offset = reader.Read<ushort>();
+            reader.Position += sizeof(ushort); // reserved
+            return offset;
+        });
+
+        paletteInfos.Items = paletteInfos.OrderBy(pair => pair.Value).ToDictionary();
+        
+        for (var paletteIndex = 0; paletteIndex < paletteInfos.Count; paletteIndex++)
+        {
+            var (paletteName, paletteOffset) = paletteInfos[paletteIndex];
+            paletteOffset <<= 3;
+
+            var nextPaletteIndex = paletteIndex;
+            var nextPaletteOffset = paletteOffset;
+            while (nextPaletteOffset == paletteOffset)
+            {
+                nextPaletteIndex++;
+
+                if (nextPaletteIndex == paletteInfos.Count)
+                {
+                    nextPaletteOffset = (ushort) _paletteDataSize;
+                    break;
+                }
+                
+                nextPaletteOffset = (ushort) (paletteInfos[nextPaletteIndex].Value << 3);
+            }
+
+            var paletteSize = nextPaletteOffset - paletteOffset;
+            if (paletteSize < 0)
+            {
+                Debugger.Break();
+            }
+
+            PalettePointers[paletteName] = new DataPointer((int) (paletteOffset + _paletteDataOffset), paletteSize, reader);
+        }
+    }
+}
+
+public class TextureInfo : BaseDeserializable
+{
+    public ushort TextureOffset;
+    public TextureFormat Format;
+    public int Height;
+    public int Width;
+    public bool FirstColorIsTransparent;
+    public bool RepeatU;
+    public bool RepeatV;
+    public bool FlipU;
+    public bool FlipV;
+
+    public override void Deserialize(BaseReader reader)
+    {
+        TextureOffset = reader.Read<ushort>();
+
+        var flags = reader.Read<ushort>();
+        RepeatU = ((flags >> 0) & 1) == 1;
+        RepeatV = ((flags >> 1) & 1) == 1;
+        FlipU = ((flags >> 2) & 1) == 1;
+        FlipV = ((flags >> 3) & 1) == 1;
+        FirstColorIsTransparent = ((flags >> 13) & 1) != 0;
+        Format = (TextureFormat) ((flags >> 10) & 7);
+        Height = 8 << ((flags >> 7) & 7);
+        Width = 8 << ((flags >> 4) & 7);
+
+        reader.Position += 4;
+    }
+}
+
+public enum TextureFormat : byte
+{
+    None = 0,
+    A3I5 = 1,
+    Color4 = 2,
+    Color16 = 3,
+    Color256 = 4,
+    Texel = 5,
+    A5I3 = 6,
+    A1BGR5 = 7
+}
