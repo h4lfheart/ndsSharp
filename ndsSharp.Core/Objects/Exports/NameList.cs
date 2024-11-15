@@ -57,10 +57,10 @@ public static class NameListExtensions
     
     public static NameList<T> ReadNameList<T>(this BaseReader reader) where T : BaseDeserializable
     {
-        return new NameList<T>(reader, reader.ReadObject<T>);
+        return new NameList<T>(reader, () => reader.ReadObject<T>());
     }
     
-    public static NameList<T> ReadNameListUnmanaged<T>(this BaseReader reader) where T : unmanaged
+    public static NameList<T> ReadNameListPrimitive<T>(this BaseReader reader) where T : unmanaged
     {
         return new NameList<T>(reader, reader.Read<T>);
     }

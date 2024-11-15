@@ -10,7 +10,15 @@ public class BaseReader : GenericBufferReader
 {
     public BaseReader? Owner;
     public int AbsoluteOffset;
-    
+
+    public int PositionZeroOffset;
+
+    public new int Position
+    {
+        get => base.Position - PositionZeroOffset;
+        set => base.Position = PositionZeroOffset + value;
+    }
+
     public BaseReader(byte[] buffer, int start, int length) : base(buffer, start, length)
     {
     }
@@ -26,6 +34,33 @@ public class BaseReader : GenericBufferReader
     public BaseReader(Memory<byte> memory) : base(memory)
     {
     }
+    
+    public BaseReader Spliced(int? position = null, int? length = null)
+    {
+        Position = position ?? Position;
+        length ??= Length - Position;
+        return new BaseReader(ReadArray<byte>((int) length));
+    }
+    
+    public void ReadWithZeroedPosition(Action<BaseReader> readFunc)
+    {
+        PositionZeroOffset = Position;
+        readFunc.Invoke(this);
+        PositionZeroOffset = 0;
+        Position = base.Position;
+    }
+    
+    public void ReadWithZeroedPosition(Action<BaseReader> readFunc, int offset)
+    {
+        Position = offset;
+        ReadWithZeroedPosition(readFunc);
+    }
+    
+    public void ReadWithZeroedPosition(Action readFunc)
+    {
+        ReadWithZeroedPosition(_ => readFunc());
+    }
+
 
     public BaseReader LoadPointer(DataPointer pointer)
     {
@@ -84,4 +119,8 @@ public class BaseReader : GenericBufferReader
             return ReadArray<byte>(Length);
         });
     }
+    
+    
+    public float ReadIntAsFloat() => FloatExtensions.ToFloat(Read<int>(), 1, 19, 12);
+    public float ReadShortAsFloat() => FloatExtensions.ToFloat(Read<ushort>(), 1, 3, 12);
 }

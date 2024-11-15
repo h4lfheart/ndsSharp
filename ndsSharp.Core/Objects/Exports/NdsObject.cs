@@ -48,6 +48,8 @@ public class NdsObject : BaseDeserializable
             var blockOffsets = reader.ReadArray(BlockCount, reader.Read<uint>);
             foreach (var offset in blockOffsets)
             {
+                reader.Position = (int) offset;
+                
                 var (extension, length) = reader.Peek(() => (reader.ReadString(4, IsLittleEndian), reader.Read<uint>()));
                 var pointer = new DataPointer((int) offset, (int) length);
                 if (FileTypeRegistry.TryGetType(extension, out var type))

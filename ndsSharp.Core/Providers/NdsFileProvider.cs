@@ -43,7 +43,6 @@ public class NdsFileProvider : IFileProvider
         
         Mount(_allocationTable, _nameTable);
 
-        // TODO cleanup logic and make better implementation
         if (UnpackNARCFiles)
         {
             var narcFiles = GetAllFilesOfType<NARC>().ToArray();
@@ -128,4 +127,22 @@ public class NdsFileProvider : IFileProvider
     }
     
     public BaseReader CreateReader(string path) => CreateReader(Files[path]);
+
+    public void LogFileStats()
+    {
+        var fileBreakdown = new Dictionary<string, int>();
+        foreach (var (path, file) in Files)
+        {
+            fileBreakdown.TryAdd(file.Type, 0);
+            fileBreakdown[file.Type]++;
+        }
+
+        fileBreakdown = fileBreakdown.OrderByDescending(x => x.Value).ToDictionary();
+
+        Log.Information("Total Files: {Count}", Files.Count);
+        foreach (var (type, count) in fileBreakdown)
+        {
+            Log.Information("{Type}: {Count}", type, count);
+        }
+    }
 }

@@ -12,12 +12,12 @@ namespace ndsSharp.Core.Conversion.Textures.Images;
 
 public static class ImageExtensions
 {
-    public static Image<Rgba32> ToImageSharp(this BaseImage image)
+    public static Image<Rgba32> ToImage(this BaseImage image)
     {
         return image switch
         {
-            IndexedPaletteImage indexedPaletteImage => indexedPaletteImage.ToImageSharp(),
-            ColoredImage coloredImage => coloredImage.ToImageSharp()
+            IndexedPaletteImage indexedPaletteImage => indexedPaletteImage.ToImage(),
+            ColoredImage coloredImage => coloredImage.ToImage()
         };
     }
     
@@ -40,17 +40,17 @@ public static class ImageExtensions
         });
     }
     
-    private static Image<Rgba32> ToImageSharp(this IndexedPaletteImage image)
+    private static Image<Rgba32> ToImage(this IndexedPaletteImage image)
     {
-        return ToImageSharp(image.Pixels, image.MetaData, image.Palettes);
+        return ToImage(image.Pixels, image.MetaData, image.Palettes);
     }
     
-    private static Image<Rgba32> ToImageSharp(this ColoredImage image)
+    private static Image<Rgba32> ToImage(this ColoredImage image)
     {
-        return ToImageSharp(image.Pixels, image.MetaData);
+        return ToImage(image.Pixels, image.MetaData);
     }
     
-    private static Image<Rgba32> ToImageSharp(IPixel[] pixels, ImageMetaData metaData, List<Palette>? palettes = null)
+    private static Image<Rgba32> ToImage(IPixel[] pixels, ImageMetaData metaData, List<Palette>? palettes = null)
     {
         palettes ??= [];
         
@@ -65,7 +65,7 @@ public static class ImageExtensions
                 case IndexedPixel indexedPixel:
                 {
                     var palette = palettes[indexedPixel.PaletteIndex];
-                    var pixelColor = palette.Colors[Math.Min(indexedPixel.Index, palette.Colors.Count - 1)]; 
+                    var pixelColor = palette.Colors[System.Math.Min(indexedPixel.Index, palette.Colors.Count - 1)]; 
                     
                     color = pixelColor.ToPixel<Rgba32>();
                     if (indexedPixel.Alpha != 255)
@@ -98,7 +98,7 @@ public static class ImageExtensions
         return bitmap;
     }
     
-    public static Image<Rgba32> ToImageSharp(this AnimatedBannerIcon icon)
+    public static Image<Rgba32> ToImage(this AnimatedBannerIcon icon)
     {
         var bitmap = new Image<Rgba32>(icon.Width, icon.Height);
         var rootMetaData = bitmap.Metadata.GetPngMetadata();
@@ -107,7 +107,7 @@ public static class ImageExtensions
         foreach (var key in icon.Keys)
         {
             var targetImage = icon.Images[key.BitmapIndex];
-            var image = ToImageSharp(targetImage.Pixels, targetImage.MetaData, [icon.Palettes[key.PaletteIndex]]);
+            var image = ToImage(targetImage.Pixels, targetImage.MetaData, [icon.Palettes[key.PaletteIndex]]);
             image.Mutate(ctx =>
             {
                 if (key.FlipHorizontal) ctx.Flip(FlipMode.Horizontal);

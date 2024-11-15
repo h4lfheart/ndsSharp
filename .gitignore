@@ -399,3 +399,6 @@ FodyWeavers.xsd
 *.idea
 
 global.json
+
+# Project
+ndsSharp.FileExplorer/
