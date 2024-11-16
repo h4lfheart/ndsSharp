@@ -25,6 +25,7 @@ public static class ModelProcessingExtensions
             var vertexIndex = 0;
             foreach (var section in model.Sections)
             {
+                section.FirstVertexIndex = vertexIndex;
                 foreach (var polygon in section.Polygons)
                 {
                     switch (polygon.PolygonType)

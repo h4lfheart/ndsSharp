@@ -1,0 +1,217 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="using:FluentAvalonia.UI.Controls"
+        xmlns:windowModels="clr-namespace:ndsSharp.FileExplorer.WindowModels"
+        xmlns:ext="clr-namespace:ndsSharp.FileExplorer.Extensions"
+        xmlns:files="clr-namespace:ndsSharp.FileExplorer.Models.Files"
+        xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
+        x:Class="ndsSharp.FileExplorer.Windows.MainWindow"
+        x:DataType="windowModels:MainWindowModel" 
+        Title="{Binding TitleString}"
+        Width="1280" Height="720" RequestedThemeVariant="Dark"
+        Background="{x:Null}" Icon="{Binding IconSource}" TransparencyLevelHint="Mica">
+    <Grid RowDefinitions="Auto *">
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="Open" Command="{Binding OpenCommand}"/>
+                <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
+            </MenuItem>
+            <MenuItem Header="Plugins">
+                <!-- TODO create plugins project and procedurally fill here-->
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1" Margin="{ext:Space 1}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="{ext:Space 1}"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="{ext:Space 1}"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="{ext:Space 1}"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <ui:FABorder Grid.Row="0" Grid.Column="0">
+                <Grid Margin="{ext:Space 1}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="{ext:Space 1}"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="File Tree" Classes="BodyStrongTextBlockStyle"/>
+                    
+                    <TreeView Grid.Row="2" ItemsSource="{Binding TreeViewCollection}" AutoScrollToSelectedItem="True"
+                              SelectedItem="{Binding SelectedTreeItem, Mode=TwoWay}"
+                              Tapped="OnTreeItemTapped">
+                        <TreeView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </TreeView.ItemsPanel>
+                        <TreeView.ItemContainerTheme>
+                            <ControlTheme x:DataType="files:TreeItem" TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                                <Setter Property="IsExpanded" Value="{Binding Expanded, Mode=TwoWay}" />
+                                <Setter Property="IsSelected" Value="{Binding Selected, Mode=TwoWay}" />
+                            </ControlTheme>
+                        </TreeView.ItemContainerTheme>
+                        <TreeView.ItemTemplate>
+                            <TreeDataTemplate ItemsSource="{Binding Children.Values}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <material:MaterialIcon Width="16" Height="16" Margin="0 0 8 0"
+                                                           Classes.File="{Binding Type, 
+                                                               Converter={StaticResource EnumEquals}, 
+                                                               ConverterParameter={x:Static files:ENodeType.File}}"
+                                                           Classes.Folder="{Binding Type, 
+                                                               Converter={StaticResource EnumEquals}, 
+                                                               ConverterParameter={x:Static files:ENodeType.Folder}}">
+                                        <material:MaterialIcon.Styles>
+                                            <Style Selector="material|MaterialIcon.File">
+                                                <Style.Setters>
+                                                    <Setter Property="Kind" Value="File" />
+                                                </Style.Setters>
+                                            </Style>
+                                            <Style Selector="material|MaterialIcon.Folder">
+                                                <Style.Setters>
+                                                    <Setter Property="Kind" Value="Folder" />
+                                                </Style.Setters>
+                                            </Style>
+                                        </material:MaterialIcon.Styles>
+                                    </material:MaterialIcon>
+                                    <TextBlock Text="{Binding Name}" />
+                                </StackPanel>
+                            </TreeDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </Grid>
+            </ui:FABorder>
+            
+            <ui:FABorder Grid.Row="0" Grid.Column="2">
+                <Grid Margin="{ext:Space 1}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="{ext:Space 1}"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="{ext:Space 1}"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    
+                    <TextBlock Grid.Row="0" Text="File List" Classes="BodyStrongTextBlockStyle"/>
+                
+                    <TextBox Grid.Row="2" Watermark="Search" KeyDown="OnSearchKeyDown"/>
+                
+                    <ScrollViewer Grid.Row="4" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <ListBox ItemsSource="{Binding FlatViewCollection}" SelectionMode="Multiple"
+                                 SelectedItems="{Binding SelectedFlatViewItems, Mode=TwoWay}"
+                                 AutoScrollToSelectedItem="True" DoubleTapped="OnFlatItemDoubleTapped" SelectionChanged="OnSelectionChanged">
+                            <ListBox.KeyBindings>
+                                <KeyBinding Gesture="P" Command="{Binding PreviewCommand}"/>
+                                <KeyBinding Gesture="E" Command="{Binding ExportCommand}"/>
+                            </ListBox.KeyBindings>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="files:FlatItem">
+                                    <ContentControl>
+                                        <ContentControl.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Copy Path" Command="{Binding CopyPathCommand}"/>
+                                            </ContextMenu>
+                                        </ContentControl.ContextMenu>
+                                        
+                                        <TextBlock Text="{Binding Path}"/>
+                                    </ContentControl>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel Margin="{ext:Space 0, 0, 1.5, 0}"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                        </ListBox>
+                    </ScrollViewer>
+                </Grid>
+            </ui:FABorder>
+            
+            <ui:FABorder Grid.Column="4" Grid.Row="0">
+                <Grid Margin="{ext:Space 1}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="{ext:Space 1}"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Properties" Classes="BodyStrongTextBlockStyle"/>
+                    <TextBlock Grid.Row="2" Text="No asset selected." Classes="BodyTextBlockStyle TextFillColorTertiaryBrush"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               IsVisible="{Binding Properties, Converter={x:Static ObjectConverters.IsNull}}"/>
+                    
+                    <Grid Grid.Row="2" 
+                          IsVisible="{Binding Properties, Converter={x:Static ObjectConverters.IsNotNull}}"
+                          VerticalAlignment="Top" HorizontalAlignment="Left" Margin="{ext:Space 2, 0, 0, 0}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="{ext:Space 1}"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="{ext:Space 1}"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="{ext:Space 1}"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <TextBlock Text="Name" Classes="BodyStrongTextBlockStyle" Margin="{ext:Space 0, 0, 1, 0}"/>
+                            <TextBlock Text="{Binding Properties.Name}"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                            <TextBlock Text="Type" Classes="BodyStrongTextBlockStyle" Margin="{ext:Space 0, 0, 1, 0}"/>
+                            <TextBlock Text="{Binding Properties.Type}"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Row="4" Orientation="Horizontal">
+                            <TextBlock Text="Offset" Classes="BodyStrongTextBlockStyle" Margin="{ext:Space 0, 0, 1, 0}"/>
+                            <TextBlock Text="{Binding Properties.Offset, StringFormat='0x{0:X2}'}"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Row="6" Orientation="Horizontal">
+                            <TextBlock Text="Length" Classes="BodyStrongTextBlockStyle" Margin="{ext:Space 0, 0, 1, 0}"/>
+                            <TextBlock Text="{Binding Properties.Length, StringFormat='0x{0:X2}'}"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </ui:FABorder>
+            
+            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="{ext:Space 1}"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="{ext:Space 1}"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="{ext:Space 1}"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <Button Grid.Column="4" HorizontalAlignment="Stretch" Command="{Binding PreviewCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <material:MaterialIcon Kind="CubeScan" Margin="{ext:Space 0, 0, 1, 0}"/>
+                        <TextBlock Text="Preview"/>
+                    </StackPanel>
+                </Button>
+                    
+                <Button Grid.Column="6" HorizontalAlignment="Stretch" Command="{Binding ExportCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <material:MaterialIcon Kind="Download" Margin="{ext:Space -1, 0, 1, 0}"/>
+                        <TextBlock Text="Export"/>
+                    </StackPanel>
+                </Button>
+                    
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

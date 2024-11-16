@@ -1,0 +1,146 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:styling="clr-namespace:FluentAvalonia.Styling;assembly=FluentAvalonia"
+             xmlns:extensions="clr-namespace:ndsSharp.FileExplorer.Extensions"
+             xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             x:Class="ndsSharp.FileExplorer.Application.App"
+             RequestedThemeVariant="Dark">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+             
+    <Application.Resources>
+        <extensions:EnumToStringConverter x:Key="EnumToString" />
+        <extensions:EnumToRecordConverter x:Key="EnumToRecord" />
+        <extensions:EnumHasFlagConverter x:Key="EnumHasFlag" />
+        <extensions:EnumEqualsConverter x:Key="EnumEquals" />
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme />
+        <styling:FluentAvaloniaTheme/>
+        <material:MaterialIconStyles/>
+        
+        
+        <Style Selector="ui|FABorder">
+            <Setter Property="Background" Value="#0DFFFFFF"/>
+            <Setter Property="BorderBrush" Value="#19000000"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="MinHeight" Value="32"/>
+        </Style>
+        
+        <Style Selector="Border">
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
+        
+        <Style Selector="TabItem > TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+        
+        <Style Selector="TextBlock:disabled">
+            <Setter Property="Foreground" Value="#5DFFFFFF"/>
+        </Style>
+
+        <Style Selector="Expander:pointerover /template/ ContentPresenter">
+           <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <Style Selector="Expander ToggleButton:pointerover /template/ ContentPresenter">
+           <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <Style Selector="Expander ToggleButton:pointerover /template/ Border">
+           <Setter Property="Background" Value="#26FFFFFF"/>
+        </Style>
+
+        <Style Selector="Expander ToggleButton:pointerover /template/ Border#ExpandCollapseChevronBorder">
+           <Setter Property="Background" Value="Transparent"/>
+        </Style>
+                   
+        <Style Selector="Expander ToggleButton:expanded /template/ ContentPresenter">
+           <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <Style Selector="Expander ToggleButton:expanded /template/ Border">
+           <Setter Property="Background" Value="#26FFFFFF"/>
+        </Style>
+
+        <Style Selector="Expander ToggleButton:checked /template/ ContentPresenter">
+           <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        
+        <Style Selector="material|MaterialIcon">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+       
+       <Style Selector="TextBlock.CaptionTextBlockStyle">
+           <Setter Property="FontSize" Value="12"/>
+           <Setter Property="FontWeight" Value="Normal"/>
+       </Style>
+       
+       <Style Selector="TextBlock.BodyTextBlockStyle">
+           <Setter Property="FontSize" Value="14"/>
+           <Setter Property="FontWeight" Value="Normal"/>
+       </Style>
+        
+        <Style Selector="TextBlock.BodyStrongTextBlockStyle">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        
+        <Style Selector="TextBlock.SubtitleTextBlockStyle">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        
+        <Style Selector="TextBlock.TitleTextBlockStyle">
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        
+        <Style Selector="TextBlock.TitleLargeTextBlockStyle">
+            <Setter Property="FontSize" Value="40"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        
+        <Style Selector="TextBlock.TextFillColorPrimaryBrush">
+            <Setter Property="Foreground" Value="#E4E4E4"/>
+        </Style>
+        
+        <Style Selector="TextBlock.TextFillColorSecondaryBrush">
+            <Setter Property="Foreground" Value="#C5FFFFFF"/>
+        </Style>
+        
+        <Style Selector="TextBlock.TextFillColorTertiaryBrush">
+            <Setter Property="Foreground" Value="#9E9E9E"/>
+        </Style>
+        
+        <Style Selector="TextBlock.TextFillColorQuaternaryBrush">
+            <Setter Property="Foreground" Value="#727272"/>
+        </Style>
+        
+        <Style Selector="TextBlock.TextFillColorDisabledBrush">
+            <Setter Property="Foreground" Value="#5C5C5C"/>
+        </Style>
+        
+        <Style Selector="CheckBox.Red /template/ Border#NormalRectangle">
+            <Setter Property="Background" Value="#FFE81123" />
+            <Setter Property="BorderBrush" Value="#FFFF4343" />
+        </Style>
+    
+        <Style Selector="CheckBox.Green /template/ Border#NormalRectangle">
+            <Setter Property="Background" Value="#FF10893E" />
+            <Setter Property="BorderBrush" Value="#FF00CC6A" />
+        </Style>
+    
+        <Style Selector="CheckBox.Blue /template/ Border#NormalRectangle">
+            <Setter Property="Background" Value="#FF0063B1" />
+            <Setter Property="BorderBrush" Value="#FF0099BC" />
+        </Style>
+    
+        <Style Selector="CheckBox.Alpha /template/ Border#NormalRectangle">
+            <Setter Property="Background" Value="#FF6B6B6B" />
+            <Setter Property="BorderBrush" Value="#FFA3A3A3" />
+        </Style>
+    </Application.Styles>
+</Application>

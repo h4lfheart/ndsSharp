@@ -1,9 +1,11 @@
 using ndsSharp.Core.Data;
+using ndsSharp.Core.Objects.Files;
 
 namespace ndsSharp.Core.Objects;
 
 public abstract class BaseDeserializable
 {
+    public RomFile? Owner;
     public abstract void Deserialize(BaseReader reader);
 }
 

@@ -143,7 +143,7 @@ public class MDL0Model : DeserializableWithName
                 material.TextureName = textureNames[matIndex];
             
             if (matIndex < paletteNames.Length)
-            material.PaletteName = paletteNames[matIndex];
+                material.PaletteName = paletteNames[matIndex];
             
             Materials.Add(material);
         }
