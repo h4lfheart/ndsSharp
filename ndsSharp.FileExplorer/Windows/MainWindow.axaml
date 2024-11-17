@@ -10,9 +10,8 @@
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
         x:Class="ndsSharp.FileExplorer.Windows.MainWindow"
         x:DataType="windowModels:MainWindowModel" 
-        Title="{Binding TitleString}"
-        Width="1280" Height="720" RequestedThemeVariant="Dark"
-        Background="{x:Null}" Icon="{Binding IconSource}" TransparencyLevelHint="Mica">
+        Title="{Binding TitleString}" Icon="{Binding IconSource}" RequestedThemeVariant="Dark"
+        Width="1280" Height="720" >
     <Grid RowDefinitions="Auto *">
         <Menu Grid.Row="0">
             <MenuItem Header="File">

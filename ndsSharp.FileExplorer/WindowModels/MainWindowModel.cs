@@ -62,13 +62,6 @@ public partial class MainWindowModel : WindowModelBase
     public readonly SourceCache<FlatItem, string> FlatViewAssetList = new(item => item.Path);
     
     private Dictionary<string, TreeItem> _treeViewBuildHierarchy = [];
-
-    public MainWindowModel()
-    {
-#if DEBUG
-        LoadRom("C:/b2.nds");
-#endif
-    }
     
     [RelayCommand]
     public async Task Open()
@@ -101,12 +94,14 @@ public partial class MainWindowModel : WindowModelBase
         switch (targetFile.Type)
         {
             case "btx0":
+            case "nsbtx":
             {
                 var btx = Provider.LoadObject<BTX0>(targetFile);
                 BTXWindow.Create(btx);
                 break;
             }
             case "bmd0":
+            case "nsbmd":
             {
                 var bmd = Provider.LoadObject<BMD0>(targetFile);
                 BMDWindow.Create(bmd);
@@ -129,6 +124,10 @@ public partial class MainWindowModel : WindowModelBase
 
     private void LoadFiles()
     {
+        FlatViewAssetList.Clear();
+        TreeViewCollection.Clear();
+        _treeViewBuildHierarchy.Clear();
+        
         foreach (var (_, file) in Provider.Files)
         {
             var path = file.Path;

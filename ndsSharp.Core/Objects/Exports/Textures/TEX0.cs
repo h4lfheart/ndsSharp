@@ -110,7 +110,7 @@ public class TEX0 : NdsBlock
             var (textureName, texturePointer) = _texturePointers.ElementAt(textureIndex);
             var textureInfo = _textureInfos[textureName];
             
-            var (paletteName, palettePointer) = _palettePointers.FirstOrDefault(pair => pair.Key.Equals(textureName + "_pl"), _palettePointers.ElementAt(Math.Min(textureIndex, _palettePointers.Count - 1)));
+            var (paletteName, palettePointer) = _palettePointers.FirstOrDefault(pair => pair.Key.Equals(textureName + "_pl") || pair.Key.Equals(textureName), _palettePointers.ElementAt(Math.Min(textureIndex, _palettePointers.Count - 1)));
             var paletteReader = palettePointer.Load();
             var palette = new Palette(paletteName, paletteReader.ReadColors<BGR555>());
             

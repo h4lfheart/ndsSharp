@@ -48,7 +48,12 @@ public class NdsFileProvider : IFileProvider
             var narcFiles = GetAllFilesOfType<NARC>().ToArray();
             foreach (var narcFile in narcFiles)
             {
-                var narc = LoadObject<NARC>(narcFile);
+                if (!TryLoadObject<NARC>(narcFile, out var narc))
+                {
+                    Log.Warning("Failed to mount NARC {Path}", narcFile.Path);
+                    continue;
+                }
+                
                 var basePath = narcFile.Path.Replace(".narc", string.Empty);
                 foreach (var (path, file) in narc.Files)
                 {

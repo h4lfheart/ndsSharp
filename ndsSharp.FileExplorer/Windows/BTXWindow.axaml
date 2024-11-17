@@ -8,9 +8,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ndsSharp.FileExplorer.Windows.BTXWindow"
         x:DataType="windowModels:BTXWindowModel"
-        Title="{Binding TitleString}"
-        Width="500" Height="540" RequestedThemeVariant="Dark"
-        Background="{x:Null}" Icon="{Binding IconSource}" TransparencyLevelHint="Mica">
+        Title="{Binding TitleString}" Icon="{Binding IconSource}" RequestedThemeVariant="Dark"
+        Width="500" Height="540">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
