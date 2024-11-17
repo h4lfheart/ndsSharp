@@ -44,7 +44,7 @@ public class Wave
     [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
     private uint DataHeaderSize;
 
-    private byte[] Data;
+    public byte[] Data;
 
     public Wave(byte[] data, ushort numChannels, uint sampleRate, ushort bitsPerSample)
     {

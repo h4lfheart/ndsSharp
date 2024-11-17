@@ -1,5 +1,5 @@
 using System.Numerics;
-using ndsSharp.Core.Objects.Exports.Meshes.Blocks.MDL;
+using ndsSharp.Core.Objects.Exports.Meshes.Model;
 
 namespace ndsSharp.Core.Conversion.Models.Processing;
 
@@ -7,7 +7,7 @@ public class MeshProcessingUnit
 {
     public Matrix4x4[] MatrixStack;
     public Matrix4x4 CurrentMatrix = Matrix4x4.Identity;
-    public MDL0Material? CurrentMaterial;
+    public MDLMaterial? CurrentMaterial;
     
     public MeshProcessingUnit()
     {

@@ -1,14 +1,14 @@
 using ndsSharp.Core.Data;
 
-namespace ndsSharp.Core.Objects.Exports.Meshes.Blocks.MDL;
+namespace ndsSharp.Core.Objects.Exports.Meshes.Model;
 
-public class MDL0Model : DeserializableWithName
+public class MDLModel : DeserializableWithName
 {
-    public List<MDL0Transform> ObjectTransforms = [];
-    public List<MDL0RenderCommand> RenderCommands = [];
-    public List<MDL0Material> Materials = [];
-    public List<MDL0Polygon> Polygons = [];
-    public List<MDL0Transform> InvBindTransforms = [];
+    public List<MDLTransform> ObjectTransforms = [];
+    public List<MDLRenderCommand> RenderCommands = [];
+    public List<MDLMaterial> Materials = [];
+    public List<MDLPolygon> Polygons = [];
+    public List<MDLTransform> InvBindTransforms = [];
     
     public uint Size;
     public uint RenderCommandsOffset;
@@ -78,7 +78,7 @@ public class MDL0Model : DeserializableWithName
         {
             reader.Position = (int) offset;
 
-            var objectTransform = reader.ReadObject<MDL0Transform>();
+            var objectTransform = reader.ReadObject<MDLTransform>();
             objectTransform.Name = name;
             ObjectTransforms.Add(objectTransform);
         }
@@ -86,10 +86,10 @@ public class MDL0Model : DeserializableWithName
     
     private void ReadRenderCommands(BaseReader reader)
     {
-        MDL0RenderCommand command;
+        MDLRenderCommand command;
         do
         {
-            command = reader.ReadObject<MDL0RenderCommand>();
+            command = reader.ReadObject<MDLRenderCommand>();
             RenderCommands.Add(command);
         }
         while (command.OpCode != RenderCommandOpCode.END);
@@ -103,7 +103,7 @@ public class MDL0Model : DeserializableWithName
         var materialList = reader.ReadNameListPrimitive<uint>();
 
         reader.Position = textureListOffset;
-        var textureList = reader.ReadNameList<MDL0MaterialMapping>();
+        var textureList = reader.ReadNameList<MDLMaterialMapping>();
         var textureNames = new string[materialList.Count];
         for (var i = 0; i < textureList.Count; i++)
         {
@@ -117,7 +117,7 @@ public class MDL0Model : DeserializableWithName
         }
         
         reader.Position = paletteListOffset;
-        var paletteList = reader.ReadNameList<MDL0MaterialMapping>();
+        var paletteList = reader.ReadNameList<MDLMaterialMapping>();
         var paletteNames = new string[materialList.Count];
         for (var i = 0; i < paletteList.Count; i++)
         {
@@ -135,7 +135,7 @@ public class MDL0Model : DeserializableWithName
             var (name, offset) = materialList.ElementAt(matIndex);
             reader.Position = (int) offset;
 
-            var material = reader.ReadObject<MDL0Material>();
+            var material = reader.ReadObject<MDLMaterial>();
             material.Name = name;
             
             if (matIndex < textureNames.Length)
@@ -151,7 +151,7 @@ public class MDL0Model : DeserializableWithName
     private void ReadPolygons(BaseReader reader)
     {
         var polygonDataList = reader.ReadNameListPrimitive<uint>();
-        var polygons = reader.ReadArray(polygonDataList.Count, () => reader.ReadObject<MDL0Polygon>());
+        var polygons = reader.ReadArray(polygonDataList.Count, () => reader.ReadObject<MDLPolygon>());
 
         foreach (var (polygon, (name, _)) in polygons.Zip(polygonDataList))
         {
@@ -163,7 +163,7 @@ public class MDL0Model : DeserializableWithName
                 var opCodes = reader.ReadArray(4, reader.ReadEnum<PolygonCommandOpCode, byte>);
                 foreach (var opCode in opCodes)
                 {
-                    var command = reader.ReadObject<MDL0PolygonCommand>(dataModifier: polygonCommand => polygonCommand.OpCode = opCode);
+                    var command = reader.ReadObject<MDLPolygonCommand>(dataModifier: polygonCommand => polygonCommand.OpCode = opCode);
                     polygon.Commands.Add(command);
                 }
 

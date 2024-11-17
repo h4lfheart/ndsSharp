@@ -1,8 +1,8 @@
 using ndsSharp.Core.Data;
 
-namespace ndsSharp.Core.Objects.Exports.Meshes.Blocks.MDL;
+namespace ndsSharp.Core.Objects.Exports.Meshes.Model;
 
-public class MDL0RenderCommand : BaseDeserializable
+public class MDLRenderCommand : BaseDeserializable
 {
     public RenderCommandOpCode OpCode;
     public int Flags;

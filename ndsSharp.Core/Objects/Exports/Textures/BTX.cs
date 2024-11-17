@@ -4,10 +4,10 @@ using ndsSharp.Core.Objects.Exports.Textures.Blocks;
 
 namespace ndsSharp.Core.Objects.Exports.Textures;
 
-public class BTX0 : NdsObject
+public class BTX : NdsObject
 {
-    public override string Magic => "BTX0";
+    public override string Magic => "BTX";
     public override bool HasBlockOffsets => true;
 
-    [Block] public TEX0 TextureData;
+    [Block] public TEX TextureData;
 }

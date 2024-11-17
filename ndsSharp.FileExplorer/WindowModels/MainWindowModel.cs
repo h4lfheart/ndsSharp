@@ -16,6 +16,7 @@ using DynamicData;
 using DynamicData.Binding;
 using ndsSharp.Core.Conversion.Textures.Images;
 using ndsSharp.Core.Objects.Exports.Meshes;
+using ndsSharp.Core.Objects.Exports.Sounds;
 using ndsSharp.Core.Objects.Exports.Textures;
 using ndsSharp.Core.Providers;
 using ndsSharp.FileExplorer.Extensions;
@@ -93,18 +94,30 @@ public partial class MainWindowModel : WindowModelBase
         var targetFile = Provider.Files[targetItem.Path];
         switch (targetFile.Type)
         {
-            case "btx0":
+            case "btx":
             case "nsbtx":
             {
-                var btx = Provider.LoadObject<BTX0>(targetFile);
+                var btx = Provider.LoadObject<BTX>(targetFile);
                 BTXWindow.Create(btx);
                 break;
             }
-            case "bmd0":
+            case "bmd":
             case "nsbmd":
             {
-                var bmd = Provider.LoadObject<BMD0>(targetFile);
+                var bmd = Provider.LoadObject<BMD>(targetFile);
                 BMDWindow.Create(bmd);
+                break;
+            }
+            case "strm":
+            {
+                var strm = Provider.LoadObject<STRM>(targetFile);
+                STRMWindow.Create(strm);
+                break;
+            }
+            case "swar":
+            {
+                var swar = Provider.LoadObject<SWAR>(targetFile);
+                SWARWindow.Create(swar);
                 break;
             }
         }
@@ -114,6 +127,7 @@ public partial class MainWindowModel : WindowModelBase
     {
         Provider = new NdsFileProvider(path);
         Provider.UnpackNARCFiles = true;
+        Provider.UnpackSDATFiles = true;
         Provider.Initialize();
 
         TitleString = $"ndsViewer: {Provider.Header.Title}";

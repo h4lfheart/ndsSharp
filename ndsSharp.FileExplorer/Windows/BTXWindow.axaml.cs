@@ -15,12 +15,12 @@ public partial class BTXWindow : WindowBase<BTXWindowModel>
         DataContext = WindowModel;
     }
 
-    public BTXWindow(BTX0 btx) : this()
+    public BTXWindow(BTX btx) : this()
     {
         WindowModel.LoadBTX(btx);
     }
 
-    public static BTXWindow Create(BTX0 btx)
+    public static BTXWindow Create(BTX btx)
     {
         var window = new BTXWindow(btx);
         

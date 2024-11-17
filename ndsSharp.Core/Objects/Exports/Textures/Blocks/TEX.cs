@@ -11,7 +11,7 @@ using ndsSharp.Core.Extensions;
 
 namespace ndsSharp.Core.Objects.Exports.Textures.Blocks;
 
-public class TEX0 : NdsBlock
+public class TEX : NdsBlock
 {
     public List<BaseImage> Textures = [];
     
@@ -19,7 +19,7 @@ public class TEX0 : NdsBlock
     private readonly Dictionary<string, DataPointer> _texturePointers = [];
     private readonly Dictionary<string, DataPointer> _palettePointers = [];
     
-    public override string Magic => "TEX0";
+    public override string Magic => "TEX";
     
     private uint _textureDataOffset;
     private ushort _textureDataSize;

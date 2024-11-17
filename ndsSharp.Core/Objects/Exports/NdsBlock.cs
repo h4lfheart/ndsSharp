@@ -18,7 +18,7 @@ public class NdsBlock : BaseDeserializable
     
     public override void Deserialize(BaseReader reader)
     {
-        ReadMagic = reader.ReadString(4, Owner.IsLittleEndian).Trim();
+        ReadMagic = reader.ReadString(4, Owner.IsLittleEndian).Trim().TrimEnd('0');
         if (!string.IsNullOrEmpty(Magic) && ReadMagic != Magic)
         {
             throw new ParserException($"{Magic} has invalid magic: {ReadMagic}");

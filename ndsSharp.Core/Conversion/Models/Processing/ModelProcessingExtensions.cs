@@ -10,7 +10,7 @@ namespace ndsSharp.Core.Conversion.Models.Processing;
 
 public static class ModelProcessingExtensions
 {
-    public static List<Model> ExtractModels(this BMD0 bmd, TEX0? overrideTextureData = null)
+    public static List<Model> ExtractModels(this BMD bmd, TEX? overrideTextureData = null)
     {
         var textureData = overrideTextureData ?? bmd.TextureData;
 

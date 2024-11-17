@@ -1,8 +1,8 @@
 using ndsSharp.Core.Data;
 
-namespace ndsSharp.Core.Objects.Exports.Meshes.Blocks.MDL;
+namespace ndsSharp.Core.Objects.Exports.Meshes.Model;
 
-public class MDL0Material : DeserializableWithName
+public class MDLMaterial : DeserializableWithName
 {
     public string TextureName;
     public string PaletteName;
@@ -106,7 +106,7 @@ public enum MaterialFlag : ushort
     EFFECT_MATRIX = 8192 // 0x2000 
 }
 
-public class MDL0MaterialMapping : BaseDeserializable
+public class MDLMaterialMapping : BaseDeserializable
 {
     public ushort Offset;
     public byte NumMaterials;

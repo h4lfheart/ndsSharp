@@ -1,14 +1,14 @@
 using ndsSharp.Core.Data;
-using ndsSharp.Core.Objects.Exports.Meshes.Blocks.MDL;
+using ndsSharp.Core.Objects.Exports.Meshes.Model;
 
 namespace ndsSharp.Core.Objects.Exports.Meshes.Blocks;
 
-public class MDL0 : NdsBlock
+public class MDL : NdsBlock
 {
 
-    public List<MDL0Model> Models = [];
+    public List<MDLModel> Models = [];
     
-    public override string Magic => "MDL0";
+    public override string Magic => "MDL";
 
     public override void Deserialize(BaseReader reader)
     {
@@ -19,7 +19,7 @@ public class MDL0 : NdsBlock
         {
             reader.Position = (int) offset;
 
-            var model = reader.ReadObject<MDL0Model>(dataModifier: model => model.Name = name, zeroPosition: true);
+            var model = reader.ReadObject<MDLModel>(dataModifier: model => model.Name = name, zeroPosition: true);
             Models.Add(model);
         }
     }

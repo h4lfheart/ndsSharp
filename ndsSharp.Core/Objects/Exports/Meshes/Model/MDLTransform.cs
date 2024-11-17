@@ -2,9 +2,9 @@ using System.Numerics;
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Mathematics;
 
-namespace ndsSharp.Core.Objects.Exports.Meshes.Blocks.MDL;
+namespace ndsSharp.Core.Objects.Exports.Meshes.Model;
 
-public class MDL0Transform : DeserializableWithName
+public class MDLTransform : DeserializableWithName
 {
     public Vector3 Translation = Vector3.Zero;
     public Matrix3x3 Rotation;

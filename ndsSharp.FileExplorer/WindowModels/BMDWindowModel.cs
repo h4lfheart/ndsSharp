@@ -26,7 +26,7 @@ public partial class BMDWindowModel : WindowModelBase
 
     private List<Model> Models = [];
     
-    public void LoadBMD(BMD0 bmd)
+    public void LoadBMD(BMD bmd)
     {
         if (RenderingControl is null)
         {

@@ -1,11 +1,11 @@
 using System.Diagnostics;
 using System.Numerics;
 using ndsSharp.Core.Conversion.Models.Mesh;
-using ndsSharp.Core.Objects.Exports.Meshes.Blocks.MDL;
+using ndsSharp.Core.Objects.Exports.Meshes.Model;
 
 namespace ndsSharp.Core.Conversion.Models.Processing;
 
-public class SectionProcessor(MDL0Model Model)
+public class SectionProcessor(MDLModel Model)
 {
     private List<Section> Sections = [];
 
@@ -18,7 +18,7 @@ public class SectionProcessor(MDL0Model Model)
         return Sections;
     } 
     
-    public void ProcessCommand(MDL0RenderCommand command)
+    public void ProcessCommand(MDLRenderCommand command)
     {
          switch (command.OpCode)
         {

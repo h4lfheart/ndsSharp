@@ -1,8 +1,8 @@
 using ndsSharp.Core.Data;
 
-namespace ndsSharp.Core.Objects.Exports.Meshes.Blocks.MDL;
+namespace ndsSharp.Core.Objects.Exports.Meshes.Model;
 
-public class MDL0Polygon : DeserializableWithName
+public class MDLPolygon : DeserializableWithName
 {
     public ushort Tag;
     public ushort Length;
@@ -10,7 +10,7 @@ public class MDL0Polygon : DeserializableWithName
     public uint CommandOffset;
     public uint CommandLength;
     
-    public List<MDL0PolygonCommand> Commands = [];
+    public List<MDLPolygonCommand> Commands = [];
     
     public override void Deserialize(BaseReader reader)
     {
@@ -22,7 +22,7 @@ public class MDL0Polygon : DeserializableWithName
     }
 }
 
-public class MDL0PolygonCommand : BaseDeserializable
+public class MDLPolygonCommand : BaseDeserializable
 {
     public PolygonCommandOpCode OpCode;
     public int[] Parameters = [];

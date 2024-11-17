@@ -2,12 +2,12 @@ using System.Diagnostics;
 using System.Numerics;
 using ndsSharp.Core.Conversion.Models.Mesh;
 using ndsSharp.Core.Extensions;
-using ndsSharp.Core.Objects.Exports.Meshes.Blocks.MDL;
+using ndsSharp.Core.Objects.Exports.Meshes.Model;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace ndsSharp.Core.Conversion.Models.Processing;
 
-public class PolygonProcessor(MDL0Polygon Polygon, MeshProcessingUnit ProcessingUnit)
+public class PolygonProcessor(MDLPolygon Polygon, MeshProcessingUnit ProcessingUnit)
 {
     private Section Section = new();
     
@@ -29,7 +29,7 @@ public class PolygonProcessor(MDL0Polygon Polygon, MeshProcessingUnit Processing
         return Section;
     }
     
-    public void ProcessCommand(MDL0PolygonCommand command)
+    public void ProcessCommand(MDLPolygonCommand command)
     {
         switch (command.OpCode)
         {
@@ -118,17 +118,17 @@ public class PolygonProcessor(MDL0Polygon Polygon, MeshProcessingUnit Processing
 
 public static class PolygonCommands
 {
-    public static int MTX_STORE(MDL0PolygonCommand command)
+    public static int MTX_STORE(MDLPolygonCommand command)
     {
         return command.Parameters[0];
     }
     
-    public static int MTX_RESTORE(MDL0PolygonCommand command)
+    public static int MTX_RESTORE(MDLPolygonCommand command)
     {
         return command.Parameters[0];
     }
     
-    public static Vector3 MTX_SCALE(MDL0PolygonCommand command)
+    public static Vector3 MTX_SCALE(MDLPolygonCommand command)
     {
         return new Vector3(
             FloatExtensions.ToFloat(command.Parameters[0], 1, 19, 12),
@@ -136,7 +136,7 @@ public static class PolygonCommands
             FloatExtensions.ToFloat(command.Parameters[2], 1, 19, 12));
     }
 
-    public static Vector3 MTX_TRANS(MDL0PolygonCommand command)
+    public static Vector3 MTX_TRANS(MDLPolygonCommand command)
     {
         return new Vector3(
             FloatExtensions.ToFloat(command.Parameters[0], 1, 19, 12),
@@ -144,7 +144,7 @@ public static class PolygonCommands
             FloatExtensions.ToFloat(command.Parameters[2], 1, 19, 12));
     }
 
-    public static Vector3 NORMAL(MDL0PolygonCommand command)
+    public static Vector3 NORMAL(MDLPolygonCommand command)
     {
         return new Vector3(
             FloatExtensions.ToFloat(command.Parameters[0] & 0x3FF, 1, 0, 9),
@@ -152,7 +152,7 @@ public static class PolygonCommands
             FloatExtensions.ToFloat((command.Parameters[0] >> 20) & 0x3FF, 1, 0, 9));
     }
     
-    public static Rgba32 COLOR(MDL0PolygonCommand command)
+    public static Rgba32 COLOR(MDLPolygonCommand command)
     {
         var r = command.Parameters[0] & 0x1F;
         var g = (command.Parameters[0] >> 5) & 0x1F;
@@ -160,14 +160,14 @@ public static class PolygonCommands
         return new Rgba32(r / 31.0f, g / 31.0f, b / 31.0f);
     }
     
-    public static Vector2 TEXCOORD(MDL0PolygonCommand command)
+    public static Vector2 TEXCOORD(MDLPolygonCommand command)
     {
         return new Vector2(
             FloatExtensions.ToFloat(command.Parameters[0] & 0xFFFF, 1, 11, 4),
             FloatExtensions.ToFloat(command.Parameters[0] >> 16, 1, 11, 4));
     }
 
-    public static Vector3 VTX_16(MDL0PolygonCommand command)
+    public static Vector3 VTX_16(MDLPolygonCommand command)
     {
         return new Vector3(
             FloatExtensions.ToFloat(command.Parameters[0] & 0xFFFF, 1, 3, 12),
@@ -175,7 +175,7 @@ public static class PolygonCommands
             FloatExtensions.ToFloat(command.Parameters[1] & 0xFFFF, 1, 3, 12));
     }
 
-    public static Vector3 VTX_10(MDL0PolygonCommand command)
+    public static Vector3 VTX_10(MDLPolygonCommand command)
     {
         return new Vector3(
             FloatExtensions.ToFloat(command.Parameters[0] & 0x3FF, 1, 3, 6),
@@ -183,7 +183,7 @@ public static class PolygonCommands
             FloatExtensions.ToFloat((command.Parameters[0] >> 20) & 0x3FF, 1, 3, 6));
     }
 
-    public static Vector3 VTX_XY(MDL0PolygonCommand command)
+    public static Vector3 VTX_XY(MDLPolygonCommand command)
     {
         return new Vector3(
             FloatExtensions.ToFloat(command.Parameters[0] & 0xFFFF, 1, 3, 12),
@@ -191,7 +191,7 @@ public static class PolygonCommands
             0);
     }
 
-    public static Vector3 VTX_XZ(MDL0PolygonCommand command)
+    public static Vector3 VTX_XZ(MDLPolygonCommand command)
     {
         return new Vector3(
             FloatExtensions.ToFloat(command.Parameters[0] & 0xFFFF, 1, 3, 12),
@@ -199,7 +199,7 @@ public static class PolygonCommands
             FloatExtensions.ToFloat(command.Parameters[0] >> 16, 1, 3, 12));
     }
 
-    public static Vector3 VTX_YZ(MDL0PolygonCommand command)
+    public static Vector3 VTX_YZ(MDLPolygonCommand command)
     {
         return new Vector3(
             0,
@@ -207,7 +207,7 @@ public static class PolygonCommands
             FloatExtensions.ToFloat(command.Parameters[0] >> 16, 1, 3, 12));
     }
 
-    public static Vector3 VTX_DIFF(MDL0PolygonCommand command)
+    public static Vector3 VTX_DIFF(MDLPolygonCommand command)
     {
         return new Vector3(
             FloatExtensions.ToFloat(command.Parameters[0] & 0x3FF, 1, 0, 9),
@@ -215,7 +215,7 @@ public static class PolygonCommands
             FloatExtensions.ToFloat((command.Parameters[0] >> 20) & 0x3FF, 1, 0, 9));
     }
     
-    public static PolygonType BEGIN_VTXS(MDL0PolygonCommand command)
+    public static PolygonType BEGIN_VTXS(MDLPolygonCommand command)
     {
         return (PolygonType) command.Parameters[0];
     }

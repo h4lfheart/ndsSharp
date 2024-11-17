@@ -20,7 +20,7 @@ public partial class BTXWindowModel : WindowModelBase
 
     private List<BaseImage> Images;
     
-    public void LoadBTX(BTX0 btx)
+    public void LoadBTX(BTX btx)
     {
         TitleString = $"BTX Viewer - {btx.Owner!.Path}";
 

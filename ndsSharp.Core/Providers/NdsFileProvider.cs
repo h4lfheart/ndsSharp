@@ -83,6 +83,8 @@ public class NdsFileProvider : IFileProvider
                 var basePath = sdatFile.Path.Replace(".sdat", string.Empty);
                 foreach (var soundType in Enum.GetValues<SoundFileType>())
                 {
+                    if (soundType is SoundFileType.GroupPlayer or SoundFileType.StreamPlayer or SoundFileType.Group) continue;
+                    
                     var typeName = soundType.GetDescription();
                     var symbols = sdat.Symbols.Records[soundType];
                     var infos = sdat.Info.Records[soundType];
@@ -92,7 +94,7 @@ public class NdsFileProvider : IFileProvider
                         var info = infos[index];
                         var data = sdat.FileAllocationTable.Pointers[info.FileID];
                         
-                        var newPath = basePath + $"/{symbols[index]}.{typeName}".ToLower();
+                        var newPath = basePath + $"/{typeName}/{symbols[index]}.{typeName}".ToLower();
                         Files[newPath] = new RomFile(newPath, data.GlobalFrom(sdat.Reader));
                     }
                 }
@@ -114,7 +116,7 @@ public class NdsFileProvider : IFileProvider
                 var fileName = nameTable.FilesById[id];
                 if (!fileName.Contains('.')) // detect extension
                 {
-                    var extension = _reader.PeekString(4, pointer.Offset).ToLower();
+                    var extension = _reader.PeekString(4, pointer.Offset).TrimEnd('0').ToLower();
                     if (FileTypeRegistry.Contains(extension))
                     {
                         fileName += $".{extension}";
