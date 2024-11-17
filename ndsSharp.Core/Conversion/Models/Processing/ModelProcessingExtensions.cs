@@ -3,6 +3,7 @@ using ndsSharp.Core.Conversion.Models.Mesh;
 using ndsSharp.Core.Conversion.Textures.Images;
 using ndsSharp.Core.Objects.Exports.Meshes;
 using ndsSharp.Core.Objects.Exports.Textures;
+using ndsSharp.Core.Objects.Exports.Textures.Blocks;
 using SixLabors.ImageSharp;
 
 namespace ndsSharp.Core.Conversion.Models.Processing;

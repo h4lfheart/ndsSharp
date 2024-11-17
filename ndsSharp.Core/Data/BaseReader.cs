@@ -10,6 +10,21 @@ public class BaseReader : GenericBufferReader
 {
     public BaseReader? Owner;
     public int AbsoluteOffset;
+    public int AbsolutePosition => AbsoluteOffset + Position;
+    
+    public virtual BaseReader AbsoluteOwner
+    {
+        get
+        {
+            var cur = this;
+            while (cur.Owner is not null)
+            {
+                cur = cur.Owner;
+            }
+
+            return cur;
+        }
+    }
 
     public int PositionZeroOffset;
 
@@ -80,6 +95,21 @@ public class BaseReader : GenericBufferReader
         var str = ReadString(length, unicode ? Encoding.Unicode : Encoding.UTF8);
         if (flip) str = str.Flip();
         return str.Trim('\0');
+    }
+    
+    public string ReadNullTerminatedString(bool unicode = false)
+    {
+        var originalPos = Position;
+        var length = 0;
+        byte currentByte;
+        do
+        {
+            currentByte = Read<byte>();
+            length++;
+        } while (currentByte != 0x00);
+
+        Position = originalPos;
+        return ReadString(length, unicode);
     }
     
     // todo infer primitive type from underlying type

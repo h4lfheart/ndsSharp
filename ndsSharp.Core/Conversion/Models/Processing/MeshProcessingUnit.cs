@@ -1,5 +1,5 @@
 using System.Numerics;
-using ndsSharp.Core.Objects.Exports.Meshes.MDL;
+using ndsSharp.Core.Objects.Exports.Meshes.Blocks.MDL;
 
 namespace ndsSharp.Core.Conversion.Models.Processing;
 

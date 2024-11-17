@@ -2,11 +2,14 @@
 using ndsSharp.Core.Conversion.Models;
 using ndsSharp.Core.Conversion.Models.Export;
 using ndsSharp.Core.Conversion.Models.Processing;
+using ndsSharp.Core.Conversion.Sounds.Stream;
+using ndsSharp.Core.Conversion.Sounds.WaveArchive;
 using ndsSharp.Core.Conversion.Textures.Images;
 using ndsSharp.Core.Extensions;
 using ndsSharp.Core.Objects.Exports;
 using ndsSharp.Core.Objects.Exports.Archive;
 using ndsSharp.Core.Objects.Exports.Meshes;
+using ndsSharp.Core.Objects.Exports.Sounds;
 using ndsSharp.Core.Objects.Exports.Textures;
 using ndsSharp.Core.Providers;
 using Serilog;
@@ -18,22 +21,30 @@ Log.Logger = new LoggerConfiguration()
 
 var provider = new NdsFileProvider("C:/b2.nds");
 provider.UnpackNARCFiles = true;
+provider.UnpackSDATFiles = true;
 provider.Initialize();
 
 provider.LogFileStats();
 
-var meshFiles = provider.GetAllFilesOfType<BMD0>().ToArray();
-var count = 0;
-foreach (var meshFile in meshFiles)
+var waveArchiveFiles = provider.GetAllFilesOfType<SWAR>();
+foreach (var waveArchiveFile in waveArchiveFiles)
 {
-    Log.Information("Mesh {Name}: {First} of {Second}", meshFile.Path, count + 1, meshFiles.Length);
-    var mesh = provider.LoadObject<BMD0>(meshFile);
-    
-    var models = mesh.ExtractModels();
-    foreach (var model in models)
+    var swar = provider.LoadObject<SWAR>(waveArchiveFile);
+    var swarName = waveArchiveFile.Name.SubstringBeforeLast(".");
+    var waves = swar.ExtractWaves();
+    for (var i = 0; i < waves.Count; i++)
     {
-        model.SaveToDirectory($"C:/Art/Models/{meshFile.Path.SubstringBeforeLast("/")}", MeshExportType.OBJ);
+        var waveName = waves.Count > 1 ? $"{swarName}_{i}" : swarName;
+        File.WriteAllBytes($"C:/Art/Waves/{waveName}.wav", waves[i].GetBuffer());
     }
+}
 
-    count++;
+var streamFiles = provider.GetAllFilesOfType<STRM>();
+foreach (var streamFile in streamFiles)
+{
+    var strm = provider.LoadObject<STRM>(streamFile);
+    var strmName = streamFile.Name.SubstringBeforeLast(".");
+    var wave = strm.ToWave();
+    
+    File.WriteAllBytes($"C:/Art/{strmName}.wav", wave.GetBuffer());
 }

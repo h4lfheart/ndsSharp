@@ -4,7 +4,7 @@ namespace ndsSharp.Core.Objects.Exports;
 
 public class FileTypeRegistry
 {
-    private static readonly Dictionary<string, Type> Types = [];
+    private static readonly List<KeyValuePair<string, Type>> Types = [];
     private static readonly Type DefaultObjectType = typeof(NdsObject);
     private static readonly Type DefaultBlockType = typeof(NdsBlock);
     
@@ -26,14 +26,14 @@ public class FileTypeRegistry
                 {
                     var obj = (NdsObject) Activator.CreateInstance(type)!;
                     if (!string.IsNullOrEmpty(obj.Magic))
-                        Types[obj.Magic] = type;
+                        Types.Add(new KeyValuePair<string, Type>(obj.Magic, type));
                 }
                 
                 if (DefaultBlockType.IsAssignableFrom(type))
                 {
                     var block = (NdsBlock) Activator.CreateInstance(type)!;
                     if (!string.IsNullOrEmpty(block.Magic))
-                        Types[block.Magic] = type;
+                        Types.Add(new KeyValuePair<string, Type>(block.Magic, type));
                 }
             }
             catch (Exception)
@@ -46,11 +46,19 @@ public class FileTypeRegistry
 
     public static bool Contains(string str)
     {
-        return Types.Keys.Any(type => type.Equals(str, StringComparison.OrdinalIgnoreCase));
+        return Types.Any(kvp => kvp.Key.Equals(str, StringComparison.OrdinalIgnoreCase));
     }
     
     public static bool TryGetType(string str, out Type type)
     {
-        return Types.TryGetValue(str, out type);
+        type = Types.FirstOrDefault(kvp => kvp.Key.Equals(str)).Value;
+        return type is not null;
+    }
+    
+    public static bool TryGetType(string str, Type ownerType, out Type type)
+    {
+        type = Types.FirstOrDefault(kvp => kvp.Key.Equals(str) && kvp.Value.DeclaringType == ownerType).Value;
+        type ??= Types.FirstOrDefault(kvp => kvp.Key.Equals(str)).Value;
+        return type is not null;
     }
 }

@@ -1,4 +1,5 @@
 using ndsSharp.Core.Objects.Exports.Textures;
+using ndsSharp.Core.Objects.Exports.Textures.Blocks;
 
 namespace ndsSharp.Core.Extensions;
 

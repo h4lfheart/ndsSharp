@@ -1,6 +1,6 @@
 using ndsSharp.Core.Data;
 
-namespace ndsSharp.Core.Objects.Exports.Meshes.MDL;
+namespace ndsSharp.Core.Objects.Exports.Meshes.Blocks.MDL;
 
 public class MDL0RenderCommand : BaseDeserializable
 {

@@ -1,5 +1,6 @@
 using ndsSharp.Core.Conversion.Textures.Pixels;
 using ndsSharp.Core.Objects.Exports.Textures;
+using ndsSharp.Core.Objects.Exports.Textures.Blocks;
 
 namespace ndsSharp.Core.Conversion.Textures.Images;
 

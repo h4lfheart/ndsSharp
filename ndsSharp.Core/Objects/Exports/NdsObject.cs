@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Reflection;
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Extensions;
+using ndsSharp.Core.Objects.Exports.Sounds;
 using ndsSharp.Core.Objects.Files;
 using Serilog;
 
@@ -53,7 +54,7 @@ public class NdsObject : BaseDeserializable
                 
                 var (extension, length) = reader.Peek(() => (reader.ReadString(4, IsLittleEndian), reader.Read<uint>()));
                 var pointer = new DataPointer((int) offset, (int) length);
-                if (FileTypeRegistry.TryGetType(extension, out var type))
+                if (FileTypeRegistry.TryGetType(extension, GetType(), out var type))
                 {
                     Blocks.Add(reader.LoadPointer(pointer).ReadObject<NdsBlock>(type, block => block.Owner = this));
                 }
@@ -71,9 +72,9 @@ public class NdsObject : BaseDeserializable
             {
                 var offset = reader.Position;
             
-                var (extension, length) = reader.Peek(() => (reader.ReadString(4, IsLittleEndian), reader.Read<uint>()));
+                var (extension, length) = reader.Peek(() => (reader.ReadString(4, IsLittleEndian).Trim(), reader.Read<uint>()));
                 var pointer = new DataPointer(offset, (int) length);
-                if (FileTypeRegistry.TryGetType(extension, out var type))
+                if (FileTypeRegistry.TryGetType(extension, GetType(), out var type))
                 {
                     Blocks.Add(reader.LoadPointer(pointer).ReadObject<NdsBlock>(type, block => block.Owner = this));
                 }

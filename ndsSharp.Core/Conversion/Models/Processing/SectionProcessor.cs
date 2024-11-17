@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Numerics;
 using ndsSharp.Core.Conversion.Models.Mesh;
-using ndsSharp.Core.Objects.Exports.Meshes.MDL;
+using ndsSharp.Core.Objects.Exports.Meshes.Blocks.MDL;
 
 namespace ndsSharp.Core.Conversion.Models.Processing;
 

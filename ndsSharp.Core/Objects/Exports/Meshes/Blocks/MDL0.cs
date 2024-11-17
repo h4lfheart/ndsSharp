@@ -1,7 +1,7 @@
 using ndsSharp.Core.Data;
-using ndsSharp.Core.Objects.Exports.Meshes.MDL;
+using ndsSharp.Core.Objects.Exports.Meshes.Blocks.MDL;
 
-namespace ndsSharp.Core.Objects.Exports.Meshes;
+namespace ndsSharp.Core.Objects.Exports.Meshes.Blocks;
 
 public class MDL0 : NdsBlock
 {

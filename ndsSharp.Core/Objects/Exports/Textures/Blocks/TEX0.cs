@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using ndsSharp.Core.Conversion.Textures.Colors;
 using ndsSharp.Core.Conversion.Textures.Colors.Types;
 using ndsSharp.Core.Conversion.Textures.Images;
@@ -10,7 +9,7 @@ using ndsSharp.Core.Conversion.Textures.Pixels.Indexed.Types;
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Extensions;
 
-namespace ndsSharp.Core.Objects.Exports.Textures;
+namespace ndsSharp.Core.Objects.Exports.Textures.Blocks;
 
 public class TEX0 : NdsBlock
 {

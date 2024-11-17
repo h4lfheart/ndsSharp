@@ -1,7 +1,10 @@
+using System.Diagnostics;
 using ndsSharp.Core.Data;
+using ndsSharp.Core.Extensions;
 using ndsSharp.Core.Objects;
 using ndsSharp.Core.Objects.Exports;
 using ndsSharp.Core.Objects.Exports.Archive;
+using ndsSharp.Core.Objects.Exports.Sounds;
 using ndsSharp.Core.Objects.Files;
 using ndsSharp.Core.Objects.Rom;
 using Serilog;
@@ -16,6 +19,7 @@ public class NdsFileProvider : IFileProvider
     public RomBanner Banner;
 
     public bool UnpackNARCFiles = false;
+    public bool UnpackSDATFiles = false;
 
     private AllocationTable _allocationTable;
     private NameTable _nameTable;
@@ -62,6 +66,38 @@ public class NdsFileProvider : IFileProvider
                 }
                 
                 Files.Remove(narcFile.Path);
+            }
+        }
+
+        if (UnpackSDATFiles)
+        {
+            var sdatFiles = GetAllFilesOfType<SDAT>().ToArray();
+            foreach (var sdatFile in sdatFiles)
+            {
+                if (!TryLoadObject<SDAT>(sdatFile, out var sdat))
+                {
+                    Log.Warning("Failed to mount SDAT {Path}", sdatFile.Path);
+                    continue;
+                }
+                
+                var basePath = sdatFile.Path.Replace(".sdat", string.Empty);
+                foreach (var soundType in Enum.GetValues<SoundFileType>())
+                {
+                    var typeName = soundType.GetDescription();
+                    var symbols = sdat.Symbols.Records[soundType];
+                    var infos = sdat.Info.Records[soundType];
+
+                    for (ushort index = 0; index < symbols.Count; index++)
+                    {
+                        var info = infos[index];
+                        var data = sdat.FileAllocationTable.Pointers[info.FileID];
+                        
+                        var newPath = basePath + $"/{symbols[index]}.{typeName}".ToLower();
+                        Files[newPath] = new RomFile(newPath, data.GlobalFrom(sdat.Reader));
+                    }
+                }
+                
+                Files.Remove(sdatFile.Path);
             }
         }
     }

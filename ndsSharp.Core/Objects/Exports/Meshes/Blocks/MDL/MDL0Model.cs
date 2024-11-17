@@ -1,7 +1,6 @@
 using ndsSharp.Core.Data;
-using Serilog;
 
-namespace ndsSharp.Core.Objects.Exports.Meshes.MDL;
+namespace ndsSharp.Core.Objects.Exports.Meshes.Blocks.MDL;
 
 public class MDL0Model : DeserializableWithName
 {
