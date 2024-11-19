@@ -12,6 +12,7 @@ public class INFO : RecordBlock<BaseSoundInfo>
         {
             SoundFileType.Bank => reader.ReadObject<BankSoundInfo>(),
             SoundFileType.Stream => reader.ReadObject<StreamSoundInfo>(),
+            SoundFileType.Sequence => reader.ReadObject<SequenceSoundInfo>(),
             _ => reader.ReadObject<BaseSoundInfo>()
         };
     }

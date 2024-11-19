@@ -62,7 +62,7 @@ public class NdsFileProvider : IFileProvider
                 foreach (var (path, file) in narc.Files)
                 {
                     var newPath = basePath + $"/{path}";
-                    Files[newPath] = new RomFile(newPath, file.Pointer.GlobalFrom(narc.Image.Reader));
+                    Files[newPath] = new RomFile(newPath, file.Pointer.GlobalFrom(narc.Image.Reader), narcFile);
                 }
                 
                 Files.Remove(narcFile.Path);
@@ -95,7 +95,7 @@ public class NdsFileProvider : IFileProvider
                         var data = sdat.FileAllocationTable.Pointers[info.FileID];
                         
                         var newPath = basePath + $"/{typeName}/{symbols[index]}.{typeName}".ToLower();
-                        Files[newPath] = new SDATRomFile(newPath, data.GlobalFrom(sdat.Reader), sdat, info, index);
+                        Files[newPath] = new SDATRomFile(newPath, data.GlobalFrom(sdat.Reader), info, index, sdatFile);
                     }
                 }
                 
