@@ -95,7 +95,7 @@ public class NdsFileProvider : IFileProvider
                         var data = sdat.FileAllocationTable.Pointers[info.FileID];
                         
                         var newPath = basePath + $"/{typeName}/{symbols[index]}.{typeName}".ToLower();
-                        Files[newPath] = new RomFile(newPath, data.GlobalFrom(sdat.Reader));
+                        Files[newPath] = new SDATRomFile(newPath, data.GlobalFrom(sdat.Reader), sdat, info, index);
                     }
                 }
                 

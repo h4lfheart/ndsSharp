@@ -4,7 +4,7 @@ using ndsSharp.Core.Extensions;
 
 namespace ndsSharp.Core.Objects.Exports.Sounds;
 
-public class SWAR : NdsObject
+public class SWAR : RecordObject
 {
     [Block] public DATA Data;
     

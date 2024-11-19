@@ -3,7 +3,7 @@ using ndsSharp.Core.Extensions;
 
 namespace ndsSharp.Core.Objects.Exports.Sounds;
 
-public class STRM : NdsObject
+public class STRM : RecordObject<StreamSoundInfo>
 {
     [Block] public HEAD Header;
     [Block] public DATA Data;
@@ -64,5 +64,23 @@ public class STRM : NdsObject
 
             Data = new DataPointer((int) DataOffset, (int) DataSize, reader);
         }
+    }
+}
+
+public class StreamSoundInfo : BaseSoundInfo
+{
+    public byte Volume;
+    public byte Priority;
+    public byte Play;
+    
+    public override void Deserialize(BaseReader reader)
+    {
+        base.Deserialize(reader);
+
+        Volume = reader.Read<byte>();
+        Priority = reader.Read<byte>();
+        Play = reader.Read<byte>();
+
+        reader.Position += sizeof(byte) * 5;
     }
 }

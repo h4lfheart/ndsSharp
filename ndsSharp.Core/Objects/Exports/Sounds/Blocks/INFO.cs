@@ -1,5 +1,4 @@
 using ndsSharp.Core.Data;
-using ndsSharp.Core.Objects.Exports.Sounds.Info;
 
 namespace ndsSharp.Core.Objects.Exports.Sounds.Blocks;
 
@@ -11,6 +10,8 @@ public class INFO : RecordBlock<BaseSoundInfo>
     {
         return type switch
         {
+            SoundFileType.Bank => reader.ReadObject<BankSoundInfo>(),
+            SoundFileType.Stream => reader.ReadObject<StreamSoundInfo>(),
             _ => reader.ReadObject<BaseSoundInfo>()
         };
     }

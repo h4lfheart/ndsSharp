@@ -2,7 +2,6 @@ using System.ComponentModel;
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Extensions;
 using ndsSharp.Core.Objects.Exports.Sounds.Blocks;
-using ndsSharp.Core.Objects.Exports.Sounds.Info;
 
 namespace ndsSharp.Core.Objects.Exports.Sounds;
 
@@ -22,6 +21,18 @@ public class SDAT : NdsObject
         base.Deserialize(reader);
 
         Reader = reader;
+    }
+}
+
+public class BaseSoundInfo : BaseDeserializable
+{
+    public ushort FileID;
+    
+    public override void Deserialize(BaseReader reader)
+    {
+        FileID = reader.Read<ushort>();
+        
+        reader.Position += sizeof(ushort);
     }
 }
 
