@@ -19,6 +19,8 @@ public class SSEQ : RecordObject<SequenceSoundInfo>
         {
             base.Deserialize(reader);
 
+            reader.Position += sizeof(uint); // reader position relative to sseq reader
+
             SequenceByteCodePointer = new DataPointer(reader.Position, reader.Length - reader.Position, reader);
         }
     }

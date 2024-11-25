@@ -1,4 +1,5 @@
-﻿using ndsSharp.Core.Objects.Exports.Sounds;
+﻿using ndsSharp.Core.Conversion.Sounds.Sequence;
+using ndsSharp.Core.Objects.Exports.Sounds;
 using ndsSharp.Core.Providers;
 using Serilog;
 
@@ -13,4 +14,7 @@ provider.Initialize();
 
 provider.LogFileStats();
 
-var sseq = provider.LoadObject<SSEQ>("swan_sound_data/sseq/seq_bgm_vs_achroma.sseq");
+var sequence = provider.LoadObject<SSEQ>("swan_sound_data/sseq/seq_bgm_wifi_access.sseq");
+
+var player = new TrackReader(sequence);
+var tracks = player.ReadTracks();
