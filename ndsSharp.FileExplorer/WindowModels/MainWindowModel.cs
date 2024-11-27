@@ -84,40 +84,7 @@ public partial class MainWindowModel : WindowModelBase
     [RelayCommand]
     public void Export()
     {
-        var targetItem = SelectedFlatViewItems.FirstOrDefault();
-        if (targetItem is null) return;
-
-        var targetFile = Provider.Files[targetItem.Path];
-        switch (targetFile.Type)
-        {
-            case "btx":
-            case "nsbtx":
-            {
-                var btx = Provider.LoadObject<BTX>(targetFile);
-                BTXWindow.Create(btx);
-                break;
-            }
-            case "bmd":
-            case "nsbmd":
-            {
-                var bmd = Provider.LoadObject<BMD>(targetFile);
-                var model = bmd.ExtractModels().First();
-                model.SaveModel($"C:/Art/{model.Name}.obj", MeshExportType.OBJ);
-                break;
-            }
-            case "strm":
-            {
-                var strm = Provider.LoadObject<STRM>(targetFile);
-                STRMWindow.Create(strm);
-                break;
-            }
-            case "swar":
-            {
-                var swar = Provider.LoadObject<SWAR>(targetFile);
-                SWARWindow.Create(swar);
-                break;
-            }
-        }
+        throw new NotImplementedException();
     }
 
     [RelayCommand]
