@@ -37,7 +37,7 @@ public class PolygonProcessor(MDLPolygon Polygon, MeshProcessingUnit ProcessingU
                 ProcessingUnit.Store(PolygonCommands.MTX_STORE(command));
                 break;
             case PolygonCommandOpCode.MTX_RESTORE:
-                ProcessingUnit.Store(PolygonCommands.MTX_RESTORE(command) & 31);
+                ProcessingUnit.Load(PolygonCommands.MTX_RESTORE(command));
                 break;
             case PolygonCommandOpCode.MTX_SCALE:
                 ProcessingUnit.Multiply(Matrix4x4.CreateScale(PolygonCommands.MTX_SCALE(command)));

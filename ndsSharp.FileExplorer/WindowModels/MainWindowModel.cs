@@ -14,6 +14,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using DynamicData.Binding;
+using ndsSharp.Core.Conversion.Models;
+using ndsSharp.Core.Conversion.Models.Processing;
 using ndsSharp.Core.Conversion.Textures.Images;
 using ndsSharp.Core.Objects.Exports.Meshes;
 using ndsSharp.Core.Objects.Exports.Sounds;
@@ -82,7 +84,40 @@ public partial class MainWindowModel : WindowModelBase
     [RelayCommand]
     public void Export()
     {
-        throw new NotImplementedException();
+        var targetItem = SelectedFlatViewItems.FirstOrDefault();
+        if (targetItem is null) return;
+
+        var targetFile = Provider.Files[targetItem.Path];
+        switch (targetFile.Type)
+        {
+            case "btx":
+            case "nsbtx":
+            {
+                var btx = Provider.LoadObject<BTX>(targetFile);
+                BTXWindow.Create(btx);
+                break;
+            }
+            case "bmd":
+            case "nsbmd":
+            {
+                var bmd = Provider.LoadObject<BMD>(targetFile);
+                var model = bmd.ExtractModels().First();
+                model.SaveModel($"C:/Art/{model.Name}.obj", MeshExportType.OBJ);
+                break;
+            }
+            case "strm":
+            {
+                var strm = Provider.LoadObject<STRM>(targetFile);
+                STRMWindow.Create(strm);
+                break;
+            }
+            case "swar":
+            {
+                var swar = Provider.LoadObject<SWAR>(targetFile);
+                SWARWindow.Create(swar);
+                break;
+            }
+        }
     }
 
     [RelayCommand]

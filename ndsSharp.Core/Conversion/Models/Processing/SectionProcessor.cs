@@ -41,33 +41,24 @@ public class SectionProcessor(MDLModel Model)
                 break;
 
             case RenderCommandOpCode.MULTIPLY_MATRIX:
-                var meshInfoIndex = command.Parameters[0];
+                var objectIndex = command.Parameters[0];
+                var parentIndex = command.Parameters[1];
+                var unknown = command.Parameters[2];
 
-                var loadIndex = -1;
-                var storeIndex = -1;
-                switch (command.Flags)
+                var (storeIndex, loadIndex) = command.Flags switch
                 {
-                    case 0: // 3 params
-                        break;
-                    case 1: // 4 params
-                        storeIndex = command.Parameters[3];
-                        break;
-                    case 2: // 4 params
-                        loadIndex = command.Parameters[3];
-                        break;
-                    case 3: // 5 params
-                        storeIndex = command.Parameters[3];
-                        loadIndex = command.Parameters[4];
-                        break;
-                }
+                    0 => (-1, -1),
+                    1 => (command.Parameters[3], -1),
+                    2 => (-1, command.Parameters[3]),
+                    3 => (command.Parameters[3], command.Parameters[4])
+                };
 
                 if (loadIndex != -1)
                 {
                     ProcessingUnit.Load(loadIndex);
                 }
 
-                var data = Model.ObjectTransforms[meshInfoIndex];
-                ProcessingUnit.Multiply(data.Matrix);
+                ProcessingUnit.Multiply(Model.ObjectTransforms[objectIndex].Matrix);
 
                 if (storeIndex != -1)
                 {

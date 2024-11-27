@@ -1,4 +1,5 @@
 using ndsSharp.Core.Data;
+using ndsSharp.Core.Mathematics;
 
 namespace ndsSharp.Core.Objects.Exports.Meshes.Model;
 
@@ -8,7 +9,7 @@ public class MDLModel : DeserializableWithName
     public List<MDLRenderCommand> RenderCommands = [];
     public List<MDLMaterial> Materials = [];
     public List<MDLPolygon> Polygons = [];
-    public List<MDLTransform> InvBindTransforms = [];
+    public List<Matrix3x4> InvBindMatrices = [];
     
     public uint Size;
     public uint RenderCommandsOffset;
@@ -176,6 +177,19 @@ public class MDLModel : DeserializableWithName
     
     private void ReadInvBindMatrices(BaseReader reader)
     {
-        // TODO
+        for (var matrixIndex = 0; matrixIndex < NumObjects; matrixIndex++)
+        {
+           var matrixValues = reader.ReadArray(12, reader.ReadShortAsFloat);
+           var unknownValues = reader.ReadArray(9, reader.ReadShortAsFloat);
+           
+           InvBindMatrices.Add(new Matrix3x4
+           {
+               M11 = matrixValues[0], M21 = matrixValues[4], M31 = matrixValues[8],
+               M12 = matrixValues[1], M22 = matrixValues[5], M32 = matrixValues[9],
+               M13 = matrixValues[2], M23 = matrixValues[6], M33 = matrixValues[10],
+               M14 = matrixValues[3], M24 = matrixValues[7], M34 = matrixValues[1]
+           }); 
+        }
     }
+    
 }
