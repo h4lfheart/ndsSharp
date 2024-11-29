@@ -1,5 +1,6 @@
 using System.Numerics;
 using ndsSharp.Core.Data;
+using ndsSharp.Core.Extensions;
 using ndsSharp.Core.Mathematics;
 
 namespace ndsSharp.Core.Objects.Exports.Meshes.Model;
@@ -33,50 +34,7 @@ public class MDLTransform : DeserializableWithName
             var negateFlag = flag >> 8 & 0b111;
             var a = reader.ReadShortAsFloat();
             var b = reader.ReadShortAsFloat();
-                
-            var o = (negateFlag >> 0 & 1) == 0 ? 1 : -1;
-            var c = (negateFlag >> 1 & 1) == 0 ? b : -b;
-            var d = (negateFlag >> 2 & 1) == 0 ? a : -a;
-
-            Rotation = matrixSelection switch
-            {
-                0 => new Matrix3x3(
-                    o, 0, 0, 
-                    0, a, b, 
-                    0, c, d),
-                1 => new Matrix3x3(
-                    0, o, 0, 
-                    a, 0, b, 
-                    c, 0, d),
-                2 => new Matrix3x3(
-                    0, 0, o, 
-                    a, b, 0, 
-                    c, d, 0),
-                3 => new Matrix3x3(
-                    0, a, b, 
-                    o, 0, 0, 
-                    0, c, d),
-                4 => new Matrix3x3(
-                    a, 0, b, 
-                    0, o, 0, 
-                    c, 0, d),
-                5 => new Matrix3x3(
-                    a, b, 0, 
-                    0, 0, o, 
-                    c, d, 0),
-                6 => new Matrix3x3(
-                    0, a, b,
-                    0, c, d, 
-                    o, 0, 0),
-                7 => new Matrix3x3(
-                    a, 0, b, 
-                    c, 0, d, 
-                    0, o, 0),
-                8 => new Matrix3x3(
-                    a, b, 0, 
-                    c, d, 0, 
-                    0, 0, o)
-            };
+            Rotation = Matrix3x3.CreatePivot(matrixSelection, negateFlag, a, b);
         }
         else if (isRotate)
         {

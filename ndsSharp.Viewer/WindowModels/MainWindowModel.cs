@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -14,6 +15,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using DynamicData.Binding;
+using FluentAvalonia.Core;
 using ndsSharp.Core.Conversion.Models;
 using ndsSharp.Core.Conversion.Models.Processing;
 using ndsSharp.Core.Conversion.Textures.Images;
@@ -52,7 +54,7 @@ public partial class MainWindowModel : WindowModelBase
         }
     }
     
-    [ObservableProperty] private string _titleString = "ndsViewer";
+    [ObservableProperty] private string _titleString = "ndsSharp.Viewer";
 
     [ObservableProperty] private PropertiesData _properties;
     
@@ -122,6 +124,10 @@ public partial class MainWindowModel : WindowModelBase
                 SWARWindow.Create(swar);
                 break;
             }
+            default:
+            {
+                throw new NotImplementedException(targetFile.Type);
+            }
         }
     }
 
@@ -132,7 +138,7 @@ public partial class MainWindowModel : WindowModelBase
         Provider.UnpackSDATFiles = true;
         Provider.Initialize();
 
-        TitleString = $"ndsViewer: {Provider.Header.Title}";
+        TitleString = $"ndsSharp.Viewer: {Provider.Header.Title}";
         IconSource = new WindowIcon(Provider.Banner.Icon.ToImage().ToWriteableBitmap());
         
         TaskService.Run(LoadFiles);

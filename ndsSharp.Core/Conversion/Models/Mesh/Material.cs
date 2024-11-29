@@ -10,5 +10,6 @@ public class Material
     public bool RepeatV;
     public bool FlipU;
     public bool FlipV;
-    
+    public float Alpha;
+
 }

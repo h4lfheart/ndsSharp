@@ -6,6 +6,8 @@ public class MDLMaterial : DeserializableWithName
 {
     public string TextureName;
     public string PaletteName;
+
+    public float Alpha;
     
     public ushort Tag;
     public ushort Length;
@@ -42,6 +44,7 @@ public class MDLMaterial : DeserializableWithName
         DiffuseAmbient = reader.Read<int>();
         SpecularEmissive = reader.Read<int>();
         PolyAttr = reader.Read<uint>();
+        Alpha = (PolyAttr >> 16 & 0b_11111) / 31.0f;
         PolyAttrMask = reader.Read<uint>();
         TextureVRAMOffset = reader.Read<ushort>();
         TextureImageParam = reader.Read<ushort>();

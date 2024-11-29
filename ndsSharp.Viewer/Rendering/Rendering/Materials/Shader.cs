@@ -62,7 +62,7 @@ public class Shader : IDisposable
 
     private int LoadShader(string name, ShaderType type)
     {
-        var stream = AssetLoader.Open(new Uri($"avares://ndsSharp.FileExplorer/Rendering/Assets/Shaders/{name}"));
+        var stream = AssetLoader.Open(new Uri($"avares://ndsSharp.Viewer/Rendering/Assets/Shaders/{name}"));
         var content = Encoding.UTF8.GetString(stream.ReadToEnd());
 
         var shader = GL.CreateShader(type);

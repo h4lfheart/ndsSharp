@@ -7,6 +7,7 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <RootNamespace>ndsSharp.Viewer</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -56,6 +57,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ndsSharp.Core\ndsSharp.Core.csproj" />
+        <ProjectReference Include="..\ndsSharp.Core\ndsSharp.Core.csproj" />
     </ItemGroup>
+
 </Project>

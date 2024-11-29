@@ -107,7 +107,8 @@ public static class ModelProcessingExtensions
                     FlipU = materialData.FlipU,
                     FlipV = materialData.FlipV,
                     RepeatU = materialData.RepeatU,
-                    RepeatV = materialData.RepeatV
+                    RepeatV = materialData.RepeatV,
+                    Alpha = materialData.Alpha
                 };
                 model.Materials.Add(material);
             }

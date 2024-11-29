@@ -6,6 +6,7 @@ in vec2 fTexCoord;
 in vec3 fNormal;
 
 uniform sampler2D diffuse;
+uniform float alpha;
 
 
 void main()
@@ -13,5 +14,5 @@ void main()
     vec4 color = texture(diffuse, fTexCoord);
     if (color.a < 0.1) discard;
     
-    FragColor = vec4(color.rgb, 1.0);
+    FragColor = vec4(color.rgb, alpha);
 }
