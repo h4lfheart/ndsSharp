@@ -1,6 +1,5 @@
-﻿using ndsSharp.Core.Objects.Exports.Animation;
-using ndsSharp.Core.Objects.Exports.Meshes;
-using ndsSharp.Core.Providers;
+﻿using ndsSharp.Core.Providers;
+using ndsSharp.Plugins.BW2;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -12,4 +11,9 @@ provider.UnpackNARCFiles = true;
 provider.UnpackSDATFiles = true;
 provider.Initialize();
 
-var animation = provider.LoadObject<BCA>("a/1/5/8/1.bca");
+var plugin = provider.GetPlugin<BW2Plugin>();
+var locationTextContainer = plugin.GetSystemText(109);
+foreach (var locationEntry in locationTextContainer.TextEntries)
+{
+    Console.WriteLine(locationEntry);
+}

@@ -18,7 +18,6 @@ public class Material : IDisposable
             : new Texture2D(new Color(255, 204, 204, 204));
 
         Alpha = material.Alpha;
-        if (Alpha != 1) Debugger.Break();
     }
 
 

@@ -8,6 +8,7 @@ using ndsSharp.Core.Objects.Exports.Archive;
 using ndsSharp.Core.Objects.Exports.Sounds;
 using ndsSharp.Core.Objects.Files;
 using ndsSharp.Core.Objects.Rom;
+using ndsSharp.Core.Plugins;
 using Serilog;
 
 namespace ndsSharp.Core.Providers;
@@ -15,6 +16,7 @@ namespace ndsSharp.Core.Providers;
 public class NdsFileProvider : IFileProvider
 {
     public Dictionary<string, RomFile> Files { get; set; } = [];
+    public Dictionary<Type, BasePlugin> Plugins { get; set; } = [];
     
     public RomHeader Header;
     public RomBanner Banner;
@@ -103,6 +105,8 @@ public class NdsFileProvider : IFileProvider
                 Files.Remove(sdatFile.Path);
             }
         }
+        
+        LoadPlugins();
     }
 
     protected void Mount(AllocationTable allocationTable, NameTable nameTable)
@@ -136,6 +140,35 @@ public class NdsFileProvider : IFileProvider
                 Files[fileName] = new RomFile(fileName, pointer);
             }
         }
+    }
+
+    protected void LoadPlugins()
+    {
+        try
+        {
+            var pluginsAssembly = Assembly.Load("ndsSharp.Plugins");
+            var pluginTypes = pluginsAssembly.DefinedTypes.Where(type => type.IsAssignableTo(typeof(BasePlugin)));
+            foreach (var pluginType in pluginTypes)
+            {
+                var pluginInstance = Activator.CreateInstance(pluginType) as BasePlugin;
+                if (pluginInstance is null) continue;
+                if (!pluginInstance.GameCodes.Contains(Header.GameCode)) continue;
+
+                pluginInstance.Owner = this;
+                pluginInstance.OnLoaded();
+            
+                Plugins[pluginType] = pluginInstance;
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Error(e.ToString());
+        }
+    }
+
+    public T GetPlugin<T>() where T : BasePlugin
+    {
+        return (T) Plugins[typeof(T)];
     }
     
     public IEnumerable<RomFile> GetAllFilesOfType<T>() where T : NdsObject, new()

@@ -1,20 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>ndsSharp.Playground</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\ndsSharp.Core\ndsSharp.Core.csproj" />
-      <ProjectReference Include="..\ndsSharp.Plugins\ndsSharp.Plugins.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="NAudio" Version="2.2.1" />
+      <Folder Include="BW2\Map\" />
     </ItemGroup>
 
 </Project>
