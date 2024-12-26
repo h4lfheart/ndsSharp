@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using DynamicData;
 using OpenTK.Graphics.OpenGL;
 
-namespace ndsSharp.FileExplorer.Rendering.Rendering.Meshes;
+namespace ndsSharp.Viewer.Rendering.Rendering.Meshes;
 
 public sealed class Section : BaseMesh
 {

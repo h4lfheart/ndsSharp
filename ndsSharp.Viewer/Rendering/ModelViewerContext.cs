@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using ndsSharp.Core.Conversion.Models.Mesh;
-using ndsSharp.FileExplorer.Rendering.Rendering;
+using ndsSharp.Viewer.Rendering.Rendering;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -10,7 +9,7 @@ using OpenTK.Windowing.Common.Input;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-namespace ndsSharp.FileExplorer.Rendering;
+namespace ndsSharp.Viewer.Rendering;
 
 public class ModelViewerContext : GameWindow
 {

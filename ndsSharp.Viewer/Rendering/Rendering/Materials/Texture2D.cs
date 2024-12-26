@@ -1,11 +1,10 @@
 using System.Runtime.CompilerServices;
 using ndsSharp.Core.Conversion.Textures.Images;
 using OpenTK.Graphics.OpenGL;
-using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using Color = Avalonia.Media.Color;
 
-namespace ndsSharp.FileExplorer.Rendering.Rendering.Materials;
+namespace ndsSharp.Viewer.Rendering.Rendering.Materials;
 
 public class Texture2D
 {

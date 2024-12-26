@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using ndsSharp.FileExplorer.Rendering.Buffers;
-using ndsSharp.FileExplorer.Rendering.Rendering.Materials;
+using ndsSharp.Viewer.Rendering.Buffers;
+using ndsSharp.Viewer.Rendering.Rendering.Materials;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
-namespace ndsSharp.FileExplorer.Rendering.Rendering.Meshes;
+namespace ndsSharp.Viewer.Rendering.Rendering.Meshes;
 
 public class BaseMesh : IRenderable
 {

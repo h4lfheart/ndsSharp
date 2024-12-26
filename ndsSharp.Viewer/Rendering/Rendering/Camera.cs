@@ -1,7 +1,7 @@
 using System;
 using OpenTK.Mathematics;
 
-namespace ndsSharp.FileExplorer.Rendering.Rendering;
+namespace ndsSharp.Viewer.Rendering.Rendering;
 
 public class Camera
 {

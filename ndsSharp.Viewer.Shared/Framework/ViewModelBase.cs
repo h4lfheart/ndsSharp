@@ -1,7 +1,6 @@
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace ndsSharp.FileExplorer.Framework;
+namespace ndsSharp.Viewer.Shared.Framework;
 
 public class ViewModelBase : ObservableValidator
 {

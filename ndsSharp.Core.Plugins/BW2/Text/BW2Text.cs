@@ -5,7 +5,7 @@ using ndsSharp.Core.Objects;
 
 namespace ndsSharp.Plugins.BW2.Text;
 
-public class BW2TextContainer : BaseDeserializable
+public class BW2Text : BaseDeserializable
 {
     public List<string> TextEntries = [];
     

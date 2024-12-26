@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using ndsSharp.Core.Conversion.Models.Mesh;
-using ndsSharp.FileExplorer.Rendering.Rendering.Materials;
-using ndsSharp.FileExplorer.Rendering.Rendering.Meshes;
-using ndsSharp.FileExplorer.Rendering.Rendering.Viewport;
+using ndsSharp.Viewer.Rendering.Rendering.Materials;
+using ndsSharp.Viewer.Rendering.Rendering.Meshes;
+using ndsSharp.Viewer.Rendering.Rendering.Viewport;
 using OpenTK.Mathematics;
 
-namespace ndsSharp.FileExplorer.Rendering.Rendering;
+namespace ndsSharp.Viewer.Rendering.Rendering;
 
 public class RenderManager : IRenderable
 {

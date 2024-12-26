@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -8,7 +5,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SkiaSharp;
 
-namespace ndsSharp.FileExplorer.Extensions;
+namespace ndsSharp.Viewer.Shared.Extensions;
 
 public static class ImageExtensions
 {

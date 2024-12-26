@@ -1,16 +1,12 @@
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
-using ndsSharp.Core.Conversion.Textures.Images;
-using ndsSharp.Core.Objects.Exports.Meshes;
-using ndsSharp.Core.Objects.Exports.Textures;
-using ndsSharp.FileExplorer.Extensions;
-using ndsSharp.FileExplorer.Framework;
-using ndsSharp.FileExplorer.Models;
-using ndsSharp.FileExplorer.Models.Files;
-using ndsSharp.FileExplorer.WindowModels;
+using ndsSharp.Viewer.Models;
+using ndsSharp.Viewer.Models.Files;
+using ndsSharp.Viewer.Shared.Framework;
+using ndsSharp.Viewer.WindowModels;
 
-namespace ndsSharp.FileExplorer.Windows;
+namespace ndsSharp.Viewer.Windows;
 
 public partial class MainWindow : WindowBase<MainWindowModel>
 {
@@ -57,7 +53,7 @@ public partial class MainWindow : WindowBase<MainWindowModel>
     
     private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        var targetItem = WindowModel.SelectedFlatViewItems.FirstOrDefault();
+        var targetItem = Enumerable.FirstOrDefault<FlatItem>(WindowModel.SelectedFlatViewItems);
         if (targetItem is null) return;
 
         var targetFile = WindowModel.Provider.Files[targetItem.Path];

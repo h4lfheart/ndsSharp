@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using ndsSharp.Core.Conversion.Models.Mesh;
-using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
-namespace ndsSharp.FileExplorer.Rendering.Rendering.Meshes;
+namespace ndsSharp.Viewer.Rendering.Rendering.Meshes;
 
 public class Mesh : IRenderable
 {

@@ -1,9 +1,8 @@
-using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace ndsSharp.FileExplorer.Extensions;
+namespace ndsSharp.Viewer.Shared.Extensions;
 
 public class SpaceExtension : MarkupExtension
 {

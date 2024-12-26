@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 
-namespace ndsSharp.FileExplorer.Rendering.Rendering.Viewport;
+namespace ndsSharp.Viewer.Rendering.Rendering.Viewport;
 
 public class Grid : Meshes.BaseMesh
 {

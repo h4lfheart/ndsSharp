@@ -1,12 +1,11 @@
-using System;
 using Avalonia.Controls;
-using ndsSharp.FileExplorer.Services;
+using ndsSharp.Viewer.Shared.Services;
 
-namespace ndsSharp.FileExplorer.Framework;
+namespace ndsSharp.Viewer.Shared.Framework;
 
-public abstract class WindowBase<T> : Window where T : ViewModelBase, new()
+public abstract class WindowBase<T> : WindowBase where T : ViewModelBase, new()
 {
-    protected readonly T WindowModel;
+    protected new readonly T WindowModel;
 
     public WindowBase(bool initializeWindowModel = true)
     {
@@ -24,7 +23,12 @@ public abstract class WindowBase<T> : Window where T : ViewModelBase, new()
 
         ViewModelRegistry.Unregister<T>();
     }
+}
 
+public abstract class WindowBase : Window
+{
+    protected readonly WindowModelBase WindowModel;
+    
     public void BringToTop()
     {
        Topmost = true;

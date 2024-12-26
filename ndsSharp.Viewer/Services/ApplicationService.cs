@@ -2,18 +2,18 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input.Platform;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
-using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
+using ndsSharp.Viewer.Shared.Services;
+using ndsSharp.Viewer.Windows;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 
-namespace ndsSharp.FileExplorer.Services;
+namespace ndsSharp.Viewer.Services;
 
 public static class ApplicationService
 {
@@ -29,7 +29,7 @@ public static class ApplicationService
             .WriteTo.Console(theme: AnsiConsoleTheme.Literate)
             .CreateLogger();
         
-        Application.MainWindow = new Windows.MainWindow();
+        Application.MainWindow = new MainWindow();
         
         Dispatcher.UIThread.UnhandledException += (sender, args) =>
         {
@@ -56,7 +56,21 @@ public static class ApplicationService
             await dialog.ShowAsync();
         });
     }
-
+    
+    public static void Dialog(string title, string content)
+    {
+        TaskService.RunDispatcher(async () =>
+        {
+            var dialog = new ContentDialog
+            {
+                Title = title,
+                Content = content,
+                CloseButtonText = "Continue"
+            };
+            
+            await dialog.ShowAsync();
+        });
+    }
     
     public static void Launch(string location, bool shellExecute = true)
     {

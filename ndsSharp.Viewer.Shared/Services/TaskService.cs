@@ -1,8 +1,6 @@
-using System;
-using System.Threading.Tasks;
 using Avalonia.Threading;
 
-namespace ndsSharp.FileExplorer.Services;
+namespace ndsSharp.Viewer.Shared.Services;
 
 public static class TaskService
 {

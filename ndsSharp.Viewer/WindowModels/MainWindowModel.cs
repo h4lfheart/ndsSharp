@@ -1,41 +1,35 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
-using System.IO;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
-using DynamicData.Binding;
 using FluentAvalonia.Core;
-using ndsSharp.Core.Conversion.Models;
-using ndsSharp.Core.Conversion.Models.Processing;
 using ndsSharp.Core.Conversion.Textures.Images;
 using ndsSharp.Core.Objects.Exports.Meshes;
 using ndsSharp.Core.Objects.Exports.Sounds;
 using ndsSharp.Core.Objects.Exports.Textures;
+using ndsSharp.Core.Plugins;
 using ndsSharp.Core.Providers;
-using ndsSharp.FileExplorer.Extensions;
-using ndsSharp.FileExplorer.Framework;
-using ndsSharp.FileExplorer.Models;
-using ndsSharp.FileExplorer.Models.Files;
-using ndsSharp.FileExplorer.Rendering.Rendering;
-using ndsSharp.FileExplorer.Services;
-using ndsSharp.FileExplorer.Windows;
-using OpenTK.Mathematics;
+using ndsSharp.Plugins;
+using ndsSharp.Viewer.Models;
+using ndsSharp.Viewer.Models.Files;
+using ndsSharp.Viewer.Services;
+using ndsSharp.Viewer.Shared.Extensions;
+using ndsSharp.Viewer.Shared.Framework;
+using ndsSharp.Viewer.Shared.Plugins;
+using ndsSharp.Viewer.Shared.Services;
+using ndsSharp.Viewer.Windows;
 using ReactiveUI;
-using Serilog;
-using SixLabors.ImageSharp;
+using WindowBase = ndsSharp.Viewer.Shared.Framework.WindowBase;
 
-namespace ndsSharp.FileExplorer.WindowModels;
+namespace ndsSharp.Viewer.WindowModels;
 
 public partial class MainWindowModel : WindowModelBase
 {
@@ -63,6 +57,9 @@ public partial class MainWindowModel : WindowModelBase
 
     [ObservableProperty] private TreeItem _selectedTreeItem;
     [ObservableProperty] private ObservableCollection<TreeItem> _treeViewCollection = new([]);
+
+    [ObservableProperty] private ObservableCollection<ViewerPluginWindowEntry> _pluginWindows = [];
+    [ObservableProperty] private ObservableCollection<ViewerPluginFileTypeAssociation> _pluginFileTypeAssociations = [];
     
     public readonly SourceCache<FlatItem, string> FlatViewAssetList = new(item => item.Path);
     
@@ -92,7 +89,7 @@ public partial class MainWindowModel : WindowModelBase
     [RelayCommand]
     public void Preview()
     {
-        var targetItem = SelectedFlatViewItems.FirstOrDefault();
+        var targetItem = Enumerable.FirstOrDefault<FlatItem>(SelectedFlatViewItems);
         if (targetItem is null) return;
 
         var targetFile = Provider.Files[targetItem.Path];
@@ -126,8 +123,41 @@ public partial class MainWindowModel : WindowModelBase
             }
             default:
             {
-                throw new NotImplementedException(targetFile.Type);
+                var foundFileType = false;
+                foreach (var fileTypeAssociation in PluginFileTypeAssociations)
+                {
+                    if (targetFile.Type != fileTypeAssociation.Extension) continue;
+                    if (Activator.CreateInstance(fileTypeAssociation.PreviewWindowType) is not WindowBase fileViewer) continue;
+                    
+                    if (fileViewer.DataContext is not BaseFileViewerModel viewerModel) continue;
+                    if (viewerModel.GetType().BaseType?.GenericTypeArguments.FirstOrDefault() is not { } assetType) continue;
+                    
+                    fileViewer.Show();
+                    fileViewer.BringToTop();
+                    
+                    var asset = Provider.LoadObject(targetFile, assetType);
+                    viewerModel.Load(asset);
+                    
+                    foundFileType = true;
+                    break;
+                }
+
+                if (!foundFileType)
+                {
+                    Dialog("Unsupported Previewer", $"Files with the extension \"{targetFile.Type}\" cannot be previewed.");
+                }
+                
+                break;
             }
+        }
+    }
+    
+    [RelayCommand]
+    public async Task OpenPluginCommand(Type windowType)
+    {
+        if (await BrowseFileDialog(fileTypes: Globals.RomFileType) is { } romPath)
+        {
+            LoadRom(romPath);
         }
     }
 
@@ -138,10 +168,31 @@ public partial class MainWindowModel : WindowModelBase
         Provider.UnpackSDATFiles = true;
         Provider.Initialize();
 
+        LoadPlugins();
+
         TitleString = $"ndsSharp.Viewer: {Provider.Header.Title}";
         IconSource = new WindowIcon(Provider.Banner.Icon.ToImage().ToWriteableBitmap());
         
         TaskService.Run(LoadFiles);
+    }
+
+    private void LoadPlugins()
+    {
+        Provider.LoadPlugins();
+        
+        var pluginTypes = Assembly.Load("ndsSharp.Viewer.Plugins").DefinedTypes.Where(type => type.IsAssignableTo(typeof(BaseViewerPlugin)));
+        foreach (var pluginType in pluginTypes)
+        {
+            if (Activator.CreateInstance(pluginType) is not BaseViewerPlugin pluginInstance) continue;
+            if (pluginType.BaseType?.GenericTypeArguments.FirstOrDefault() is not { } corePluginType) continue;
+            if (Provider.GetPluginInterface(corePluginType) is not { } corePlugin) continue;
+
+            var corePluginField = pluginType.GetField("PluginInterface");
+            corePluginField?.SetValue(pluginInstance, corePlugin);
+            
+            PluginWindows.AddRange(pluginInstance.PluginWindows);
+            PluginFileTypeAssociations.AddRange(pluginInstance.FileTypeAssociations);
+        }
     }
 
     private void LoadFiles()

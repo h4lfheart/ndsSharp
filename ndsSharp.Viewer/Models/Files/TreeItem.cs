@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace ndsSharp.FileExplorer.Models.Files;
+namespace ndsSharp.Viewer.Models.Files;
 
 public partial class TreeItem : ObservableObject
 {

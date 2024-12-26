@@ -1,8 +1,8 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using ndsSharp.FileExplorer.Services;
+using ndsSharp.Viewer.Services;
 
-namespace ndsSharp.FileExplorer.Application;
+namespace ndsSharp.Viewer.Application;
 
 public partial class App : Avalonia.Application
 {

@@ -1,0 +1,15 @@
+using ndsSharp.Plugins.BW2;
+using ndsSharp.Viewer.Plugins.BW2.Windows;
+using ndsSharp.Viewer.Shared.Plugins;
+
+namespace ndsSharp.Viewer.Plugins.BW2;
+
+public class BW2ViewerPlugin : BaseViewerPlugin<BW2Plugin>
+{
+    public override List<ViewerPluginWindowEntry> PluginWindows { get; } = [];
+
+    public override List<ViewerPluginFileTypeAssociation> FileTypeAssociations { get; } =
+    [
+        new("text", typeof(BW2TextViewer))
+    ];
+}

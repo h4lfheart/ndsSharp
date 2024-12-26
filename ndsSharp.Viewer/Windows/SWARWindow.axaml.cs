@@ -1,15 +1,11 @@
 using System;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Markup.Xaml;
-using ndsSharp.Core.Objects.Exports.Meshes;
 using ndsSharp.Core.Objects.Exports.Sounds;
-using ndsSharp.Core.Objects.Exports.Textures;
-using ndsSharp.FileExplorer.Framework;
-using ndsSharp.FileExplorer.WindowModels;
+using ndsSharp.Viewer.Shared.Framework;
+using ndsSharp.Viewer.WindowModels;
 
-namespace ndsSharp.FileExplorer.Windows;
+namespace ndsSharp.Viewer.Windows;
 
 public partial class SWARWindow : WindowBase<SWARWindowModel>
 {

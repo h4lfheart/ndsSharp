@@ -10,7 +10,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ndsSharp.Core\ndsSharp.Core.csproj" />
-      <ProjectReference Include="..\ndsSharp.Plugins\ndsSharp.Plugins.csproj" />
+      <ProjectReference Include="..\ndsSharp.Core.Plugins\ndsSharp.Core.Plugins.csproj" />
     </ItemGroup>
 
     <ItemGroup>

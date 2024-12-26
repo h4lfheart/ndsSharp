@@ -1,11 +1,11 @@
 using System;
 using System.Text;
 using Avalonia.Platform;
-using ndsSharp.FileExplorer.Extensions;
+using ndsSharp.Viewer.Shared.Extensions;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
-namespace ndsSharp.FileExplorer.Rendering.Rendering.Materials;
+namespace ndsSharp.Viewer.Rendering.Rendering.Materials;
 
 public class Shader : IDisposable
 {

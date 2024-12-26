@@ -1,8 +1,8 @@
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
-using ndsSharp.FileExplorer.Extensions;
+using ndsSharp.Viewer.Shared.Extensions;
 
-namespace ndsSharp.FileExplorer.Framework;
+namespace ndsSharp.Viewer.Shared.Framework;
 
 public partial class WindowModelBase : ViewModelBase
 {

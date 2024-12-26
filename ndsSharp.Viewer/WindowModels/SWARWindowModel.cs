@@ -2,31 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Material.Icons;
 using NAudio.Wave;
-using ndsSharp.Core.Conversion.Models.Mesh;
-using ndsSharp.Core.Conversion.Models.Processing;
 using ndsSharp.Core.Conversion.Sounds.Formats;
-using ndsSharp.Core.Conversion.Sounds.Stream;
 using ndsSharp.Core.Conversion.Sounds.WaveArchive;
-using ndsSharp.Core.Conversion.Textures.Images;
-using ndsSharp.Core.Objects.Exports.Meshes;
 using ndsSharp.Core.Objects.Exports.Sounds;
-using ndsSharp.Core.Objects.Exports.Textures;
-using ndsSharp.FileExplorer.Extensions;
-using ndsSharp.FileExplorer.Framework;
-using ndsSharp.FileExplorer.Rendering;
-using ndsSharp.FileExplorer.Rendering.Rendering;
-using ndsSharp.FileExplorer.Services;
-using SixLabors.ImageSharp;
-using WaveFormat = NAudio.Wave.WaveFormat;
+using ndsSharp.Viewer.Services;
+using ndsSharp.Viewer.Shared.Framework;
+using ndsSharp.Viewer.Shared.Services;
 
-namespace ndsSharp.FileExplorer.WindowModels;
+namespace ndsSharp.Viewer.WindowModels;
 
 public partial class SWARWindowModel : WindowModelBase
 {

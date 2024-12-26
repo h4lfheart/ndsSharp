@@ -1,7 +1,7 @@
 using System;
 using Avalonia.Platform.Storage;
 
-namespace ndsSharp.FileExplorer;
+namespace ndsSharp.Viewer;
 
 public static class Globals
 {

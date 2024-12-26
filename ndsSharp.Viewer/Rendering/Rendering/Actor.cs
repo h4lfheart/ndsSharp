@@ -1,9 +1,8 @@
-using System.Numerics;
 using ndsSharp.Core.Conversion.Models.Mesh;
 using Quaternion = OpenTK.Mathematics.Quaternion;
 using Vector3 = OpenTK.Mathematics.Vector3;
 
-namespace ndsSharp.FileExplorer.Rendering.Rendering;
+namespace ndsSharp.Viewer.Rendering.Rendering;
 
 public class Actor(Model model, Vector3? position = null, Quaternion? rotation = null)
 {

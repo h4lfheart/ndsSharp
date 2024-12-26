@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace ndsSharp.FileExplorer.Extensions;
+namespace ndsSharp.Viewer.Shared.Extensions;
 
 public static class ComparisonExtensions
 {

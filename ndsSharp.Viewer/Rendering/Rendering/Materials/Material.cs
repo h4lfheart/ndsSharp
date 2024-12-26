@@ -1,10 +1,8 @@
 using System;
-using System.Diagnostics;
 using Avalonia.Media;
-using ndsSharp.Core.Conversion.Textures.Images;
 using OpenTK.Graphics.OpenGL;
 
-namespace ndsSharp.FileExplorer.Rendering.Rendering.Materials;
+namespace ndsSharp.Viewer.Rendering.Rendering.Materials;
 
 public class Material : IDisposable
 {

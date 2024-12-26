@@ -105,8 +105,6 @@ public class NdsFileProvider : IFileProvider
                 Files.Remove(sdatFile.Path);
             }
         }
-        
-        LoadPlugins();
     }
 
     protected void Mount(AllocationTable allocationTable, NameTable nameTable)
@@ -141,34 +139,15 @@ public class NdsFileProvider : IFileProvider
             }
         }
     }
-
-    protected void LoadPlugins()
-    {
-        try
-        {
-            var pluginsAssembly = Assembly.Load("ndsSharp.Plugins");
-            var pluginTypes = pluginsAssembly.DefinedTypes.Where(type => type.IsAssignableTo(typeof(BasePlugin)));
-            foreach (var pluginType in pluginTypes)
-            {
-                var pluginInstance = Activator.CreateInstance(pluginType) as BasePlugin;
-                if (pluginInstance is null) continue;
-                if (!pluginInstance.GameCodes.Contains(Header.GameCode)) continue;
-
-                pluginInstance.Owner = this;
-                pluginInstance.OnLoaded();
-            
-                Plugins[pluginType] = pluginInstance;
-            }
-        }
-        catch (Exception e)
-        {
-            Log.Error(e.ToString());
-        }
-    }
-
-    public T GetPlugin<T>() where T : BasePlugin
+    
+    public T GetPluginInterface<T>() where T : BasePlugin
     {
         return (T) Plugins[typeof(T)];
+    }
+    
+    public BasePlugin GetPluginInterface(Type type)
+    {
+        return Plugins[type];
     }
     
     public IEnumerable<RomFile> GetAllFilesOfType<T>() where T : NdsObject, new()
@@ -180,6 +159,10 @@ public class NdsFileProvider : IFileProvider
     public T LoadObject<T>(string path) where T : BaseDeserializable, new() => LoadObject<T>(Files[path]);
     
     public T LoadObject<T>(RomFile file) where T : BaseDeserializable, new() => CreateReader(file).ReadObject<T>(dataModifier: obj => obj.Owner = file);
+    
+    public BaseDeserializable LoadObject(string path, Type type) => LoadObject(Files[path], type);
+    
+    public BaseDeserializable LoadObject(RomFile file, Type type) => CreateReader(file).ReadObject(type, dataModifier: obj => obj.Owner = file);
     
     public bool TryLoadObject<T>(string path, out T data) where T : BaseDeserializable, new() => TryLoadObject(Files[path], out data);
     

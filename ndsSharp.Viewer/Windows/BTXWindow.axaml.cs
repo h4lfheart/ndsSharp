@@ -1,11 +1,8 @@
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using ndsSharp.Core.Objects.Exports.Textures;
-using ndsSharp.FileExplorer.Framework;
-using ndsSharp.FileExplorer.WindowModels;
+using ndsSharp.Viewer.Shared.Framework;
+using ndsSharp.Viewer.WindowModels;
 
-namespace ndsSharp.FileExplorer.Windows;
+namespace ndsSharp.Viewer.Windows;
 
 public partial class BTXWindow : WindowBase<BTXWindowModel>
 {

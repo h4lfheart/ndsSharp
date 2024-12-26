@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ndsSharp.Core.Plugins\ndsSharp.Core.Plugins.csproj" />
+      <ProjectReference Include="..\ndsSharp.Core\ndsSharp.Core.csproj" />
+      <ProjectReference Include="..\ndsSharp.Viewer.Shared\ndsSharp.Viewer.Shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="BW2\FileViewers\BW2TextViewer.axaml.cs">
+        <DependentUpon>BW2TextViewer.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
+</Project>

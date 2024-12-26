@@ -2,13 +2,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:windowModels="clr-namespace:ndsSharp.FileExplorer.WindowModels"
-        xmlns:ext="clr-namespace:ndsSharp.FileExplorer.Extensions"
+        xmlns:windowModels="clr-namespace:ndsSharp.Viewer.WindowModels"
         xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:windowModels1="clr-namespace:ndsSharp.Viewer.WindowModels"
+        xmlns:ext="clr-namespace:ndsSharp.Viewer.Shared.Extensions;assembly=ndsSharp.Viewer.Shared"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="ndsSharp.FileExplorer.Windows.SWARWindow"
-        x:DataType="windowModels:SWARWindowModel"
+        x:Class="ndsSharp.Viewer.Windows.SWARWindow"
+        x:DataType="windowModels1:SWARWindowModel"
         Title="{Binding TitleString}" Icon="{Binding IconSource}" RequestedThemeVariant="Dark"
         Width="540" SizeToContent="Height">
     <Grid>

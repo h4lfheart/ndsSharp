@@ -1,11 +1,9 @@
-using System;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml;
 
-namespace ndsSharp.FileExplorer.Extensions;
+namespace ndsSharp.Viewer.Shared.Extensions;
 
 public static class EnumExtensions
 {

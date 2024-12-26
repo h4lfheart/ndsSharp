@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using ndsSharp.FileExplorer.Services;
+using ndsSharp.Viewer.Shared.Services;
 
-namespace ndsSharp.FileExplorer.Framework;
+namespace ndsSharp.Viewer.Shared.Framework;
 
 public class ViewModelRegistry
 {

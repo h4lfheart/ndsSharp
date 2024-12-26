@@ -1,15 +1,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ndsSharp.Core.Conversion.Textures.Images;
 using ndsSharp.Core.Objects.Exports.Textures;
-using ndsSharp.FileExplorer.Extensions;
-using ndsSharp.FileExplorer.Framework;
-using SixLabors.ImageSharp;
+using ndsSharp.Viewer.Shared.Extensions;
+using ndsSharp.Viewer.Shared.Framework;
 
-namespace ndsSharp.FileExplorer.WindowModels;
+namespace ndsSharp.Viewer.WindowModels;
 
 public partial class BTXWindowModel : WindowModelBase
 {

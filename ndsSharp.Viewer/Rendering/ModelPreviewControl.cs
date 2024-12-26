@@ -3,7 +3,7 @@ using Avalonia.Interactivity;
 using Avalonia.Platform;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-namespace ndsSharp.FileExplorer.Rendering;
+namespace ndsSharp.Viewer.Rendering;
 
 public class ModelPreviewControl : NativeControlHost
 {

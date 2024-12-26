@@ -1,6 +1,6 @@
 using System;
 
-namespace ndsSharp.FileExplorer.Rendering.Rendering;
+namespace ndsSharp.Viewer.Rendering.Rendering;
 
 public interface IRenderable : IDisposable
 {

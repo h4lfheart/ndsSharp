@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:windows="clr-namespace:ndsSharp.Viewer.Plugins.BW2.Windows"
+        xmlns:ext="clr-namespace:ndsSharp.Viewer.Shared.Extensions;assembly=ndsSharp.Viewer.Shared"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Title="{Binding TitleString}" Width="540" Height="720" 
+        Icon="{Binding IconSource}"
+        x:Class="ndsSharp.Viewer.Plugins.BW2.Windows.BW2TextViewer"
+        x:DataType="windows:BW2TextViewerModel">
+    <Grid Margin="{ext:Space 1}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="{ext:Space 1}"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <ListBox Grid.Row="0" ItemsSource="{Binding TextEntries}"
+                 SelectedItem="{Binding CurrentEntry, Mode=TwoWay}" SelectedIndex="0"
+                 HorizontalAlignment="Stretch" Margin="{ext:Space 1}">
+            
+        </ListBox>
+        
+        <Button Grid.Row="2" Content="Copy" HorizontalAlignment="Stretch" Command="{Binding CopyCommand}"/>
+    </Grid>
+</Window>

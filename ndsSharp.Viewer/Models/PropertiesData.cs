@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace ndsSharp.FileExplorer.Models;
+namespace ndsSharp.Viewer.Models;
 
 public partial class PropertiesData : ObservableObject
 {

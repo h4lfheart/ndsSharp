@@ -3,13 +3,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="using:FluentAvalonia.UI.Controls"
-        xmlns:windowModels="clr-namespace:ndsSharp.FileExplorer.WindowModels"
-        xmlns:ext="clr-namespace:ndsSharp.FileExplorer.Extensions"
-        xmlns:files="clr-namespace:ndsSharp.FileExplorer.Models.Files"
         xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:windowModels1="clr-namespace:ndsSharp.Viewer.WindowModels"
+        xmlns:files1="clr-namespace:ndsSharp.Viewer.Models.Files"
+        xmlns:ext="clr-namespace:ndsSharp.Viewer.Shared.Extensions;assembly=ndsSharp.Viewer.Shared"
+        xmlns:plugins="clr-namespace:ndsSharp.Viewer.Shared.Plugins;assembly=ndsSharp.Viewer.Shared"
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
-        x:Class="ndsSharp.FileExplorer.Windows.MainWindow"
-        x:DataType="windowModels:MainWindowModel" 
+        x:Class="ndsSharp.Viewer.Windows.MainWindow"
+        x:DataType="windowModels1:MainWindowModel" 
         Title="{Binding TitleString}" Icon="{Binding IconSource}" RequestedThemeVariant="Dark"
         Width="1280" Height="720" >
     <Grid RowDefinitions="Auto *">
@@ -18,8 +19,14 @@
                 <MenuItem Header="Open" Command="{Binding OpenCommand}"/>
                 <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
             </MenuItem>
-            <MenuItem Header="Plugins">
-                <!-- TODO create plugins project and procedurally fill here-->
+            <MenuItem Header="Plugins" IsVisible="{Binding !!PluginWindows.Count}"
+                      ItemsSource="{Binding PluginWindows}" Classes="PluginItem">
+                <MenuItem.Styles>
+                    <Style Selector="MenuItem.PluginItem MenuItem" x:DataType="plugins:ViewerPluginWindowEntry">
+                        <Setter Property="Header" Value="{Binding Name}"/>
+                        <Setter Property="Command" Value="{Binding OpenWindowCommand}"/>
+                    </Style>
+                </MenuItem.Styles>
             </MenuItem>
         </Menu>
         <Grid Grid.Row="1" Margin="{ext:Space 1}">
@@ -55,7 +62,7 @@
                             </ItemsPanelTemplate>
                         </TreeView.ItemsPanel>
                         <TreeView.ItemContainerTheme>
-                            <ControlTheme x:DataType="files:TreeItem" TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                            <ControlTheme x:DataType="files1:TreeItem" TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                                 <Setter Property="IsExpanded" Value="{Binding Expanded, Mode=TwoWay}" />
                                 <Setter Property="IsSelected" Value="{Binding Selected, Mode=TwoWay}" />
                             </ControlTheme>
@@ -66,10 +73,10 @@
                                     <material:MaterialIcon Width="16" Height="16" Margin="0 0 8 0"
                                                            Classes.File="{Binding Type, 
                                                                Converter={StaticResource EnumEquals}, 
-                                                               ConverterParameter={x:Static files:ENodeType.File}}"
+                                                               ConverterParameter={x:Static files1:ENodeType.File}}"
                                                            Classes.Folder="{Binding Type, 
                                                                Converter={StaticResource EnumEquals}, 
-                                                               ConverterParameter={x:Static files:ENodeType.Folder}}">
+                                                               ConverterParameter={x:Static files1:ENodeType.Folder}}">
                                         <material:MaterialIcon.Styles>
                                             <Style Selector="material|MaterialIcon.File">
                                                 <Style.Setters>
@@ -115,7 +122,7 @@
                                 <KeyBinding Gesture="E" Command="{Binding ExportCommand}"/>
                             </ListBox.KeyBindings>
                             <ListBox.ItemTemplate>
-                                <DataTemplate DataType="files:FlatItem">
+                                <DataTemplate DataType="files1:FlatItem">
                                     <ContentControl>
                                         <ContentControl.ContextMenu>
                                             <ContextMenu>

@@ -1,7 +1,7 @@
 using System;
 using OpenTK.Graphics.OpenGL;
 
-namespace ndsSharp.FileExplorer.Rendering.Buffers;
+namespace ndsSharp.Viewer.Rendering.Buffers;
 
 public class Buffer<T> : IDisposable where T : unmanaged
 {

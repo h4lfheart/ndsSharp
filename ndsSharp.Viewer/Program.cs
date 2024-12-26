@@ -1,10 +1,9 @@
-﻿global using static ndsSharp.FileExplorer.Services.ApplicationService;
-
-using Avalonia;
+﻿global using static ndsSharp.Viewer.Services.ApplicationService;
 using System;
-using ndsSharp.FileExplorer.Application;
+using Avalonia;
+using ndsSharp.Viewer.Application;
 
-namespace ndsSharp.FileExplorer;
+namespace ndsSharp.Viewer;
 
 class Program
 {

@@ -1,20 +1,14 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ndsSharp.Core.Conversion.Models.Mesh;
 using ndsSharp.Core.Conversion.Models.Processing;
-using ndsSharp.Core.Conversion.Textures.Images;
 using ndsSharp.Core.Objects.Exports.Meshes;
-using ndsSharp.Core.Objects.Exports.Textures;
-using ndsSharp.FileExplorer.Extensions;
-using ndsSharp.FileExplorer.Framework;
-using ndsSharp.FileExplorer.Rendering;
-using ndsSharp.FileExplorer.Rendering.Rendering;
-using SixLabors.ImageSharp;
+using ndsSharp.Viewer.Rendering;
+using ndsSharp.Viewer.Rendering.Rendering;
+using ndsSharp.Viewer.Shared.Framework;
 
-namespace ndsSharp.FileExplorer.WindowModels;
+namespace ndsSharp.Viewer.WindowModels;
 
 public partial class BMDWindowModel : WindowModelBase
 {
