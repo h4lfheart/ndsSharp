@@ -6,6 +6,7 @@
         xmlns:ext="clr-namespace:ndsSharp.Viewer.Shared.Extensions;assembly=ndsSharp.Viewer.Shared"
         xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
         xmlns:progressRing="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia.ProgressRing"
+        xmlns:bw2="clr-namespace:ndsSharp.Plugins.BW2;assembly=ndsSharp.Core.Plugins"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ndsSharp.Viewer.Plugins.BW2.Windows.BW2MatrixWindow"
         x:DataType="windows:BW2MatrixWindowModel"
@@ -18,14 +19,29 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <Grid Grid.Row="0" HorizontalAlignment="Stretch" Margin="{ext:Space 0, 1, 0, 0}">
+        <Grid Grid.Row="0" HorizontalAlignment="Stretch" Margin="{ext:Space 1, 1, 1, 0}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="{ext:Space 1}"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="{ext:Space 1}"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
             <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBlock Text="Index" Classes="BodyStrongTextBlockStyle" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="{ext:Space 0, 0, 1, 0}"/>
-                <ui:NumberBox Value="{Binding CurrentMatrixIndex, Mode=TwoWay}" Margin="{ext:Space 0, 0, 1, 0}"
-                              Minimum="0"
-                              SpinButtonPlacementMode="Inline"/>
-                <Button Content="Load" Command="{Binding LoadCommand}"/>
+                <ui:NumberBox Value="{Binding CurrentMatrixIndex, Mode=TwoWay}"
+                              Minimum="0" SpinButtonPlacementMode="Inline"/>
             </StackPanel>
+            
+            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Season" Classes="BodyStrongTextBlockStyle" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="{ext:Space 0, 0, 1, 0}"/>
+                <ComboBox ItemsSource="{ext:EnumToItemsSource {x:Type bw2:ESeason}}"
+                          SelectedItem="{Binding TargetSeason, Converter={StaticResource EnumToRecord}}"/>
+            </StackPanel>
+            
+            <Button Grid.Column="4" Content="Load" Command="{Binding LoadCommand}" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
             
         </Grid>
         

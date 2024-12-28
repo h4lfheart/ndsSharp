@@ -53,9 +53,9 @@ public class BW2Plugin : BasePlugin
         return _areaContainer.Areas[index];
     }
 
-    public BTX GetMapTextures(int index)
+    public BTX GetMapTextures(BW2Area area, ESeason season = ESeason.Spring)
     {
-        return Provider.LoadObject<BTX>($"a/0/1/4/{index}.btx");
+        return Provider.LoadObject<BTX>($"a/0/1/4/{area.TexturesIndex + (int) (area.IsExterior ? season : ESeason.Spring)}.btx");
     }
     
     public BW2MapBuildingContainer GetMapBuildingContainer(BW2Area area)
@@ -69,4 +69,12 @@ public class BW2Plugin : BasePlugin
         var path = area.IsExterior ? "a/1/7/4" : "a/1/7/5";
         return Provider.LoadObject<BTX>($"{path}/{area.BuildingContainerIndex}.btx");
     }
+}
+
+public enum ESeason
+{
+    Spring = 0,
+    Summer = 1,
+    Autumn = 2,
+    Winter = 3
 }

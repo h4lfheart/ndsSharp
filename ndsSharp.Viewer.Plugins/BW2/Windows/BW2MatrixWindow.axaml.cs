@@ -33,6 +33,7 @@ public partial class BW2MatrixWindowModel : BasePluginWindowModel
     [ObservableProperty] private int _currentMatrixIndex;
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private string _loadingText;
+    [ObservableProperty] private ESeason _targetSeason = ESeason.Spring;
 
     private BW2Plugin Plugin => Provider.GetPluginInterface<BW2Plugin>();
     
@@ -75,7 +76,7 @@ public partial class BW2MatrixWindowModel : BasePluginWindowModel
             
             var area = Plugin.GetArea(header.AreaIndex);
 
-            var mapTextures = Plugin.GetMapTextures(area.TexturesIndex);
+            var mapTextures = Plugin.GetMapTextures(area);
                
             var buildingContainer = Plugin.GetMapBuildingContainer(area);
             var buildingTextures = Plugin.GetMapBuildingTextures(area);
