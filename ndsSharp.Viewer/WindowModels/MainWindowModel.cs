@@ -7,10 +7,13 @@ using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using FluentAvalonia.Core;
+using ndsSharp.Core.Conversion.Models;
+using ndsSharp.Core.Conversion.Models.Processing;
 using ndsSharp.Core.Conversion.Textures.Images;
 using ndsSharp.Core.Objects.Exports.Meshes;
 using ndsSharp.Core.Objects.Exports.Sounds;
@@ -27,6 +30,8 @@ using ndsSharp.Viewer.Shared.Plugins;
 using ndsSharp.Viewer.Shared.Services;
 using ndsSharp.Viewer.Windows;
 using ReactiveUI;
+using SixLabors.ImageSharp;
+using Path = System.IO.Path;
 using WindowBase = ndsSharp.Viewer.Shared.Framework.WindowBase;
 
 namespace ndsSharp.Viewer.WindowModels;
@@ -81,15 +86,51 @@ public partial class MainWindowModel : WindowModelBase
     }
 
     [RelayCommand]
-    public void Export()
+    public async Task Export()
     {
-        throw new NotImplementedException();
+        var targetItem = SelectedFlatViewItems.FirstOrDefault();
+        if (targetItem is null) return;
+        
+        if (await BrowseFolderDialog() is not { } outPath) return;
+
+        var targetFile = Provider.Files[targetItem.Path];
+        switch (targetFile.Type)
+        {
+            case "btx":
+            case "nsbtx":
+            {
+                var btx = Provider.LoadObject<BTX>(targetFile);
+                foreach (var texture in btx.TextureData.Textures)
+                {
+                    await texture.ToImage().SaveAsPngAsync(Path.Combine(outPath, $"{texture.Name}.png"));
+                }
+                
+                break;
+            }
+            case "bmd":
+            case "nsbmd":
+            {
+                var bmd = Provider.LoadObject<BMD>(targetFile);
+                foreach (var model in bmd.ExtractModels())
+                {
+                    model.SaveToDirectory(outPath, MeshExportType.OBJ);
+                }
+                
+                break;
+            }
+            default:
+            {
+                Dialog("Unsupported Previewer", $"Files with the extension \"{targetFile.Type}\" cannot be exported.");
+                
+                break;
+            }
+        }
     }
 
     [RelayCommand]
     public void Preview()
     {
-        var targetItem = Enumerable.FirstOrDefault<FlatItem>(SelectedFlatViewItems);
+        var targetItem = SelectedFlatViewItems.FirstOrDefault();
         if (targetItem is null) return;
 
         var targetFile = Provider.Files[targetItem.Path];

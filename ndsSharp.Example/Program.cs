@@ -1,9 +1,9 @@
-﻿using ndsSharp.Core.Providers;
+﻿using ndsSharp.Core.Conversion.Textures.Images;
+using ndsSharp.Core.Objects.Exports.Textures;
+using ndsSharp.Core.Providers;
 using ndsSharp.Plugins;
-using ndsSharp.Plugins.BW2;
-using ndsSharp.Plugins.BW2.Map;
-using ndsSharp.Plugins.BW2.Text;
 using Serilog;
+using SixLabors.ImageSharp;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -15,5 +15,8 @@ provider.UnpackSDATFiles = true;
 provider.Initialize();
 provider.LoadPlugins();
 
-var plugin = provider.GetPluginInterface<BW2Plugin>();
-var matrix = plugin.GetMatrix(0);
+var textureFile = provider.LoadObject<BTX>("a/0/1/4/0.btx");
+foreach (var image in textureFile.TextureData.Textures)
+{
+    image.ToImage().SaveAsPng("");
+}

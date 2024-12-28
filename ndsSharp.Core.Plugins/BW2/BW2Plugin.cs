@@ -37,17 +37,17 @@ public class BW2Plugin : BasePlugin
     {
         return Provider.LoadObject<BW2MapMatrix>($"a/0/0/9/{index}.matrix");
     }
-    
+
     public BW2Map GetMap(int index)
     {
         return Provider.LoadObject<BW2Map>($"a/0/0/8/{index}.map");
     }
-    
+
     public BW2MapHeader GetMapHeader(int index)
     {
         return HeaderContainer.Headers[index];
     }
-    
+
     public BW2Area GetArea(int index)
     {
         return _areaContainer.Areas[index];
@@ -55,15 +55,16 @@ public class BW2Plugin : BasePlugin
 
     public BTX GetMapTextures(BW2Area area, ESeason season = ESeason.Spring)
     {
-        return Provider.LoadObject<BTX>($"a/0/1/4/{area.TexturesIndex + (int) (area.IsExterior ? season : ESeason.Spring)}.btx");
+        return Provider.LoadObject<BTX>(
+            $"a/0/1/4/{area.TexturesIndex + (int)(area.IsExterior ? season : ESeason.Spring)}.btx");
     }
-    
+
     public BW2MapBuildingContainer GetMapBuildingContainer(BW2Area area)
     {
         var path = area.IsExterior ? "a/2/2/5" : "a/2/2/6";
         return Provider.LoadObject<BW2MapBuildingContainer>($"{path}/{area.BuildingContainerIndex}.buildings");
     }
-    
+
     public BTX GetMapBuildingTextures(BW2Area area)
     {
         var path = area.IsExterior ? "a/1/7/4" : "a/1/7/5";
