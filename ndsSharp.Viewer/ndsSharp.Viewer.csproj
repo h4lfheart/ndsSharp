@@ -11,41 +11,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentAvaloniaUI" Version="2.0.5" />
         <PackageReference Include="Material.Icons" Version="2.1.10" />
         <PackageReference Include="Material.Icons.Avalonia" Version="2.1.10" />
         <PackageReference Include="NAudio" Version="2.2.1" />
-        <PackageReference Include="OpenTK" Version="5.0.0-pre.10" />
         <PackageReference Include="ReactiveUI" Version="20.1.63" />
     </ItemGroup>
 
-
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
-        <AvaloniaResource Include="Rendering\Assets\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="Application\App.axaml.cs">
-        <DependentUpon>App.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Windows\MainWindow.axaml.cs">
-        <DependentUpon>MainWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Windows\BMDWindow.axaml.cs">
-        <DependentUpon>BMDWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Windows\STRMWindow.axaml.cs">
-        <DependentUpon>STRMWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Windows\SWARWindow.axaml.cs">
-        <DependentUpon>SWARWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
     </ItemGroup>
 
     <ItemGroup>

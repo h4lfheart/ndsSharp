@@ -1,15 +1,11 @@
 using System.Collections.ObjectModel;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ndsSharp.Plugins.BW2.Text;
 using ndsSharp.Viewer.Shared.Extensions;
 using ndsSharp.Viewer.Shared.Plugins;
-using WindowBase = ndsSharp.Viewer.Shared.Framework.WindowBase;
 
-namespace ndsSharp.Viewer.Plugins.BW2.Windows;
+namespace ndsSharp.Viewer.Plugins.BW2.FileViewers;
 
 public partial class BW2TextViewer : BaseFileViewer<BW2TextViewerModel>
 {

@@ -4,9 +4,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using ndsSharp.Core.Conversion.Models.Mesh;
 using ndsSharp.Core.Conversion.Models.Processing;
 using ndsSharp.Core.Objects.Exports.Meshes;
-using ndsSharp.Viewer.Rendering;
-using ndsSharp.Viewer.Rendering.Rendering;
 using ndsSharp.Viewer.Shared.Framework;
+using ndsSharp.Viewer.Shared.Rendering;
+using ndsSharp.Viewer.Shared.Rendering.Rendering;
 
 namespace ndsSharp.Viewer.WindowModels;
 

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using ndsSharp.Core.Extensions;
 using ndsSharp.Core.Plugins;
@@ -17,9 +18,6 @@ public static class PluginExtensions
             if (!pluginInstance.GameCodes.Contains(provider.Header.GameCode)) continue;
 
             pluginInstance.Provider = provider;
-            pluginInstance.OnLoaded();
-            
-            provider.Plugins[pluginType] = pluginInstance;
 
             foreach (var file in provider.Files.Values.ToArray())
             {
@@ -37,6 +35,8 @@ public static class PluginExtensions
                 }
             }
           
+            provider.Plugins[pluginType] = pluginInstance;
+            pluginInstance.OnLoaded();
         }
     }
 }

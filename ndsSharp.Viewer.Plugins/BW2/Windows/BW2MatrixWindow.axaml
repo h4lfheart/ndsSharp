@@ -1,0 +1,46 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:windows="clr-namespace:ndsSharp.Viewer.Plugins.BW2.Windows"
+        xmlns:ext="clr-namespace:ndsSharp.Viewer.Shared.Extensions;assembly=ndsSharp.Viewer.Shared"
+        xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+        xmlns:progressRing="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia.ProgressRing"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ndsSharp.Viewer.Plugins.BW2.Windows.BW2MatrixWindow"
+        x:DataType="windows:BW2MatrixWindowModel"
+        Title="{Binding TitleString}" Icon="{Binding IconSource}" RequestedThemeVariant="Dark"
+        Width="960" Height="540">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{ext:Space 1}"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0" HorizontalAlignment="Stretch" Margin="{ext:Space 0, 1, 0, 0}">
+            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Index" Classes="BodyStrongTextBlockStyle" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="{ext:Space 0, 0, 1, 0}"/>
+                <ui:NumberBox Value="{Binding CurrentMatrixIndex, Mode=TwoWay}" Margin="{ext:Space 0, 0, 1, 0}"
+                              Minimum="0"
+                              SpinButtonPlacementMode="Inline"/>
+                <Button Content="Load" Command="{Binding LoadCommand}"/>
+            </StackPanel>
+            
+        </Grid>
+        
+        <Separator Grid.Row="1" Margin="{ext:Space 0, 1, 0, 0}"/>
+        
+        <Grid Grid.Row="2" Margin="{ext:Space 1}">
+            <ContentControl Content="{Binding RenderingControl}" IsVisible="{Binding !IsLoading}"/>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding IsLoading}">
+                <progressRing:ProgressRing IsIndeterminate="True" Background="Transparent" Width="50" Height="50" BorderThickness="5"/>
+                <TextBlock Text="{Binding CurrentMatrixIndex, StringFormat='Loading Matrix {0}'}"
+                           Classes="BodyStrongTextBlockStyle" HorizontalAlignment="Center"
+                           Margin="{ext:Space 0, 2, 0, 0}"/>
+                <TextBlock Text="{Binding LoadingText}" Margin="{ext:Space 0, 1, 0, 0}"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

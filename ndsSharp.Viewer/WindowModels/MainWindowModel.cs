@@ -151,14 +151,20 @@ public partial class MainWindowModel : WindowModelBase
             }
         }
     }
-    
+
     [RelayCommand]
-    public async Task OpenPluginCommand(Type windowType)
+    public void OpenPluginWindow(Type windowType)
     {
-        if (await BrowseFileDialog(fileTypes: Globals.RomFileType) is { } romPath)
-        {
-            LoadRom(romPath);
-        }
+        var windowObject = Activator.CreateInstance(windowType);
+        if (windowObject is not WindowBase window) return;
+        if (window.DataContext is not BasePluginWindowModel pluginWindowModel) return;
+
+        pluginWindowModel.Provider = Provider;
+        TaskService.Run(pluginWindowModel.Initialize);
+        
+        window.Show();
+        window.BringToTop();
+        
     }
 
     private void LoadRom(string path)

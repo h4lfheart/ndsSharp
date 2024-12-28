@@ -4,13 +4,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="using:FluentAvalonia.UI.Controls"
         xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-        xmlns:windowModels1="clr-namespace:ndsSharp.Viewer.WindowModels"
+        xmlns:windowModels="clr-namespace:ndsSharp.Viewer.WindowModels"
         xmlns:files1="clr-namespace:ndsSharp.Viewer.Models.Files"
         xmlns:ext="clr-namespace:ndsSharp.Viewer.Shared.Extensions;assembly=ndsSharp.Viewer.Shared"
         xmlns:plugins="clr-namespace:ndsSharp.Viewer.Shared.Plugins;assembly=ndsSharp.Viewer.Shared"
+        xmlns:windows="clr-namespace:ndsSharp.Viewer.Windows"
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
         x:Class="ndsSharp.Viewer.Windows.MainWindow"
-        x:DataType="windowModels1:MainWindowModel" 
+        x:DataType="windowModels:MainWindowModel" 
         Title="{Binding TitleString}" Icon="{Binding IconSource}" RequestedThemeVariant="Dark"
         Width="1280" Height="720" >
     <Grid RowDefinitions="Auto *">
@@ -24,7 +25,8 @@
                 <MenuItem.Styles>
                     <Style Selector="MenuItem.PluginItem MenuItem" x:DataType="plugins:ViewerPluginWindowEntry">
                         <Setter Property="Header" Value="{Binding Name}"/>
-                        <Setter Property="Command" Value="{Binding OpenWindowCommand}"/>
+                        <Setter Property="Command" Value="{Binding $parent[windows:MainWindow].((windowModels:MainWindowModel)DataContext).OpenPluginWindowCommand}"/>
+                        <Setter Property="CommandParameter" Value="{Binding WindowType}"/>
                     </Style>
                 </MenuItem.Styles>
             </MenuItem>

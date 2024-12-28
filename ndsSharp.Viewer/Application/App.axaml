@@ -19,7 +19,7 @@
         <FluentTheme />
         <styling:FluentAvaloniaTheme/>
         <material:MaterialIconStyles/>
-        
+        <StyleInclude Source="avares://FluentAvalonia.ProgressRing/Styling/Controls/ProgressRing.axaml" />
         
         <Style Selector="ui|FABorder">
             <Setter Property="Background" Value="#0DFFFFFF"/>

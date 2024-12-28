@@ -1,6 +1,7 @@
 ﻿using ndsSharp.Core.Providers;
 using ndsSharp.Plugins;
 using ndsSharp.Plugins.BW2;
+using ndsSharp.Plugins.BW2.Map;
 using ndsSharp.Plugins.BW2.Text;
 using Serilog;
 
@@ -14,8 +15,5 @@ provider.UnpackSDATFiles = true;
 provider.Initialize();
 provider.LoadPlugins();
 
-var locationTextContainer = provider.LoadObject<BW2Text>("a/0/0/2.text");
-foreach (var locationEntry in locationTextContainer.TextEntries)
-{
-    Console.WriteLine(locationEntry);
-}
+var plugin = provider.GetPluginInterface<BW2Plugin>();
+var matrix = plugin.GetMatrix(0);

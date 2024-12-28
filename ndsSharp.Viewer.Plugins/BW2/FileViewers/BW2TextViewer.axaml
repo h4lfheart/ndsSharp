@@ -4,11 +4,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:windows="clr-namespace:ndsSharp.Viewer.Plugins.BW2.Windows"
         xmlns:ext="clr-namespace:ndsSharp.Viewer.Shared.Extensions;assembly=ndsSharp.Viewer.Shared"
+        xmlns:fileViewers="clr-namespace:ndsSharp.Viewer.Plugins.BW2.FileViewers"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         Title="{Binding TitleString}" Width="540" Height="720" 
         Icon="{Binding IconSource}"
-        x:Class="ndsSharp.Viewer.Plugins.BW2.Windows.BW2TextViewer"
-        x:DataType="windows:BW2TextViewerModel">
+        x:Class="ndsSharp.Viewer.Plugins.BW2.FileViewers.BW2TextViewer"
+        x:DataType="fileViewers:BW2TextViewerModel">
     <Grid Margin="{ext:Space 1}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
