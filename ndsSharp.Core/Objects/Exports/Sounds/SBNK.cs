@@ -56,7 +56,7 @@ public class Instrument : BaseDeserializable
     
     public override void Deserialize(BaseReader reader)
     {
-        Type = reader.ReadEnum<InstrumentType, byte>();
+        Type = reader.ReadEnum<InstrumentType>();
         DataOffset = reader.Read<ushort>();
 
         reader.Position += 1;
@@ -89,7 +89,7 @@ public class SubInstrument : BaseDeserializable
     
     public override void Deserialize(BaseReader reader)
     {
-        Type = reader.ReadEnum<InstrumentType, byte>();
+        Type = reader.ReadEnum<InstrumentType>();
 
         reader.Position += 1;
         

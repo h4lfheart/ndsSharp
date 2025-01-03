@@ -1,9 +1,7 @@
-using System.Diagnostics;
 using System.Reflection;
 using ndsSharp.Core.Extensions;
 using ndsSharp.Core.Plugins;
 using ndsSharp.Core.Providers;
-using Serilog;
 
 namespace ndsSharp.Plugins;
 
@@ -15,7 +13,7 @@ public static class PluginExtensions
         foreach (var pluginType in pluginTypes)
         {
             if (Activator.CreateInstance(pluginType) is not BasePlugin pluginInstance) continue;
-            if (!pluginInstance.GameCodes.Contains(provider.Header.GameCode)) continue;
+            if (pluginInstance.GameCodes.Length > 0 && !pluginInstance.GameCodes.Contains(provider.Header.GameCode)) continue;
 
             pluginInstance.Provider = provider;
 

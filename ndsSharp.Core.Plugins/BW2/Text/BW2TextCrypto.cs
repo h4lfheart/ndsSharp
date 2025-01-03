@@ -1,15 +1,16 @@
 using System.Diagnostics;
 using System.Globalization;
+using ndsSharp.Core.Data;
+using ndsSharp.Plugins.BW2.Text.Tokens;
 
 namespace ndsSharp.Plugins.BW2.Text;
 
-public class BW2TextCryptoState
+public class BW2TextReader
 {
-    private ushort Key;
-    private int EntryIndex;
-    private bool AwaitingControlCode;
-
-    private static Dictionary<ushort, string> CharacterLUT = new()
+    private ushort _key;
+    private int _entryIndex;
+    
+    private static Dictionary<ushort, string> _characterLUT = new()
     {
         { 0xFFFF, "\0" },
         { 0xFFFE, "\n" },
@@ -19,72 +20,70 @@ public class BW2TextCryptoState
         { 0x2487, "Mn" }
     };
     
-    private const int STEP_KEY = 0x2983;
+    private const int StepKey = 0x2983;
 
-    public void BeginEntry()
+    public void BeginString()
     {
-        Key = (ushort)((EntryIndex + 3) * STEP_KEY);
+        _key = (ushort)((_entryIndex + 3) * StepKey);
     }
     
-    public void EndEntry()
+    public void EndString()
     {
-        EntryIndex++;
+        _entryIndex++;
     }
 
-    public string GetCharacter(ushort rawValue)
+    public List<BW2TextToken> GetTokens(BaseReader reader, int entrySize)
     {
-        var correctedValue = (ushort) (rawValue ^ Key);
-        StepCharacter();
+        var tokens = new List<BW2TextToken>();
 
-        if (AwaitingControlCode)
+        var characterCounter = 0;
+        while (characterCounter < entrySize)
         {
-            AwaitingControlCode = false;
+            ushort ReadCharacter()
+            {
+                var rawValue = reader.Read<ushort>();
             
-            // TODO create custom class for the character-by-character handling instead of putting this as text
-            var enumValue = (BW2ControlType) correctedValue;
-            return Enum.IsDefined(typeof(BW2ControlType), enumValue) ? $"<{enumValue}>" : "\0";
+                var value = (ushort) (rawValue ^ _key);
+                StepCharacter();
+                characterCounter++;
+
+                return value;
+            }
+            
+            var value = ReadCharacter();
+            
+            if (value == 0xF000) // variable identifier
+            {
+                var variableToken = new BW2VariableToken
+                {
+                    VariableType = (BW2VariableType) ReadCharacter()
+                };
+
+                var argumentCount = ReadCharacter();
+                for (var argumentIndex = 0; argumentIndex < argumentCount; argumentIndex++)
+                {
+                    variableToken.Arguments.Add(ReadCharacter());
+                }
+
+                tokens.Add(variableToken);
+            }
+            else
+            {
+                
+                var characterToken = new BW2CharacterToken
+                {
+                    Content = _characterLUT.TryGetValue(value, out var lutValue) ? lutValue : Convert.ToChar(value).ToString()
+                };
+                
+                tokens.Add(characterToken);
+            }
         }
 
-        if (correctedValue == 0xF000) // variable
-        {
-            AwaitingControlCode = true;
-            return "\0";
-        }
-        
-        if (CharacterLUT.TryGetValue(correctedValue, out var lutValue))
-        {
-            return lutValue;
-        }
-
-        var correctedCharacter = Convert.ToChar(correctedValue);
-        
-        return correctedCharacter.ToString();
+        return tokens;
     }
     
     private void StepCharacter()
     {
-        Key = (ushort)(((Key << 3) | (Key >> 13)) & 0xFFFF);
+        _key = (ushort)(((_key << 3) | (_key >> 13)) & 0xFFFF);
     }
-}
-
-public enum BW2ControlType : ushort
-{
-    // TODO add the rest of the control types!!
-    
-    SCROLL = 0xBE00,
-    CLEAR = 0xBE01,
-    WAIT = 0xBE02,
-    SPEED_UP = 0xBE09,
-    BLANK = 0xBDFF,
-    COLOR = 0xFF00,
-    
-    TRAINER_NAME = 0x0100,
-    POKEMON_NAME = 0x0101,
-    POKEMON_NICKNAME = 0x0102,
-    TYPE = 0x0103,
-    LOCATION = 0x0105,
-    ABILITY = 0x0106,
-    MOVE = 0x0107,
-    ITEM1 = 0x0108,
-    ITEM2 = 0x0109,
 }

@@ -161,7 +161,7 @@ public class MDLModel : DeserializableWithName
             var commandEnd = reader.Position + polygon.CommandLength;
             while (reader.Position < commandEnd)
             {
-                var opCodes = reader.ReadArray(4, reader.ReadEnum<PolygonCommandOpCode, byte>);
+                var opCodes = reader.ReadArray(4, reader.ReadEnum<PolygonCommandOpCode>);
                 foreach (var opCode in opCodes)
                 {
                     var command = reader.ReadObject<MDLPolygonCommand>(dataModifier: polygonCommand => polygonCommand.OpCode = opCode);

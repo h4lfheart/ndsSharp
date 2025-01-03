@@ -16,7 +16,7 @@ public class MDLPolygon : DeserializableWithName
     {
         Tag = reader.Read<ushort>();
         Length = reader.Read<ushort>();
-        Flag = reader.ReadEnum<PolygonFlag, uint>();
+        Flag = reader.ReadEnum<PolygonFlag>();
         CommandOffset = reader.Read<uint>();
         CommandLength = reader.Read<uint>();
     }

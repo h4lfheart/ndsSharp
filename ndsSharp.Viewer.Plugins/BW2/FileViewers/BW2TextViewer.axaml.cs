@@ -26,7 +26,7 @@ public partial class BW2TextViewerModel : BaseFileViewerModel<BW2Text>
 
     public override void Load(BW2Text obj)
     {
-        TextEntries = new ObservableCollection<string>(obj.TextEntries);
+        TextEntries = new ObservableCollection<string>(obj.TextEntries.Select(x => x.ToString()));
     }
 
     [RelayCommand]

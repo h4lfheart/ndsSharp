@@ -1,8 +1,8 @@
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using GenericReader;
 using ndsSharp.Core.Extensions;
-using ndsSharp.Core.Objects;
-using ndsSharp.Core.Objects.Exports;
 
 namespace ndsSharp.Core.Data;
 
@@ -48,6 +48,19 @@ public class BaseReader : GenericBufferReader
 
     public BaseReader(Memory<byte> memory) : base(memory)
     {
+    }
+    
+    public unsafe object Read(Type type)
+    {
+        var size = Marshal.SizeOf(type);
+        var memory = ReadMemory(size);
+
+        ref var spanRef = ref MemoryMarshal.GetReference(memory.Span);
+        var ptr = (IntPtr) Unsafe.AsPointer(ref Unsafe.Add(ref spanRef, Position));
+        
+        var result = Marshal.PtrToStructure(ptr, type)!;
+        Position += size;
+        return result;
     }
     
     public BaseReader Spliced(int? position = null, int? length = null)
@@ -112,10 +125,11 @@ public class BaseReader : GenericBufferReader
         return ReadString(length, unicode);
     }
     
-    // todo infer primitive type from underlying type
-    public TEnumType ReadEnum<TEnumType, TPrimitiveType>() where TEnumType : Enum where TPrimitiveType : unmanaged
+    public T ReadEnum<T>() where T : Enum
     {
-        return (TEnumType) (object) Read<TPrimitiveType>();
+        var enumType = typeof(T);
+        var primitiveType = enumType.GetEnumUnderlyingType();
+        return (T) Read(primitiveType);
     }
     
     public T Peek<T>(Func<T> func)
@@ -151,6 +165,6 @@ public class BaseReader : GenericBufferReader
     }
     
     
-    public float ReadIntAsFloat() => FloatExtensions.ToFloat(Read<int>(), 1, 19, 12);
+    public float ReadIntAsFloat() => Read<int>().ToFloat(1, 19, 12);
     public float ReadShortAsFloat() => FloatExtensions.ToFloat(Read<ushort>(), 1, 3, 12);
 }

@@ -34,7 +34,7 @@ public class STRM : RecordObject<StreamSoundInfo>
         {
             base.Deserialize(reader);
             
-            Type = reader.ReadEnum<WaveType, byte>();
+            Type = reader.ReadEnum<WaveType>();
             Looping = reader.Read<byte>() == 1;
             NumChannels = reader.Read<ushort>();
             SampleRate = reader.Read<ushort>();

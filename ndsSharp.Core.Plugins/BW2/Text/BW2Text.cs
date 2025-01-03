@@ -7,7 +7,7 @@ namespace ndsSharp.Plugins.BW2.Text;
 
 public class BW2Text : BaseDeserializable
 {
-    public List<string> TextEntries = [];
+    public List<BW2TextString> TextEntries = [];
     
     public override void Deserialize(BaseReader reader)
     {
@@ -23,29 +23,26 @@ public class BW2Text : BaseDeserializable
             
             var sectionSize = reader.Read<uint>();
 
-            var cryptoState = new BW2TextCryptoState();
+            var textReader = new BW2TextReader();
             for (var entryIndex = 0; entryIndex < entryCount; entryIndex++)
             {
                 var entryOffset = reader.Read<uint>();
                 var entrySize = reader.Read<ushort>();
                 reader.Position += sizeof(ushort); // unknown
                 
-                cryptoState.BeginEntry();
+                var textString = new BW2TextString();
+                textReader.BeginString();
                 
                 reader.Peek(() =>
                 {
                     reader.Position = (int) (entryOffset + sectionOffset);
 
-                    var entryBuilder = new StringBuilder();
-                    for (var charIndex = 0; charIndex < entrySize; charIndex++)
-                    {
-                        entryBuilder.Append(cryptoState.GetCharacter(reader.Read<ushort>()));
-                    }
-                    
-                    TextEntries.Add(entryBuilder.ToString());
+                    textString.Tokens = textReader.GetTokens(reader, entrySize);
                 });
                 
-                cryptoState.EndEntry();
+                textReader.EndString();
+                
+                TextEntries.Add(textString);
             }
         }
     }

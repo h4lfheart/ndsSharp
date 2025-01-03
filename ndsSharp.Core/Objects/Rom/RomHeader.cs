@@ -42,7 +42,7 @@ public class RomHeader
         Title = reader.ReadString(12);
         GameCode = reader.ReadString(4);
         MakerCode = reader.ReadString(2);
-        UnitCode = reader.ReadEnum<UnitCode, byte>();
+        UnitCode = reader.ReadEnum<UnitCode>();
         EncryptionSeedSelect = reader.Read<byte>();
 
         var deviceCapacity = reader.Read<byte>();

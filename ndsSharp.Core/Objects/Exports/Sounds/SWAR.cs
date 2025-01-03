@@ -57,7 +57,7 @@ public class SWAVInfo : BaseDeserializable
     
     public override void Deserialize(BaseReader reader)
     {
-        WaveType = reader.ReadEnum<WaveType, byte>();
+        WaveType = reader.ReadEnum<WaveType>();
         Loop = reader.Read<byte>() == 1;
         SampleRate = reader.Read<ushort>();
         Time = reader.Read<ushort>();

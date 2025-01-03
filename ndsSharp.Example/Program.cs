@@ -14,9 +14,3 @@ provider.UnpackNARCFiles = true;
 provider.UnpackSDATFiles = true;
 provider.Initialize();
 provider.LoadPlugins();
-
-var textureFile = provider.LoadObject<BTX>("a/0/1/4/0.btx");
-foreach (var image in textureFile.TextureData.Textures)
-{
-    image.ToImage().SaveAsPng("");
-}
