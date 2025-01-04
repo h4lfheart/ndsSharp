@@ -11,9 +11,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Material.Icons" Version="2.1.10" />
-        <PackageReference Include="Material.Icons.Avalonia" Version="2.1.10" />
-        <PackageReference Include="NAudio" Version="2.2.1" />
         <PackageReference Include="ReactiveUI" Version="20.1.63" />
     </ItemGroup>
 

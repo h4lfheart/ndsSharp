@@ -54,11 +54,9 @@ public class BaseReader : GenericBufferReader
     {
         var size = Marshal.SizeOf(type);
         var memory = ReadMemory(size);
+        var memoryHandle = memory.Pin();
 
-        ref var spanRef = ref MemoryMarshal.GetReference(memory.Span);
-        var ptr = (IntPtr) Unsafe.AsPointer(ref Unsafe.Add(ref spanRef, Position));
-        
-        var result = Marshal.PtrToStructure(ptr, type)!;
+        var result = Marshal.PtrToStructure(new IntPtr(memoryHandle.Pointer), type)!;
         Position += size;
         return result;
     }

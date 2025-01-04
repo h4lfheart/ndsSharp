@@ -8,6 +8,7 @@ namespace ndsSharp.Viewer.Shared.Plugins;
 
 public abstract partial class BaseFileViewerModel<T> : BaseFileViewerModel where T : BaseDeserializable
 {
+    
     public virtual void Load(T obj)
     {
         

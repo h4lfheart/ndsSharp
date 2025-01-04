@@ -8,7 +8,11 @@ using Avalonia.Input.Platform;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using FluentAvalonia.UI.Controls;
+using ndsSharp.Viewer.Models.App;
+using ndsSharp.Viewer.Shared.Extensions;
+using ndsSharp.Viewer.Shared.Framework;
 using ndsSharp.Viewer.Shared.Services;
+using ndsSharp.Viewer.WindowModels;
 using ndsSharp.Viewer.Windows;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -20,6 +24,8 @@ public static class ApplicationService
     public static IClassicDesktopStyleApplicationLifetime Application = null!;
     private static IStorageProvider StorageProvider => Application.MainWindow!.StorageProvider;
     public static IClipboard Clipboard => Application.MainWindow!.Clipboard!;
+
+    public static MainWindowModel MainWM => ViewModelRegistry.Get<MainWindowModel>()!;
 
     public static void Initialize()
     {

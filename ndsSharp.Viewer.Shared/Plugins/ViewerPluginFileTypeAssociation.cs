@@ -3,8 +3,20 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ndsSharp.Viewer.Shared.Plugins;
 
-public partial class ViewerPluginFileTypeAssociation(string extension, Type previewWindowType) : ObservableObject
+public partial class ViewerPluginFileTypeAssociation : ObservableObject
 {
-    [ObservableProperty] private string _extension = extension;
-    [ObservableProperty] private Type _previewWindowType = previewWindowType;
+    [ObservableProperty] private string[] _extensions;
+    [ObservableProperty] private Type _previewWindowType;
+
+    public ViewerPluginFileTypeAssociation(string extension, Type previewWindowType)
+    {
+        Extensions = [extension];
+        PreviewWindowType = previewWindowType;
+    }
+    
+    public ViewerPluginFileTypeAssociation(string[] extensions, Type previewWindowType)
+    {
+        Extensions = extensions;
+        PreviewWindowType = previewWindowType;
+    }
 }

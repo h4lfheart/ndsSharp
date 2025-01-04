@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using FluentAvalonia.Core;
+using FluentAvalonia.UI.Controls;
 using ndsSharp.Core.Conversion.Models;
 using ndsSharp.Core.Conversion.Models.Processing;
 using ndsSharp.Core.Conversion.Textures.Images;
@@ -22,6 +23,7 @@ using ndsSharp.Core.Plugins;
 using ndsSharp.Core.Providers;
 using ndsSharp.Plugins;
 using ndsSharp.Viewer.Models;
+using ndsSharp.Viewer.Models.App;
 using ndsSharp.Viewer.Models.Files;
 using ndsSharp.Viewer.Services;
 using ndsSharp.Viewer.Shared.Extensions;
@@ -65,6 +67,9 @@ public partial class MainWindowModel : WindowModelBase
 
     [ObservableProperty] private ObservableCollection<ViewerPluginWindowEntry> _pluginWindows = [];
     [ObservableProperty] private ObservableCollection<ViewerPluginFileTypeAssociation> _pluginFileTypeAssociations = [];
+    
+    [ObservableProperty] private ObservableCollection<InfoBarData> _infoBars = [];
+    [ObservableProperty] private ObservableCollection<string> _tests = [];
     
     public readonly SourceCache<FlatItem, string> FlatViewAssetList = new(item => item.Path);
     
@@ -120,7 +125,7 @@ public partial class MainWindowModel : WindowModelBase
             }
             default:
             {
-                Dialog("Unsupported Previewer", $"Files with the extension \"{targetFile.Type}\" cannot be exported.");
+                Message("Unsupported Exporter", $"Files with the extension \"{targetFile.Type}\" cannot be exported.");
                 
                 break;
             }
@@ -133,63 +138,29 @@ public partial class MainWindowModel : WindowModelBase
         var targetItem = SelectedFlatViewItems.FirstOrDefault();
         if (targetItem is null) return;
 
+        // i dont like this but it gets the job done
+        
+        var foundFileType = false;
         var targetFile = Provider.Files[targetItem.Path];
-        switch (targetFile.Type)
+        foreach (var fileTypeAssociation in PluginFileTypeAssociations)
         {
-            case "btx":
-            case "nsbtx":
-            {
-                var btx = Provider.LoadObject<BTX>(targetFile);
-                BTXWindow.Create(btx);
-                break;
-            }
-            case "bmd":
-            case "nsbmd":
-            {
-                var bmd = Provider.LoadObject<BMD>(targetFile);
-                BMDWindow.Create(bmd);
-                break;
-            }
-            case "strm":
-            {
-                var strm = Provider.LoadObject<STRM>(targetFile);
-                STRMWindow.Create(strm);
-                break;
-            }
-            case "swar":
-            {
-                var swar = Provider.LoadObject<SWAR>(targetFile);
-                SWARWindow.Create(swar);
-                break;
-            }
-            default:
-            {
-                var foundFileType = false;
-                foreach (var fileTypeAssociation in PluginFileTypeAssociations)
-                {
-                    if (targetFile.Type != fileTypeAssociation.Extension) continue;
-                    if (Activator.CreateInstance(fileTypeAssociation.PreviewWindowType) is not WindowBase fileViewer) continue;
+            if (fileTypeAssociation.Extensions.All(extension => !targetFile.Type.Equals(extension, StringComparison.OrdinalIgnoreCase))) continue;
                     
-                    if (fileViewer.DataContext is not BaseFileViewerModel viewerModel) continue;
-                    if (viewerModel.GetType().BaseType?.GenericTypeArguments.FirstOrDefault() is not { } assetType) continue;
-                    
-                    fileViewer.Show();
-                    fileViewer.BringToTop();
-                    
-                    var asset = Provider.LoadObject(targetFile, assetType);
-                    viewerModel.Load(asset);
-                    
-                    foundFileType = true;
-                    break;
-                }
+            if (fileTypeAssociation.PreviewWindowType.BaseType?.GenericTypeArguments.FirstOrDefault() is not { } viewerModelType) continue;
+            if (viewerModelType.BaseType?.GenericTypeArguments.FirstOrDefault() is not { } assetType) continue;
 
-                if (!foundFileType)
-                {
-                    Dialog("Unsupported Previewer", $"Files with the extension \"{targetFile.Type}\" cannot be previewed.");
-                }
-                
-                break;
-            }
+            var asset = Provider.LoadObject(targetFile, assetType);
+            var loadMethod = fileTypeAssociation.PreviewWindowType.GetMethod("Load", 
+                BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            loadMethod?.Invoke(null, [fileTypeAssociation.PreviewWindowType, asset]);
+                    
+            foundFileType = true;
+            break;
+        }
+
+        if (!foundFileType)
+        {
+            Message("Unsupported Previewer", $"Files with the extension \"{targetFile.Type}\" cannot be previewed.");
         }
     }
 
@@ -231,11 +202,13 @@ public partial class MainWindowModel : WindowModelBase
         foreach (var pluginType in pluginTypes)
         {
             if (Activator.CreateInstance(pluginType) is not BaseViewerPlugin pluginInstance) continue;
-            if (pluginType.BaseType?.GenericTypeArguments.FirstOrDefault() is not { } corePluginType) continue;
-            if (Provider.GetPluginInterface(corePluginType) is not { } corePlugin) continue;
+            if (pluginType.BaseType?.GenericTypeArguments.FirstOrDefault() is { } corePluginType)
+            {
+                if (Provider.GetPluginInterface(corePluginType) is not { } corePlugin) continue;
 
-            var corePluginField = pluginType.GetField("PluginInterface");
-            corePluginField?.SetValue(pluginInstance, corePlugin);
+                var corePluginField = pluginType.GetField("PluginInterface");
+                corePluginField?.SetValue(pluginInstance, corePlugin);
+            }
             
             PluginWindows.AddRange(pluginInstance.PluginWindows);
             PluginFileTypeAssociations.AddRange(pluginInstance.FileTypeAssociations);
@@ -348,6 +321,39 @@ public partial class MainWindowModel : WindowModelBase
     private Func<FlatItem, bool> CreateAssetFilter(string filter)
     {
         return asset => MiscExtensions.Filter(asset.Path, filter);
+    }
+    
+    public void Message(string title, string message, InfoBarSeverity severity = InfoBarSeverity.Informational, bool autoClose = true, string id = "", float closeTime = 3f, bool useButton = false, string buttonTitle = "", Action? buttonCommand = null)
+    {
+        Message(new InfoBarData(title, message, severity, autoClose, id, closeTime, useButton, buttonTitle, buttonCommand));
+    }
+
+    public void Message(InfoBarData data)
+    {
+        if (!string.IsNullOrEmpty(data.Id))
+            InfoBars.RemoveAll(bar => bar.Id.Equals(data.Id));
+        
+        InfoBars.Add(data);
+        if (!data.AutoClose) return;
+        
+        TaskService.Run(async () =>
+        {
+            await Task.Delay((int) (data.CloseTime * 1000));
+            InfoBars.Remove(data);
+        });
+    }
+    
+    public void UpdateMessage(string id, string message)
+    {
+        var foundInfoBar = InfoBars.FirstOrDefault(infoBar => infoBar.Id == id);
+        if (foundInfoBar is null) return;
+        
+        foundInfoBar.Message = message;
+    }
+    
+    public void CloseMessage(string id)
+    {
+        InfoBars.RemoveAll(info => info.Id == id);
     }
     
 }

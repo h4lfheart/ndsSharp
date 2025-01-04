@@ -9,7 +9,7 @@ namespace ndsSharp.Viewer.Shared.Plugins;
 
 public class BaseViewerPlugin<T> : BaseViewerPlugin where T : BasePlugin
 {
-    public T PluginInterface;
+    public T CorePluginInterface;
 }
 
 public partial class BaseViewerPlugin : ObservableObject

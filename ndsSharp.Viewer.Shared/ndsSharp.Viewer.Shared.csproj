@@ -19,6 +19,9 @@
         <PackageReference Include="DynamicData" Version="9.0.4" />
         <PackageReference Include="OpenTK" Version="5.0.0-pre.10" />
         <PackageReference Include="FluentAvalonia.ProgressRing" Version="1.69.2" />
+        <PackageReference Include="Material.Icons" Version="2.1.10" />
+        <PackageReference Include="Material.Icons.Avalonia" Version="2.1.10" />
+        <PackageReference Include="NAudio" Version="2.2.1" />
     </ItemGroup>
     
     <ItemGroup>

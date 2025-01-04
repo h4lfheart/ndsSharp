@@ -1,21 +1,51 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Material.Icons;
 using NAudio.Wave;
 using ndsSharp.Core.Conversion.Sounds.Formats;
 using ndsSharp.Core.Conversion.Sounds.Stream;
+using ndsSharp.Core.Conversion.Textures.Images;
 using ndsSharp.Core.Objects.Exports.Sounds;
-using ndsSharp.Viewer.Services;
-using ndsSharp.Viewer.Shared.Framework;
+using ndsSharp.Viewer.Shared.Extensions;
+using ndsSharp.Viewer.Shared.Plugins;
 using ndsSharp.Viewer.Shared.Services;
+using ImageExtensions = ndsSharp.Core.Conversion.Textures.Images.ImageExtensions;
 
-namespace ndsSharp.Viewer.WindowModels;
+namespace ndsSharp.Viewer.Plugins.Sound.FileViewers;
 
-public partial class STRMWindowModel : WindowModelBase
+public partial class STRMViewer : BaseFileViewer<STRMViewerModel>
 {
+    public override bool OnlyOneWindow => true;
+
+    public STRMViewer()
+    {
+        InitializeComponent();
+        DataContext = WindowModel;
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        base.OnClosed(e);
+        
+        WindowModel.OutputDevice.Stop();
+    }
+
+    private void OnSliderValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        if (sender is not Slider slider) return;
+        WindowModel.Scrub(TimeSpan.FromSeconds(slider.Value));
+    }
+}
+
+public partial class STRMViewerModel : BaseFileViewerModel<STRM>
+{
+    public override string Title => "STRM Viewer";
+    
     [ObservableProperty] private TimeSpan _currentTime;
     [ObservableProperty] private TimeSpan _totalTime;
     
@@ -39,16 +69,16 @@ public partial class STRMWindowModel : WindowModelBase
         UpdateTimer.Interval = TimeSpan.FromMilliseconds(1);
         UpdateTimer.Start();
     }
-    
-    public void LoadSTRM(STRM strm)
-    {
-        TitleString = $"STRM Viewer - {strm.Owner!.Path}";
 
-        StreamWave = strm.ToWave();
+    public override void Load(STRM obj)
+    {
+        base.Load(obj);
+        
+        StreamWave = obj.ToWave();
         
         TaskService.Run(Play);
     }
-
+    
     private void OnUpdateTimerTick(object? sender, EventArgs e)
     {
         if (AudioReader is null) return;

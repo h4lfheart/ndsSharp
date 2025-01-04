@@ -39,11 +39,11 @@ public partial class BW2TextViewerModel : BaseFileViewerModel<BW2Text>
 
         SetText(0);
     }
-
-    public void SetText(int index)
+    
+    [RelayCommand]
+    public void Copy()
     {
-        TextEntries = new ObservableCollection<string>(_sections[index].Strings.Select(str => str.ToString()));
-        CurrentEntryIndex = 0;
+        ApplicationExtensions.CopyToClipboard(TextEntries[CurrentEntryIndex]);
     }
     
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -59,10 +59,10 @@ public partial class BW2TextViewerModel : BaseFileViewerModel<BW2Text>
             }
         }
     }
-
-    [RelayCommand]
-    public void Copy()
+    
+    private void SetText(int index)
     {
-        ApplicationExtensions.CopyToClipboard(TextEntries[CurrentEntryIndex]);
+        TextEntries = new ObservableCollection<string>(_sections[index].Strings.Select(str => str.ToString()));
+        CurrentEntryIndex = 0;
     }
 }

@@ -1,31 +1,67 @@
-using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
-using System.Threading.Tasks;
+using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Material.Icons;
 using NAudio.Wave;
 using ndsSharp.Core.Conversion.Sounds.Formats;
+using ndsSharp.Core.Conversion.Sounds.Stream;
 using ndsSharp.Core.Conversion.Sounds.WaveArchive;
+using ndsSharp.Core.Conversion.Textures.Images;
 using ndsSharp.Core.Objects.Exports.Sounds;
-using ndsSharp.Viewer.Services;
-using ndsSharp.Viewer.Shared.Framework;
+using ndsSharp.Viewer.Shared.Extensions;
+using ndsSharp.Viewer.Shared.Plugins;
 using ndsSharp.Viewer.Shared.Services;
+using ImageExtensions = ndsSharp.Core.Conversion.Textures.Images.ImageExtensions;
 
-namespace ndsSharp.Viewer.WindowModels;
+namespace ndsSharp.Viewer.Plugins.Sound.FileViewers;
 
-public partial class SWARWindowModel : WindowModelBase
+public partial class SWARViewer : BaseFileViewer<SWARViewerModel>
 {
+    public override bool OnlyOneWindow => true;
+
+    public SWARViewer()
+    {
+        InitializeComponent();
+        DataContext = WindowModel;
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        base.OnClosed(e);
+        
+        WindowModel.OutputDevice.Stop();
+    }
+
+    private void OnSliderValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
+    {
+        if (sender is not Slider slider) return;
+        
+        if (Math.Abs(slider.Value - WindowModel.AudioReader.CurrentTime.TotalSeconds) < 0.1f)
+        {
+            return;
+        }
+        
+        WindowModel.Scrub(TimeSpan.FromSeconds(slider.Value));
+    }
+}
+
+public partial class SWARViewerModel : BaseFileViewerModel<SWAR>
+{
+    public override string Title => "SWAR Viewer";
+    
     [ObservableProperty] private TimeSpan _currentTime;
     [ObservableProperty] private TimeSpan _totalTime;
     
     [ObservableProperty, NotifyPropertyChangedFor(nameof(PauseIcon))] private bool _isPaused;
     public MaterialIconKind PauseIcon => IsPaused ? MaterialIconKind.Play : MaterialIconKind.Pause;
     
-    [ObservableProperty] private int _maximumWaveIndex;
     [ObservableProperty] private int _currentWaveIndex = 0;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(MaximumWaveIndex))] private ObservableCollection<Wave> _waves = [];
+    public int MaximumWaveIndex => Waves.Count - 1;
 
     public WaveFileReader AudioReader;
 
@@ -34,7 +70,6 @@ public partial class SWARWindowModel : WindowModelBase
         DesiredLatency = 250
     };
 
-    public List<Wave> Waves = [];
     
     private readonly DispatcherTimer UpdateTimer = new();
 
@@ -44,14 +79,12 @@ public partial class SWARWindowModel : WindowModelBase
         UpdateTimer.Interval = TimeSpan.FromMilliseconds(1);
         UpdateTimer.Start();
     }
-    
-    public void LoadSWAR(SWAR swar)
-    {
-        TitleString = $"SWAR Viewer - {swar.Owner!.Path}";
 
-        Waves = swar.ExtractWaves();
-        MaximumWaveIndex = Waves.Count - 1;
-        CurrentWaveIndex = 0;
+    public override void Load(SWAR obj)
+    {
+        base.Load(obj);
+        
+        Waves = new ObservableCollection<Wave>(obj.ExtractWaves());
         TaskService.Run(Play);
     }
 
@@ -75,27 +108,37 @@ public partial class SWARWindowModel : WindowModelBase
         
         TotalTime = AudioReader.TotalTime;
         CurrentTime = AudioReader.CurrentTime;
+
+        if (Math.Abs(TotalTime.TotalSeconds - CurrentTime.TotalSeconds) < 0.01f)
+        {
+            TogglePause(true);
+        }
     }
 
     public async Task Play()
     {
-        if (AudioReader is not null && Math.Abs(AudioReader.TotalTime.TotalSeconds - AudioReader.CurrentTime.TotalSeconds) < 0.1f)
+        if (AudioReader is not null)
         {
             AudioReader.CurrentTime = TimeSpan.Zero;
         }
         
         var stream = new MemoryStream(Waves[CurrentWaveIndex].GetBuffer());
         AudioReader = new WaveFileReader(stream);
-        
         OutputDevice.Stop();
         OutputDevice.Init(AudioReader);
-        OutputDevice.Play();
+        AudioReader.CurrentTime = TimeSpan.Zero;
+        TogglePause(false);
         while (OutputDevice.PlaybackState != PlaybackState.Stopped) { }
     }
 
     public void TogglePause()
     {
-        IsPaused = !IsPaused;
+        TogglePause(!IsPaused);
+    }
+    
+    public void TogglePause(bool isPaused)
+    {
+        IsPaused = isPaused;
         
         if (IsPaused)
         {
@@ -103,7 +146,7 @@ public partial class SWARWindowModel : WindowModelBase
         }
         else
         {
-            if (AudioReader is not null && Math.Abs(AudioReader.TotalTime.TotalSeconds - AudioReader.CurrentTime.TotalSeconds) < 0.1f)
+            if (AudioReader is not null && Math.Abs(AudioReader.TotalTime.TotalSeconds - AudioReader.CurrentTime.TotalSeconds) < 0.01f)
             {
                 AudioReader.CurrentTime = TimeSpan.Zero;
             }
