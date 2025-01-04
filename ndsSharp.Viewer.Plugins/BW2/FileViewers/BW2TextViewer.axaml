@@ -5,24 +5,44 @@
         xmlns:windows="clr-namespace:ndsSharp.Viewer.Plugins.BW2.Windows"
         xmlns:ext="clr-namespace:ndsSharp.Viewer.Shared.Extensions;assembly=ndsSharp.Viewer.Shared"
         xmlns:fileViewers="clr-namespace:ndsSharp.Viewer.Plugins.BW2.FileViewers"
+        xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         Title="{Binding TitleString}" Width="540" Height="720" 
         Icon="{Binding IconSource}"
         x:Class="ndsSharp.Viewer.Plugins.BW2.FileViewers.BW2TextViewer"
         x:DataType="fileViewers:BW2TextViewerModel">
-    <Grid Margin="{ext:Space 1}">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="{ext:Space 1}"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{ext:Space 1}"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <ListBox Grid.Row="0" ItemsSource="{Binding TextEntries}"
-                 SelectedItem="{Binding CurrentEntry, Mode=TwoWay}" SelectedIndex="0"
-                 HorizontalAlignment="Stretch" Margin="{ext:Space 1}">
+        <Grid Grid.Row="0" HorizontalAlignment="Stretch" Margin="{ext:Space 0, 1, 0, 0}">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Section Index" Classes="BodyStrongTextBlockStyle" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="{ext:Space 0, 0, 1, 0}"/>
+                <ui:NumberBox Value="{Binding CurrentSectionIndex}" 
+                              Minimum="0" Maximum="{Binding MaximumSectionIndex}"
+                              SpinButtonPlacementMode="Inline"/>
+            </StackPanel>
             
-        </ListBox>
+        </Grid>
         
-        <Button Grid.Row="2" Content="Copy" HorizontalAlignment="Stretch" Command="{Binding CopyCommand}"/>
+        <Separator Grid.Row="1" Margin="{ext:Space 0, 1, 0, 0}"/>
+        
+        <Grid Grid.Row="2" Margin="{ext:Space 1}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="{ext:Space 1}"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+        
+            <ListBox Grid.Row="0" ItemsSource="{Binding TextEntries}" SelectedIndex="{Binding CurrentEntryIndex, Mode=TwoWay}"
+                     HorizontalAlignment="Stretch" Margin="{ext:Space 1}">
+            
+            </ListBox>
+        
+            <Button Grid.Row="2" Content="Copy" HorizontalAlignment="Stretch" Command="{Binding CopyCommand}"/>
+        </Grid>
     </Grid>
 </Window>

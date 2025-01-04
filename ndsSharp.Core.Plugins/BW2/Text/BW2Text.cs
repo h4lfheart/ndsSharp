@@ -7,7 +7,7 @@ namespace ndsSharp.Plugins.BW2.Text;
 
 public class BW2Text : BaseDeserializable
 {
-    public List<BW2TextString> TextEntries = [];
+    public List<BW2TextSection> Sections = [];
     
     public override void Deserialize(BaseReader reader)
     {
@@ -24,6 +24,7 @@ public class BW2Text : BaseDeserializable
             var sectionSize = reader.Read<uint>();
 
             var textReader = new BW2TextReader();
+            var section = new BW2TextSection();
             for (var entryIndex = 0; entryIndex < entryCount; entryIndex++)
             {
                 var entryOffset = reader.Read<uint>();
@@ -42,8 +43,15 @@ public class BW2Text : BaseDeserializable
                 
                 textReader.EndString();
                 
-                TextEntries.Add(textString);
+                section.Strings.Add(textString);
             }
+            
+            Sections.Add(section);
         }
     }
+}
+
+public class BW2TextSection 
+{
+    public List<BW2TextString> Strings = [];
 }
