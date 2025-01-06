@@ -12,6 +12,8 @@ using ndsSharp.Viewer.Models.App;
 using ndsSharp.Viewer.Shared.Extensions;
 using ndsSharp.Viewer.Shared.Framework;
 using ndsSharp.Viewer.Shared.Services;
+using ndsSharp.Viewer.ViewModels;
+using ndsSharp.Viewer.Views;
 using ndsSharp.Viewer.WindowModels;
 using ndsSharp.Viewer.Windows;
 using Serilog;
@@ -26,6 +28,8 @@ public static class ApplicationService
     public static IClipboard Clipboard => Application.MainWindow!.Clipboard!;
 
     public static MainWindowModel MainWM => ViewModelRegistry.Get<MainWindowModel>()!;
+    public static FilesViewModel FilesVM => ViewModelRegistry.Get<FilesViewModel>()!;
+    public static PluginsViewModel PluginsVM => ViewModelRegistry.Get<PluginsViewModel>()!;
 
     public static void Initialize()
     {
@@ -44,6 +48,8 @@ public static class ApplicationService
         };
         
         TaskService.Exception += HandleException;
+
+        ViewModelRegistry.New<PluginsViewModel>();
     }
     
     public static void HandleException(Exception e)

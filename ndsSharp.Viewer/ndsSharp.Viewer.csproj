@@ -24,4 +24,17 @@
         <ProjectReference Include="..\ndsSharp.Viewer.Shared\ndsSharp.Viewer.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="FluentAvalonia">
+        <HintPath>..\..\..\.nuget\packages\fluentavaloniaui\2.0.5\lib\net6.0\FluentAvalonia.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\PluginsView.axaml.cs">
+        <DependentUpon>Plugins.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
 </Project>

@@ -140,14 +140,14 @@ public class NdsFileProvider : IFileProvider
         }
     }
     
-    public T GetPluginInterface<T>() where T : BasePlugin
+    public T? GetPluginInterface<T>() where T : BasePlugin
     {
-        return (T) Plugins[typeof(T)];
+        return (T?) GetPluginInterface(typeof(T));
     }
     
-    public BasePlugin GetPluginInterface(Type type)
+    public BasePlugin? GetPluginInterface(Type type)
     {
-        return Plugins[type];
+        return Plugins.GetValueOrDefault(type);
     }
     
     public IEnumerable<RomFile> GetAllFilesOfType<T>() where T : NdsObject, new()

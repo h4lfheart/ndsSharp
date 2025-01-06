@@ -1,5 +1,4 @@
-﻿using ndsSharp.Core.Objects.Exports.Meshes;
-using ndsSharp.Core.Providers;
+﻿using ndsSharp.Core.Providers;
 using ndsSharp.Plugins;
 using Serilog;
 
@@ -15,5 +14,3 @@ var provider = new NdsFileProvider("C:/b2.nds")
 
 provider.Initialize();
 provider.LoadPlugins();
-
-var bmd = provider.LoadObject<BMD>("a/0/1/1/0.bmd");

@@ -8,6 +8,6 @@ public class G3DViewerPlugin : BaseViewerPlugin
     public override List<ViewerPluginFileTypeAssociation> FileTypeAssociations { get; } =
     [
         new(["bmd", "nsbmd"], typeof(BMDViewer)),
-        new(["btx", "nsbtx"], typeof(BMDViewer))
+        new(["btx", "nsbtx"], typeof(BTXViewer))
     ];
 }

@@ -9,7 +9,7 @@ public class BW2ViewerPlugin : BaseViewerPlugin<BW2Plugin>
 {
     public override List<ViewerPluginWindowEntry> PluginWindows { get; } = 
     [
-        new("Matrix Viewer", typeof(BW2MatrixWindow))
+        new("Matrix Viewer", "Window to preview the map matrices from the game.", typeof(BW2MatrixWindow))
     ];
 
     public override List<ViewerPluginFileTypeAssociation> FileTypeAssociations { get; } =

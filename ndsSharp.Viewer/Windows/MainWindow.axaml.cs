@@ -1,68 +1,62 @@
+using System;
 using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using FluentAvalonia.UI.Controls;
 using ndsSharp.Viewer.Models;
 using ndsSharp.Viewer.Models.Files;
 using ndsSharp.Viewer.Shared.Framework;
+using ndsSharp.Viewer.Views;
 using ndsSharp.Viewer.WindowModels;
 
 namespace ndsSharp.Viewer.Windows;
 
 public partial class MainWindow : WindowBase<MainWindowModel>
 {
-    public MainWindowModel WindowModel;
-    
     public MainWindow()
     {
         InitializeComponent();
-
-        WindowModel = new MainWindowModel();
         DataContext = WindowModel;
-    }
-
-    private void OnSearchKeyDown(object? sender, KeyEventArgs e)
-    {
-        if (e.Key != Key.Enter) return;
-        if (sender is not TextBox textBox) return;
-
-        WindowModel.SearchFilter = textBox.Text ?? string.Empty;
-    }
-
-    private void OnFlatItemDoubleTapped(object? sender, TappedEventArgs e)
-    { 
-        if (sender is not ListBox listBox) return;
-        if (listBox.SelectedItem is not FlatItem item) return;
         
-        WindowModel.TreeViewJumpTo(item.Path);
+        WindowModel.ContentFrame = ContentFrame;
+        WindowModel.NavigationView = NavigationView;
+        WindowModel.Navigate<FilesView>();
     }
-
-    private void OnTreeItemTapped(object? sender, TappedEventArgs e)
-    {
-        if (sender is not TreeView treeView) return;
-        if (treeView.SelectedItem is not TreeItem item) return;
-        if (string.IsNullOrWhiteSpace(item.FilePath))
-        {
-            item.Expanded = !item.Expanded;
-            return;
-        }
-        
-        WindowModel.SearchFilter = string.Empty;
-        WindowModel.FlatViewJumpTo(item.FilePath);
-    }
-
     
-    private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    private void OnPointerPressedUpperBar(object? sender, PointerPressedEventArgs e)
     {
-        var targetItem = Enumerable.FirstOrDefault<FlatItem>(WindowModel.SelectedFlatViewItems);
-        if (targetItem is null) return;
-
-        var targetFile = WindowModel.Provider.Files[targetItem.Path];
-        WindowModel.Properties = new PropertiesData
+        BeginMoveDrag(e);
+    }
+    
+    private async void OnItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)
+    {
+        var tag = e.InvokedItemContainer.Tag;
+        switch (tag)
         {
-            Name = targetFile.Name[..targetFile.Name.IndexOf('.')],
-            Type = targetFile.Type,
-            Offset = targetFile.Pointer.Offset,
-            Length = targetFile.Pointer.Length
-        };
+            case "OpenROM":
+            {
+                if (await BrowseFileDialog(fileTypes: Globals.RomFileType) is { } romPath)
+                {
+                    WindowModel.LoadFiles(romPath);
+                }
+                break;
+            }
+            default:
+            {
+                var viewName = $"ndsSharp.Viewer.Views.{tag}View";
+        
+                var type = Type.GetType(viewName);
+                if (type is null)
+                {
+                    MainWM.Message("Unimplemented View", $"The {tag} view has not been implemented yet.");
+                    return;
+                }
+        
+                WindowModel.Navigate(type);
+                
+                break;
+            }
+        }
     }
 }

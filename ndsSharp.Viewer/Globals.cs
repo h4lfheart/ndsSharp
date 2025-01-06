@@ -7,5 +7,5 @@ public static class Globals
 {
     public static readonly Version Version = new(1, 0, 0);
     
-    public static readonly FilePickerFileType RomFileType = new("NDS Rom") { Patterns = [ "*.nds" ] };
+    public static readonly FilePickerFileType RomFileType = new("NDS Rom") { Patterns = [ "*.nds", "*.srl" ] };
 }

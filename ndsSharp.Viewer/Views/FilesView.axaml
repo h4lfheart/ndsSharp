@@ -1,0 +1,157 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:ext="clr-namespace:ndsSharp.Viewer.Shared.Extensions;assembly=ndsSharp.Viewer.Shared"
+             xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:files="clr-namespace:ndsSharp.Viewer.Models.Files"
+             xmlns:viewModels="clr-namespace:ndsSharp.Viewer.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ndsSharp.Viewer.Views.FilesView"
+             x:DataType="viewModels:FilesViewModel">
+    <Grid>
+        <Grid Margin="{ext:Space 1}" IsVisible="{Binding RomLoaded}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="{ext:Space 1}"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="{ext:Space 1}"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            
+            <ui:FABorder Grid.Row="0" Grid.Column="0">
+                <TreeView ItemsSource="{Binding TreeViewCollection}" AutoScrollToSelectedItem="True"
+                          SelectedItem="{Binding SelectedTreeItem, Mode=TwoWay}"
+                          Tapped="OnTreeItemTapped">
+                    <TreeView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </TreeView.ItemsPanel>
+                    <TreeView.ItemContainerTheme>
+                        <ControlTheme x:DataType="files:TreeItem" TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                            <Setter Property="IsExpanded" Value="{Binding Expanded, Mode=TwoWay}" />
+                            <Setter Property="IsSelected" Value="{Binding Selected, Mode=TwoWay}" />
+                        </ControlTheme>
+                    </TreeView.ItemContainerTheme>
+                    <TreeView.ItemTemplate>
+                        <TreeDataTemplate ItemsSource="{Binding Children.Values}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <material:MaterialIcon Width="16" Height="16" Margin="0 0 8 0"
+                                                       Classes.File="{Binding Type, 
+                                                           Converter={StaticResource EnumEquals}, 
+                                                           ConverterParameter={x:Static files:ENodeType.File}}"
+                                                       Classes.Folder="{Binding Type, 
+                                                           Converter={StaticResource EnumEquals}, 
+                                                           ConverterParameter={x:Static files:ENodeType.Folder}}">
+                                    <material:MaterialIcon.Styles>
+                                        <Style Selector="material|MaterialIcon.File">
+                                            <Style.Setters>
+                                                <Setter Property="Kind" Value="File" />
+                                            </Style.Setters>
+                                        </Style>
+                                        <Style Selector="material|MaterialIcon.Folder">
+                                            <Style.Setters>
+                                                <Setter Property="Kind" Value="Folder" />
+                                            </Style.Setters>
+                                        </Style>
+                                    </material:MaterialIcon.Styles>
+                                </material:MaterialIcon>
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </TreeDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+            </ui:FABorder>
+            
+            <Grid Grid.Row="0" Grid.Column="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="{ext:Space 1}"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="{ext:Space 1}"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBox Grid.Column="0" Watermark="Search" KeyDown="OnSearchKeyDown"/>
+                        
+                        <ToggleButton Grid.Column="2" ToolTip.Tip="Regex" HorizontalAlignment="Right" 
+                                      Content="{material:MaterialIconExt Regex}" IsChecked="{Binding UseRegex}"/>
+                    </Grid>
+                    
+                    <ui:FABorder Grid.Row="2">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                            <ListBox ItemsSource="{Binding FlatViewCollection}" SelectionMode="Multiple"
+                                     SelectedItems="{Binding SelectedFlatViewItems, Mode=TwoWay}"
+                                     AutoScrollToSelectedItem="True" DoubleTapped="OnFlatItemDoubleTapped">
+                                <ListBox.KeyBindings>
+                                    <KeyBinding Gesture="P" Command="{Binding PreviewCommand}"/>
+                                    <KeyBinding Gesture="E" Command="{Binding ExportCommand}"/>
+                                </ListBox.KeyBindings>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate DataType="files:FlatItem">
+                                        <ContentControl>
+                                            <ContentControl.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Copy Path" Command="{Binding CopyPathCommand}"/>
+                                                </ContextMenu>
+                                            </ContentControl.ContextMenu>
+                                        
+                                            <TextBlock Text="{Binding Path}"/>
+                                        </ContentControl>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel Margin="{ext:Space 0, 0, 1.5, 0}"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
+                        </ScrollViewer>
+                    </ui:FABorder>
+                </Grid>
+            </Grid>
+            
+            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="{ext:Space 1}"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="{ext:Space 1}"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="{ext:Space 1}"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <Button Grid.Column="4" HorizontalAlignment="Stretch" Command="{Binding PreviewCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <material:MaterialIcon Kind="CubeScan" Margin="{ext:Space 0, 0, 1, 0}"/>
+                        <TextBlock Text="Preview"/>
+                    </StackPanel>
+                </Button>
+                    
+                <Button Grid.Column="6" HorizontalAlignment="Stretch" Command="{Binding ExportCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <material:MaterialIcon Kind="Download" Margin="{ext:Space -1, 0, 1, 0}"/>
+                        <TextBlock Text="Export"/>
+                    </StackPanel>
+                </Button>
+                
+            </Grid>
+        </Grid>
+        
+        <TextBlock Text="No files loaded." HorizontalAlignment="Center" VerticalAlignment="Center"
+            IsVisible="{Binding !RomLoaded}" Classes="CaptionTextBlockStyle TextFillColorTertiaryBrush"/>
+    </Grid>
+</UserControl>
