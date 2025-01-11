@@ -6,7 +6,7 @@ public class SYMB : RecordBlock<string>
 {
     public override string Magic => "SYMB";
     
-    protected override string ReadRecord(BaseReader reader, SoundFileType type)
+    protected override string ReadRecord(DataReader reader, SoundFileType type)
     {
         return reader.ReadNullTerminatedString();
     }

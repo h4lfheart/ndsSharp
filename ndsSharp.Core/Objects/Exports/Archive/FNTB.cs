@@ -10,7 +10,7 @@ public class FNTB : NdsBlock
     
     public override string Magic => "FNTB";
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
 

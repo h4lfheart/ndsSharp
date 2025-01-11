@@ -6,7 +6,7 @@ public class INFO : RecordBlock<BaseSoundInfo>
 {
     public override string Magic => "INFO";
     
-    protected override BaseSoundInfo ReadRecord(BaseReader reader, SoundFileType type)
+    protected override BaseSoundInfo ReadRecord(DataReader reader, SoundFileType type)
     {
         return type switch
         {

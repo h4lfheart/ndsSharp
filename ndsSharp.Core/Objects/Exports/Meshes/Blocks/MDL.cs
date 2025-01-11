@@ -10,7 +10,7 @@ public class MDL : NdsBlock
     
     public override string Magic => "MDL";
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
 

@@ -9,7 +9,7 @@ public class BW2Text : BaseDeserializable
 {
     public List<BW2TextSection> Sections = [];
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         var sectionCount = reader.Read<ushort>();
         var entryCount = reader.Read<ushort>();

@@ -37,7 +37,7 @@ public class RomHeader
     
     private const int BaseCartridgeSize = 1280000;
     
-    public RomHeader(BaseReader reader)
+    public RomHeader(DataReader reader)
     {
         Title = reader.ReadString(12);
         GameCode = reader.ReadString(4);
@@ -92,7 +92,7 @@ public class ArmMeta
     public int Destination;
     public int Size;
     
-    public ArmMeta(BaseReader reader)
+    public ArmMeta(DataReader reader)
     {
         Offset = reader.Read<int>();
         ExecuteAddress = reader.Read<int>();

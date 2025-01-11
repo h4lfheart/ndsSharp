@@ -8,7 +8,7 @@ public class FAT : NdsBlock
     
     public override string Magic => "FAT";
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
         

@@ -30,7 +30,7 @@ public class STRM : RecordObject<StreamSoundInfo>
         
         public override string Magic => "HEAD";
 
-        public override void Deserialize(BaseReader reader)
+        public override void Deserialize(DataReader reader)
         {
             base.Deserialize(reader);
             
@@ -58,7 +58,7 @@ public class STRM : RecordObject<StreamSoundInfo>
     
         public override string Magic => "DATA";
 
-        public override void Deserialize(BaseReader reader)
+        public override void Deserialize(DataReader reader)
         {
             base.Deserialize(reader);
 
@@ -73,7 +73,7 @@ public class StreamSoundInfo : BaseSoundInfo
     public byte Priority;
     public byte Play;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
 

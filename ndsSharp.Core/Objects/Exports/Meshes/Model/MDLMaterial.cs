@@ -37,7 +37,7 @@ public class MDLMaterial : DeserializableWithName
     public bool FlipU;
     public bool FlipV;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         Tag = reader.Read<ushort>();
         Length = reader.Read<ushort>();
@@ -115,7 +115,7 @@ public class MDLMaterialMapping : BaseDeserializable
     public byte NumMaterials;
     public byte Bound;
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         Offset = reader.Read<ushort>();
         NumMaterials = reader.Read<byte>();

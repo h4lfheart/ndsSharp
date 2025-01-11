@@ -12,7 +12,7 @@ public class MDLPolygon : DeserializableWithName
     
     public List<MDLPolygonCommand> Commands = [];
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         Tag = reader.Read<ushort>();
         Length = reader.Read<ushort>();
@@ -27,7 +27,7 @@ public class MDLPolygonCommand : BaseDeserializable
     public PolygonCommandOpCode OpCode;
     public int[] Parameters = [];
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         var parameterCount = GetParameterCount();
         Parameters = reader.ReadArray<int>(parameterCount);

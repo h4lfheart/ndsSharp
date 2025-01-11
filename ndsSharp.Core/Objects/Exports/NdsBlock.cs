@@ -16,7 +16,7 @@ public class NdsBlock : BaseDeserializable
 
     private const int HEADER_SIZE = 8; // 4 char magic + file size
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         ReadMagic = reader.ReadString(4, Owner.IsLittleEndian).Trim().TrimEnd('0');
         if (!string.IsNullOrEmpty(Magic) && ReadMagic != Magic)

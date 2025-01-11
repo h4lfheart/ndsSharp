@@ -15,7 +15,7 @@ public class BW2Area : BaseDeserializable
     
     public const int SIZE = 10;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         BuildingContainerIndex = reader.Read<ushort>();
         TexturesIndex = reader.Read<ushort>();

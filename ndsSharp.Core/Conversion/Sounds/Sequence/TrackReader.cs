@@ -7,7 +7,7 @@ namespace ndsSharp.Core.Conversion.Sounds.Sequence;
 
 public class TrackReader(SSEQ sequence)
 {
-    private readonly BaseReader _reader = sequence.Data.SequenceByteCodePointer.Load();
+    private readonly DataReader _reader = sequence.Data.SequenceByteCodePointer.Load();
 
     public List<BaseSequenceEvent>[] ReadTracks()
     {

@@ -6,7 +6,7 @@ public abstract class ColorDeserializer
 {
     public abstract int Size { get; }
 
-    public abstract Color Deserialize(BaseReader reader);
+    public abstract Color Deserialize(DataReader reader);
 }
 
 
@@ -14,7 +14,7 @@ public abstract class ColorDeserializer<T> : ColorDeserializer where T : unmanag
 {
     public override unsafe int Size => sizeof(T);
 
-    public override Color Deserialize(BaseReader reader)
+    public override Color Deserialize(DataReader reader)
     {
         var value = reader.Read<T>();
         return ProvideColor(value);

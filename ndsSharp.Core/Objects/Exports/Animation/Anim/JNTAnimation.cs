@@ -17,7 +17,7 @@ public class JNTAnimation : DeserializableWithName
 
     public ushort[] TrackOffsets = [];
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         reader.Position += 4; // identifier? always J \0 A C
 

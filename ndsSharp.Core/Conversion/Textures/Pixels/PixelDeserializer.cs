@@ -6,7 +6,7 @@ public abstract class PixelDeserializer
 {
     public abstract int BitsPerPixel { get; }
 
-    public abstract IPixel[] Deserialize(BaseReader reader, int pixelCount);
+    public abstract IPixel[] Deserialize(DataReader reader, int pixelCount);
 }
 
 
@@ -14,7 +14,7 @@ public abstract class PixelDeserializer<T> : PixelDeserializer where T : unmanag
 {
     public override int BitsPerPixel => 0;
 
-    public override IPixel[] Deserialize(BaseReader reader, int pixelCount)
+    public override IPixel[] Deserialize(DataReader reader, int pixelCount)
     {
         var data = reader.ReadArray<byte>((int) (pixelCount * BitsPerPixel / 8f));
 

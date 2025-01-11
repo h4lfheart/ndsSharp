@@ -8,7 +8,7 @@ public class MDLRenderCommand : BaseDeserializable
     public int Flags;
     public byte[] Parameters;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         var data = reader.Read<byte>();
         OpCode = (RenderCommandOpCode) (data & 0b11111);

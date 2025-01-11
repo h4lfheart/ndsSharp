@@ -11,13 +11,13 @@ public class NameTable
 
     private const int RootID = 0xF000;
 
-    public NameTable(BaseReader reader)
+    public NameTable(DataReader reader)
     {
         StartOffset = reader.Position;
         FirstId = LoadDirectory(reader);
     }
     
-    protected ushort LoadDirectory(BaseReader reader, int folderId = RootID, string folderName = "", string pathAtThisPoint = "")
+    protected ushort LoadDirectory(DataReader reader, int folderId = RootID, string folderName = "", string pathAtThisPoint = "")
     {
         pathAtThisPoint = string.IsNullOrEmpty(folderName) ? pathAtThisPoint : pathAtThisPoint + $"{folderName}/";
         

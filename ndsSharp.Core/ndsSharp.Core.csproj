@@ -1,6 +1,4 @@
-﻿
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -9,37 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="GenericReader" Version="2.1.2" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="Serilog" Version="4.0.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
       <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
     </ItemGroup>
-
-    <!-- Build Plugins and Copy to Core Output -->
-   
-
-    <!-- Build Plugins First -->
-    <Target Name="BuildPlugins" DependsOnTargets="BeforeBuild">
-        <MSBuild Projects="..\ndsSharp.Core.Plugins\ndsSharp.Core.Plugins.csproj"
-                 Targets="Build"
-                 Properties="Configuration=$(Configuration);TargetFramework=net8.0" />
-    </Target>
-
-    <Target Name="CopyPluginDll" DependsOnTargets="BuildPlugins">
-        <!-- Define Content ItemGroup inside the Target -->
-        <ItemGroup>
-            <Content Include="..\ndsSharp.Core.Plugins\bin\$(Configuration)\net8.0\ndsSharp.Core.Plugins.dll">
-                <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-                <PackagePath>lib/$(TargetFramework)</PackagePath>
-            </Content>
-        </ItemGroup>
-
-        <!-- Copy the content to the output directory -->
-        <Copy SourceFiles="@(Content)"
-              DestinationFolder="$(OutputPath)"
-              SkipUnchangedFiles="true" />
-    </Target>
-    
-
 </Project>

@@ -12,7 +12,7 @@ public class MDLTransform : DeserializableWithName
     public Vector3 Scale = Vector3.One;
     public Matrix4x4 Matrix = Matrix4x4.Identity;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         var flag = reader.Read<ushort>();
 

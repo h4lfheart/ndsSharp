@@ -12,7 +12,7 @@ public static class SequenceExtensions
         return reader.ReadTracks();
     }
     
-    public static int ReadVariableLength(this BaseReader reader)
+    public static int ReadVariableLength(this DataReader reader)
     {
         var finalValue = 0;
 

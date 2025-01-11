@@ -28,7 +28,7 @@ public class NdsObject : BaseDeserializable
     private const int LITTLE_ENDIAN_BOM = 0xFFFE;
     private const int BIG_ENDIAN_BOM = 0xFEFF;
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         ReadMagic = reader.ReadString(4).TrimEnd('0');
         if (!string.IsNullOrEmpty(Magic) &&  ReadMagic != Magic)

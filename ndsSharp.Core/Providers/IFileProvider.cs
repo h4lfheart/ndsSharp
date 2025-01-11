@@ -17,7 +17,7 @@ public interface IFileProvider
 
     public bool TryLoadObject<T>(RomFile file, out T data) where T : BaseDeserializable, new();
 
-    public BaseReader CreateReader(RomFile file);
+    public DataReader CreateReader(RomFile file);
 
-    public BaseReader CreateReader(string path);
+    public DataReader CreateReader(string path);
 }

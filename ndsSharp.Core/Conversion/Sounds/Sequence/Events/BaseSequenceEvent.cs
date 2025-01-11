@@ -10,7 +10,7 @@ public class BaseSequenceEvent : BaseDeserializable
     public int Offset;
     public byte ReadCommand;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         Offset = reader.Position;
         

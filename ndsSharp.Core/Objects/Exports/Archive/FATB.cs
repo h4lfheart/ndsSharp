@@ -9,7 +9,7 @@ public class FATB : NdsBlock
     
     public override string Magic => "FATB";
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
 

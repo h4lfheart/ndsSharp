@@ -32,7 +32,7 @@ public class BW2TextReader
         _entryIndex++;
     }
 
-    public List<BW2TextToken> GetTokens(BaseReader reader, int entrySize)
+    public List<BW2TextToken> GetTokens(DataReader reader, int entrySize)
     {
         var tokens = new List<BW2TextToken>();
 

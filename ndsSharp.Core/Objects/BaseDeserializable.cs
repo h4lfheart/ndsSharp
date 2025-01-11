@@ -7,7 +7,7 @@ namespace ndsSharp.Core.Objects;
 public abstract class BaseDeserializable
 {
     public RomFile? Owner;
-    public abstract void Deserialize(BaseReader reader);
+    public abstract void Deserialize(DataReader reader);
 }
 
 public abstract class DeserializableWithName : BaseDeserializable
@@ -17,34 +17,34 @@ public abstract class DeserializableWithName : BaseDeserializable
 
 public static class DeserializableExtensions
 {
-    public static T ReadObject<T>(this BaseReader reader, bool zeroPosition = false) where T : BaseDeserializable
+    public static T ReadObject<T>(this DataReader reader, bool zeroPosition = false) where T : BaseDeserializable
     {
         return ReadObject<T>(reader, typeof(T), zeroPosition);
     }
      
-    public static T ReadObject<T>(this BaseReader reader, Action<T> dataModifier, bool zeroPosition = false) where T : BaseDeserializable
+    public static T ReadObject<T>(this DataReader reader, Action<T> dataModifier, bool zeroPosition = false) where T : BaseDeserializable
     {
         return ReadObject<T>(reader, typeof(T), dataModifier, zeroPosition);
     }
     
-    public static BaseDeserializable ReadObject(this BaseReader reader, Type type, bool zeroPosition = false)
+    public static BaseDeserializable ReadObject(this DataReader reader, Type type, bool zeroPosition = false)
     {
         return ReadObject<BaseDeserializable>(reader, type, zeroPosition);
     }
      
-    public static BaseDeserializable ReadObject(this BaseReader reader, Type type, Action<BaseDeserializable> dataModifier, bool zeroPosition = false)
+    public static BaseDeserializable ReadObject(this DataReader reader, Type type, Action<BaseDeserializable> dataModifier, bool zeroPosition = false)
     {
         return ReadObject<BaseDeserializable>(reader, type, dataModifier, zeroPosition);
     }
      
-    public static T ReadObject<T>(this BaseReader reader, Type type, bool zeroPosition = false) where T : BaseDeserializable
+    public static T ReadObject<T>(this DataReader reader, Type type, bool zeroPosition = false) where T : BaseDeserializable
     {
         var ret = Activator.CreateInstance(type) as T;
         ret!.Deserialize(zeroPosition ? reader.Spliced() : reader);
         return ret;
     }
      
-    public static T ReadObject<T>(this BaseReader reader, Type type, Action<T> dataModifier, bool zeroPosition = false) where T : BaseDeserializable
+    public static T ReadObject<T>(this DataReader reader, Type type, Action<T> dataModifier, bool zeroPosition = false) where T : BaseDeserializable
     {
         var ret = Activator.CreateInstance(type) as T;
         dataModifier.Invoke(ret);

@@ -28,7 +28,7 @@ public class MDLModel : DeserializableWithName
     public float UpScale;
     public float DownScale;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         ReadHeader(reader);
         ReadModelInfo(reader);
@@ -41,7 +41,7 @@ public class MDLModel : DeserializableWithName
             reader.ReadWithZeroedPosition(ReadInvBindMatrices, (int) InvBindsOffset);
     }
     
-    private void ReadHeader(BaseReader reader)
+    private void ReadHeader(DataReader reader)
     {
         Size = reader.Read<uint>();
         RenderCommandsOffset = reader.Read<uint>();
@@ -50,7 +50,7 @@ public class MDLModel : DeserializableWithName
         InvBindsOffset = reader.Read<uint>();
     }
     
-    private void ReadModelInfo(BaseReader reader)
+    private void ReadModelInfo(DataReader reader)
     {
         reader.Position += 3; // unknown
 
@@ -72,7 +72,7 @@ public class MDLModel : DeserializableWithName
         reader.Position += sizeof(uint) * 2; // bounding box up/down scale
     }
     
-    private void ReadObjects(BaseReader reader)
+    private void ReadObjects(DataReader reader)
     {
         var transformList = reader.ReadNameListPrimitive<uint>();
         foreach (var (name, offset) in transformList.Items)
@@ -85,7 +85,7 @@ public class MDLModel : DeserializableWithName
         }
     }
     
-    private void ReadRenderCommands(BaseReader reader)
+    private void ReadRenderCommands(DataReader reader)
     {
         MDLRenderCommand command;
         do
@@ -96,7 +96,7 @@ public class MDLModel : DeserializableWithName
         while (command.OpCode != RenderCommandOpCode.END);
     }
 
-    private void ReadMaterials(BaseReader reader)
+    private void ReadMaterials(DataReader reader)
     {
         var textureListOffset = reader.Read<ushort>();
         var paletteListOffset = reader.Read<ushort>();
@@ -149,7 +149,7 @@ public class MDLModel : DeserializableWithName
         }
     }
 
-    private void ReadPolygons(BaseReader reader)
+    private void ReadPolygons(DataReader reader)
     {
         var polygonDataList = reader.ReadNameListPrimitive<uint>();
         var polygons = reader.ReadArray(polygonDataList.Count, () => reader.ReadObject<MDLPolygon>());
@@ -175,7 +175,7 @@ public class MDLModel : DeserializableWithName
         }
     }
     
-    private void ReadInvBindMatrices(BaseReader reader)
+    private void ReadInvBindMatrices(DataReader reader)
     {
         for (var matrixIndex = 0; matrixIndex < NumObjects; matrixIndex++)
         {

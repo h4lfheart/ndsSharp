@@ -12,7 +12,7 @@ public class BW2MapBuildingDefinition : BaseDeserializable
     public ushort DoorID;
     public Vector3 DoorLocation;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         ID = reader.Read<ushort>();
         BuildingType = reader.Read<ushort>();

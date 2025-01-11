@@ -6,7 +6,7 @@ public abstract class RecordBlock<TRecordType> : NdsBlock
 {
     public Dictionary<SoundFileType, List<TRecordType>> Records = new();
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
 
@@ -23,9 +23,9 @@ public abstract class RecordBlock<TRecordType> : NdsBlock
         }
     }
     
-    protected abstract TRecordType ReadRecord(BaseReader reader, SoundFileType type);
+    protected abstract TRecordType ReadRecord(DataReader reader, SoundFileType type);
     
-    private List<TRecordType> ReadRecords(BaseReader reader, SoundFileType type, uint offset)
+    private List<TRecordType> ReadRecords(DataReader reader, SoundFileType type, uint offset)
     {
         reader.Position = (int) offset;
         

@@ -5,11 +5,11 @@ namespace ndsSharp.Core.Objects.Exports.Archive;
 
 public class FIMG : NdsBlock
 {
-    public BaseReader Reader;
+    public DataReader Reader;
     
     public override string Magic => "FIMG";
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
 

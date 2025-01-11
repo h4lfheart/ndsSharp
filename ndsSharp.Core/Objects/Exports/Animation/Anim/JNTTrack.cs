@@ -22,7 +22,7 @@ public class JNTTrack : BaseDeserializable
     private const int PIVOT_MATRIX_SIZE = sizeof(ushort) * 3;
     private const int BASIS_MATRIX_SIZE = sizeof(ushort) * 5;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         Flags = reader.ReadObject<JNTTrackFlags>();
         reader.Position += sizeof(byte);
@@ -53,7 +53,7 @@ public class JNTTrack : BaseDeserializable
         
     }
 
-    public JNTCurve<float> ReadTranslationCurve(BaseReader reader, bool isConstant)
+    public JNTCurve<float> ReadTranslationCurve(DataReader reader, bool isConstant)
     {
         if (isConstant)
         {
@@ -72,7 +72,7 @@ public class JNTTrack : BaseDeserializable
         return new JNTCurve<float>(curveInfo, samples);
     }
     
-    public JNTCurve<Matrix3x3> ReadRotationCurve(BaseReader reader, bool isConstant)
+    public JNTCurve<Matrix3x3> ReadRotationCurve(DataReader reader, bool isConstant)
     {
         if (isConstant)
         {
@@ -97,7 +97,7 @@ public class JNTTrack : BaseDeserializable
         return new JNTCurve<Matrix3x3>(curveInfo, samples);
     }
     
-    public JNTCurve<float> ReadScaleCurve(BaseReader reader, bool isConstant)
+    public JNTCurve<float> ReadScaleCurve(DataReader reader, bool isConstant)
     {
         if (isConstant)
         {
@@ -122,7 +122,7 @@ public class JNTTrack : BaseDeserializable
         return new JNTCurve<float>(curveInfo, samples);
     }
 
-    private Matrix3x3 ReadMatrix(BaseReader reader, ushort controlData)
+    private Matrix3x3 ReadMatrix(DataReader reader, ushort controlData)
     {
         var matrixIndex = controlData.Bits(0, 15);
         
@@ -163,7 +163,7 @@ public class JNTTrackFlags : BaseDeserializable
     public readonly bool[] ConstantScaleFlags = new bool[3];
     
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         var flag = reader.Read<ushort>();
 

@@ -9,7 +9,7 @@ public class BW2MapBuildingContainer : BW2Object
     public readonly List<BW2MapBuildingDefinition> Definitions = [];
     public readonly List<BMD> Models = [];
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
         

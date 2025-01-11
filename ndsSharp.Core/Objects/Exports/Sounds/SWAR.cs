@@ -19,7 +19,7 @@ public class SWAR : RecordObject
     
         public override string Magic => "DATA";
 
-        public override void Deserialize(BaseReader reader)
+        public override void Deserialize(DataReader reader)
         {
             base.Deserialize(reader);
 
@@ -55,7 +55,7 @@ public class SWAVInfo : BaseDeserializable
     public ushort LoopOffset;
     public uint NonLoopLength;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         WaveType = reader.ReadEnum<WaveType>();
         Loop = reader.Read<byte>() == 1;

@@ -24,7 +24,7 @@ public class RomBanner
 
     private const int AnimatedIconOffset = 0x1240;
     
-    public RomBanner(BaseReader reader)
+    public RomBanner(DataReader reader)
     {
         var startPosition = reader.Position;
         
@@ -44,7 +44,7 @@ public class RomBanner
 
     }
     
-    private IndexedPaletteImage DeserializeIcon(BaseReader reader)
+    private IndexedPaletteImage DeserializeIcon(DataReader reader)
     {
         var pixels = reader.ReadPixels<Indexed4>(IconWidth, IconHeight);
         PixelSwizzler.UnSwizzle(ref pixels, IconWidth);
@@ -54,7 +54,7 @@ public class RomBanner
     }
 }
 
-public class LocalizedBannerTitles(BaseReader reader)
+public class LocalizedBannerTitles(DataReader reader)
 {
     public string Japanese = reader.ReadString(256, unicode: true);
     public string English = reader.ReadString(256, unicode: true);
@@ -75,7 +75,7 @@ public class AnimatedBannerIcon
     private const int ImageCount = 8;
     private const int KeyCount = 64;
 
-    public AnimatedBannerIcon(BaseReader reader)
+    public AnimatedBannerIcon(DataReader reader)
     {
         for (var i = 0; i < ImageCount; i++)
         {
@@ -114,7 +114,7 @@ public class AnimatedBannerKey
     
     private const int TickCount = (int) (1000f / 60);
     
-    public AnimatedBannerKey(BaseReader reader)
+    public AnimatedBannerKey(DataReader reader)
     {
         var animData = reader.Read<ushort>();
         if (animData == 0x00)

@@ -41,7 +41,7 @@ public class JNTCurveInfo : BaseDeserializable
 
     public uint SampleOffset;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         var flag = reader.Read<uint>();
 

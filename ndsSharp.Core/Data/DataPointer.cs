@@ -6,9 +6,9 @@ public class DataPointer
 {
     public int Offset;
     public int Length;
-    public BaseReader? Owner;
+    public DataReader? Owner;
     
-    public DataPointer(BaseReader reader, DataPointerType pointerType = DataPointerType.OffsetLength)
+    public DataPointer(DataReader reader, DataPointerType pointerType = DataPointerType.OffsetLength)
     {
         Owner = reader;
         switch (pointerType)
@@ -30,7 +30,7 @@ public class DataPointer
         }
     }
 
-    public DataPointer(int offset, int length, BaseReader? owner = null)
+    public DataPointer(int offset, int length, DataReader? owner = null)
     {
         Offset = offset;
         Length = length;
@@ -38,12 +38,12 @@ public class DataPointer
         Owner = owner;
     }
 
-    public BaseReader Load()
+    public DataReader Load()
     {
         return Owner?.LoadPointer(this) ?? throw new ParserException("Pointer does not have an owner to load from.");
     }
 
-    public DataPointer GlobalFrom(BaseReader reader)
+    public DataPointer GlobalFrom(DataReader reader)
     {
         return new DataPointer(Offset + reader.AbsoluteOffset, Length);
     }

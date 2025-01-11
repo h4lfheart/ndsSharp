@@ -16,7 +16,7 @@ public class NARC : NdsObject, IFileProvider
     [Block] public FNTB NameTable;
     [Block] public FIMG Image;
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
         
@@ -71,10 +71,10 @@ public class NARC : NdsObject, IFileProvider
         }
     }
 
-    public BaseReader CreateReader(RomFile file)
+    public DataReader CreateReader(RomFile file)
     {
         return Image.Reader.LoadPointer(file.Pointer);
     }
     
-    public BaseReader CreateReader(string path) => CreateReader(Files[path]);
+    public DataReader CreateReader(string path) => CreateReader(Files[path]);
 }

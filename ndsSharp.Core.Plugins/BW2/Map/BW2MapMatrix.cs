@@ -11,7 +11,7 @@ public class BW2MapMatrix : BaseDeserializable
     public Matrix<int> Maps = new();
     public Matrix<int> Headers = new();
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         HasHeaders = reader.Read<int>() == 1;
         var width = reader.Read<ushort>();

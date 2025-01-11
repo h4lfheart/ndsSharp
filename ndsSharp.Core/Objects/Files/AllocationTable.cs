@@ -6,7 +6,7 @@ public unsafe class AllocationTable
 {
     public List<DataPointer> Pointers = [];
 
-    public AllocationTable(BaseReader reader, int fileCount = -1)
+    public AllocationTable(DataReader reader, int fileCount = -1)
     {
         if (fileCount == -1)
             fileCount = reader.Length / (sizeof(uint) * 2);

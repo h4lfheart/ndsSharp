@@ -27,7 +27,7 @@ public class NdsFileProvider : IFileProvider
     private AllocationTable _allocationTable;
     private NameTable _nameTable;
     
-    private BaseReader _reader;
+    private DataReader _reader;
     
     public NdsFileProvider(FileInfo romFile) : this(romFile.FullName)
     {
@@ -35,7 +35,7 @@ public class NdsFileProvider : IFileProvider
 
     public NdsFileProvider(string filePath)
     {
-        _reader = new BaseReader(File.ReadAllBytes(filePath));
+        _reader = new DataReader(File.ReadAllBytes(filePath));
     }
 
     public void Initialize()
@@ -181,12 +181,12 @@ public class NdsFileProvider : IFileProvider
         }
     }
 
-    public BaseReader CreateReader(RomFile file)
+    public DataReader CreateReader(RomFile file)
     {
         return _reader.LoadPointer(file.Pointer);
     }
     
-    public BaseReader CreateReader(string path) => CreateReader(Files[path]);
+    public DataReader CreateReader(string path) => CreateReader(Files[path]);
 
     public void LogFileStats()
     {

@@ -9,7 +9,7 @@ public class BW2Map : BW2Object
     public BMD Model;
     public List<BW2MapActor> Actors = [];
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
         
@@ -17,7 +17,7 @@ public class BW2Map : BW2Object
         ReadActors(reader);
     }
 
-    public void ReadModel(BaseReader reader)
+    public void ReadModel(DataReader reader)
     {
         var modelOffset = FileOffsets[0];
         
@@ -25,7 +25,7 @@ public class BW2Map : BW2Object
         Model = reader.ReadObject<BMD>(zeroPosition: true);
     }
 
-    public void ReadActors(BaseReader reader)
+    public void ReadActors(DataReader reader)
     {
         var actorsOffset = Magic switch
         {

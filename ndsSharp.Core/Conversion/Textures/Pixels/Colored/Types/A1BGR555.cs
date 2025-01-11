@@ -5,7 +5,7 @@ namespace ndsSharp.Core.Conversion.Textures.Pixels.Colored.Types;
 
 public class A1BGR555 : PixelDeserializer<ushort>
 {
-    public override IPixel[] Deserialize(BaseReader reader, int pixelCount)
+    public override IPixel[] Deserialize(DataReader reader, int pixelCount)
     {
         var pixels = new IPixel[pixelCount];
         for (var pixelIndex = 0; pixelIndex < pixelCount; pixelIndex++)

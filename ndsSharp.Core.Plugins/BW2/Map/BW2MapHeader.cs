@@ -26,7 +26,7 @@ public class BW2MapHeader : BaseDeserializable
     
     public const int HEADER_SIZE = 48;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         MapType = reader.Read<byte>();
 

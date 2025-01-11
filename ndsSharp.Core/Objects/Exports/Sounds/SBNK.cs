@@ -17,7 +17,7 @@ public class SBNK : RecordObject<BankSoundInfo>
         
         public override string Magic => "DATA";
 
-        public override void Deserialize(BaseReader reader)
+        public override void Deserialize(DataReader reader)
         {
             base.Deserialize(reader);
 
@@ -40,7 +40,7 @@ public class BankSoundInfo : BaseSoundInfo
 {
     public ushort[] WaveArchiveIDs = [];
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
 
@@ -54,7 +54,7 @@ public class Instrument : BaseDeserializable
     public ushort DataOffset;
     public BaseInstrumentData Data;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         Type = reader.ReadEnum<InstrumentType>();
         DataOffset = reader.Read<ushort>();
@@ -87,7 +87,7 @@ public class SubInstrument : BaseDeserializable
     public InstrumentType Type;
     public InstrumentInfo Info;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         Type = reader.ReadEnum<InstrumentType>();
 
@@ -108,7 +108,7 @@ public class InstrumentInfo : BaseDeserializable
     public byte Release;
     public byte Pan;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         WaveIndex = reader.Read<ushort>();
         ArchiveIndex = reader.Read<ushort>();
@@ -131,7 +131,7 @@ public class DefaultInstrumentData : BaseInstrumentData
 {
     public InstrumentInfo Info;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         Info = reader.ReadObject<InstrumentInfo>();
     }
@@ -143,7 +143,7 @@ public class DrumInstrumentData : BaseInstrumentData
     public byte MaxNote;
     public List<SubInstrument> Instruments = [];
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         MinNote = reader.Read<byte>();
         MaxNote = reader.Read<byte>();
@@ -162,7 +162,7 @@ public class KeyRegionInstrumentData : BaseInstrumentData
     public List<SubInstrument> Instruments = [];
     public byte[] KeyRegions = [];
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         KeyRegions = reader.ReadArray<byte>(8);
         

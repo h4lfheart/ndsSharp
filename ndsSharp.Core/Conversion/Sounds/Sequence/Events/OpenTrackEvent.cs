@@ -7,7 +7,7 @@ public class OpenTrackEvent : BaseSequenceEvent
     [SequenceParameter] public byte TrackNumber;
     public int Offset;
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
 

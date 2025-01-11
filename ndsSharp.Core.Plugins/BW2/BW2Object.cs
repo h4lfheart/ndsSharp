@@ -8,7 +8,7 @@ public class BW2Object : BaseDeserializable
     public string Magic;
     public uint[] FileOffsets = [];
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         Magic = reader.ReadString(2);
 

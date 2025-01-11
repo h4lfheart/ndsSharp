@@ -15,7 +15,7 @@ public class SSEQ : RecordObject<SequenceSoundInfo>
         public DataPointer SequenceByteCodePointer;
         public override string Magic => "DATA";
 
-        public override void Deserialize(BaseReader reader)
+        public override void Deserialize(DataReader reader)
         {
             base.Deserialize(reader);
 
@@ -31,7 +31,7 @@ public class SequenceSoundInfo : BaseSoundInfo
     public ushort BankIndex;
     public byte Volume;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
 

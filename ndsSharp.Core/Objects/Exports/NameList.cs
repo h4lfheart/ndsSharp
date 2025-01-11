@@ -14,7 +14,7 @@ public class NameList<T> : IEnumerable<KeyValuePair<string, T>>
     
     public Dictionary<string, T> Items = [];
 
-    public NameList(BaseReader reader, Func<T> func)
+    public NameList(DataReader reader, Func<T> func)
     {
         var dummy = reader.Read<byte>();
         var count = reader.Read<byte>();
@@ -50,17 +50,17 @@ public class NameList<T> : IEnumerable<KeyValuePair<string, T>>
 
 public static class NameListExtensions
 {
-    public static NameList<T> ReadNameList<T>(this BaseReader reader, Func<T> valueFunction)
+    public static NameList<T> ReadNameList<T>(this DataReader reader, Func<T> valueFunction)
     {
         return new NameList<T>(reader, valueFunction);
     }
     
-    public static NameList<T> ReadNameList<T>(this BaseReader reader) where T : BaseDeserializable
+    public static NameList<T> ReadNameList<T>(this DataReader reader) where T : BaseDeserializable
     {
         return new NameList<T>(reader, () => reader.ReadObject<T>());
     }
     
-    public static NameList<T> ReadNameListPrimitive<T>(this BaseReader reader) where T : unmanaged
+    public static NameList<T> ReadNameListPrimitive<T>(this DataReader reader) where T : unmanaged
     {
         return new NameList<T>(reader, reader.Read<T>);
     }

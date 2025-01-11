@@ -10,7 +10,7 @@ public class BW2MapActor : BaseDeserializable
     public float Rotation;
     public int ModelID;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         Location.X = reader.Read<int>() / 4096f;
         Location.Y = reader.Read<int>() / 4096f;

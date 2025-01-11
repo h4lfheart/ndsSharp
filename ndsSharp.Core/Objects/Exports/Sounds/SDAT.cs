@@ -12,11 +12,11 @@ public class SDAT : NdsObject
     [Block] public FAT FileAllocationTable;
     [Block] public FILE FileData;
 
-    public BaseReader Reader;
+    public DataReader Reader;
     
     public override string Magic => "SDAT";
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
 
@@ -28,7 +28,7 @@ public class BaseSoundInfo : BaseDeserializable
 {
     public ushort FileID;
     
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         FileID = reader.Read<ushort>();
         

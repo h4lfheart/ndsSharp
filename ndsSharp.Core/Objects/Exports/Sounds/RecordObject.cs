@@ -8,7 +8,7 @@ public abstract class RecordObject<TInfoType> : NdsObject where TInfoType : Base
     public TInfoType Info;
     public int RecordId;
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
 

@@ -9,7 +9,7 @@ public class JNT : NdsBlock
     
     public override string Magic => "JNT";
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
 

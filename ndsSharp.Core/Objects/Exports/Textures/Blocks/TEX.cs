@@ -28,7 +28,7 @@ public class TEX : NdsBlock
     private uint _paletteDataSize;
     private uint _paletteInfoOffset;
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
         
@@ -36,7 +36,7 @@ public class TEX : NdsBlock
         DeserializeTextures(reader);
     }
     
-    private void DeserializeHeader(BaseReader reader)
+    private void DeserializeHeader(DataReader reader)
     {
         reader.Position += sizeof(uint); // padding
         _textureDataSize = reader.Read<ushort>();
@@ -55,7 +55,7 @@ public class TEX : NdsBlock
         _paletteDataOffset = reader.Read<uint>();
     }
     
-    private void DeserializeTextures(BaseReader reader)
+    private void DeserializeTextures(DataReader reader)
     {
         var textureInfos = reader.ReadNameList<TextureInfo>();
         for (var textureIndex = 0; textureIndex < textureInfos.Count; textureIndex++)
@@ -152,7 +152,7 @@ public class TextureInfo : BaseDeserializable
     public bool FlipU;
     public bool FlipV;
 
-    public override void Deserialize(BaseReader reader)
+    public override void Deserialize(DataReader reader)
     {
         TextureOffset = reader.Read<ushort>();
 

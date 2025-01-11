@@ -1,18 +1,18 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using GenericReader;
+using ndsSharp.Core.Data.Reader;
 using ndsSharp.Core.Extensions;
 
 namespace ndsSharp.Core.Data;
 
-public class BaseReader : GenericBufferReader
+public class DataReader : MemoryReader
 {
-    public BaseReader? Owner;
+    public DataReader? Owner;
     public int AbsoluteOffset;
     public int AbsolutePosition => AbsoluteOffset + Position;
     
-    public virtual BaseReader AbsoluteOwner
+    public virtual DataReader AbsoluteOwner
     {
         get
         {
@@ -34,19 +34,19 @@ public class BaseReader : GenericBufferReader
         set => base.Position = PositionZeroOffset + value;
     }
 
-    public BaseReader(byte[] buffer, int start, int length) : base(buffer, start, length)
+    public DataReader(byte[] buffer, int start, int length) : base(buffer, start, length)
     {
     }
 
-    public BaseReader(byte[] buffer) : base(buffer)
+    public DataReader(byte[] buffer) : base(buffer)
     {
     }
 
-    public BaseReader(ReadOnlyMemory<byte> memory) : base(memory)
+    public DataReader(ReadOnlyMemory<byte> memory) : base(memory)
     {
     }
 
-    public BaseReader(Memory<byte> memory) : base(memory)
+    public DataReader(Memory<byte> memory) : base(memory)
     {
     }
     
@@ -61,14 +61,14 @@ public class BaseReader : GenericBufferReader
         return result;
     }
     
-    public BaseReader Spliced(int? position = null, int? length = null)
+    public DataReader Spliced(int? position = null, int? length = null)
     {
         Position = position ?? Position;
         length ??= Length - Position;
-        return new BaseReader(ReadArray<byte>((int) length));
+        return new DataReader(ReadArray<byte>((int) length));
     }
     
-    public void ReadWithZeroedPosition(Action<BaseReader> readFunc)
+    public void ReadWithZeroedPosition(Action<DataReader> readFunc)
     {
         PositionZeroOffset = Position;
         readFunc.Invoke(this);
@@ -76,7 +76,7 @@ public class BaseReader : GenericBufferReader
         Position = base.Position;
     }
     
-    public void ReadWithZeroedPosition(Action<BaseReader> readFunc, int offset)
+    public void ReadWithZeroedPosition(Action<DataReader> readFunc, int offset)
     {
         Position = offset;
         ReadWithZeroedPosition(readFunc);
@@ -88,13 +88,13 @@ public class BaseReader : GenericBufferReader
     }
 
 
-    public BaseReader LoadPointer(DataPointer pointer)
+    public DataReader LoadPointer(DataPointer pointer)
     {
         return Peek(() =>
         {
             Position = pointer.Offset;
             var memory = ReadMemory(pointer.Length);
-            var pointerReader = new BaseReader(memory);
+            var pointerReader = new DataReader(memory);
             pointerReader.Owner = this;
             pointerReader.AbsoluteOffset = AbsoluteOffset + Position;
             return pointerReader;
