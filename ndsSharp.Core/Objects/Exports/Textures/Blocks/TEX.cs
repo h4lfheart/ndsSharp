@@ -76,7 +76,7 @@ public class TEX : NdsBlock
             return offset;
         });
 
-        paletteInfos.Items = paletteInfos.OrderBy(pair => pair.Value).ToDictionary();
+        paletteInfos.Items = paletteInfos.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
         
         for (var paletteIndex = 0; paletteIndex < paletteInfos.Count; paletteIndex++)
         {
@@ -109,7 +109,13 @@ public class TEX : NdsBlock
             var (textureName, texturePointer) = _texturePointers.ElementAt(textureIndex);
             var textureInfo = _textureInfos[textureName];
             
-            var (paletteName, palettePointer) = _palettePointers.FirstOrDefault(pair => pair.Key.Equals(textureName + "_pl") || pair.Key.Equals(textureName), _palettePointers.ElementAt(Math.Min(textureIndex, _palettePointers.Count - 1)));
+            var (paletteName, palettePointer) = _palettePointers.FirstOrDefault(pair => pair.Key.Equals(textureName + "_pl") || pair.Key.Equals(textureName));
+            if (paletteName is null || palettePointer is null)
+            {
+                (paletteName, palettePointer) =
+                    _palettePointers.ElementAt(Math.Min(textureIndex, _palettePointers.Count - 1));
+            }
+            
             var paletteReader = palettePointer.Load();
             var palette = new Palette(paletteName, paletteReader.ReadColors<BGR555>());
             

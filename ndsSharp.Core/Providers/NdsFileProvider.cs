@@ -84,8 +84,9 @@ public class NdsFileProvider : IFileProvider
                 }
                 
                 var basePath = sdatFile.Path.Replace(".sdat", string.Empty);
-                foreach (var soundType in Enum.GetValues<SoundFileType>())
+                foreach (var soundTypeObject in Enum.GetValues(typeof(SoundFileType)))
                 {
+                    if (soundTypeObject is not SoundFileType soundType) continue;
                     if (soundType is SoundFileType.GroupPlayer or SoundFileType.StreamPlayer or SoundFileType.Group) continue;
                     
                     var typeName = soundType.GetDescription();
@@ -187,22 +188,4 @@ public class NdsFileProvider : IFileProvider
     }
     
     public DataReader CreateReader(string path) => CreateReader(Files[path]);
-
-    public void LogFileStats()
-    {
-        var fileBreakdown = new Dictionary<string, int>();
-        foreach (var (path, file) in Files)
-        {
-            fileBreakdown.TryAdd(file.Type, 0);
-            fileBreakdown[file.Type]++;
-        }
-
-        fileBreakdown = fileBreakdown.OrderByDescending(x => x.Value).ToDictionary();
-
-        Log.Information("Total Files: {Count}", Files.Count);
-        foreach (var (type, count) in fileBreakdown)
-        {
-            Log.Information("{Type}: {Count}", type, count);
-        }
-    }
 }

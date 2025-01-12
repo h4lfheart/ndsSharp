@@ -97,31 +97,4 @@ public static class ImageExtensions
 
         return bitmap;
     }
-    
-    public static Image<Rgba32> ToImage(this AnimatedBannerIcon icon)
-    {
-        var bitmap = new Image<Rgba32>(icon.Width, icon.Height);
-        var rootMetaData = bitmap.Metadata.GetPngMetadata();
-        rootMetaData.RepeatCount = 0;
-        
-        foreach (var key in icon.Keys)
-        {
-            var targetImage = icon.Images[key.BitmapIndex];
-            var image = ToImage(targetImage.Pixels, targetImage.MetaData, [icon.Palettes[key.PaletteIndex]]);
-            image.Mutate(ctx =>
-            {
-                if (key.FlipHorizontal) ctx.Flip(FlipMode.Horizontal);
-                if (key.FlipVertical) ctx.Flip(FlipMode.Vertical);
-            });
-                
-            var rootFrame = image.Frames.RootFrame;
-            var metaData = rootFrame.Metadata.GetPngMetadata();
-            metaData.FrameDelay = new Rational((uint) key.Duration, 1000);
-
-            bitmap.Frames.AddFrame(rootFrame);
-        }
-        
-        bitmap.Frames.RemoveFrame(0);
-        return bitmap;
-    }
 }

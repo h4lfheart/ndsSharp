@@ -9,7 +9,7 @@ public static class PluginExtensions
 {
     public static void LoadPlugins(this NdsFileProvider provider)
     {
-        var pluginTypes = Assembly.GetExecutingAssembly().DefinedTypes.Where(type => type.IsAssignableTo(typeof(BasePlugin)));
+        var pluginTypes = Assembly.GetExecutingAssembly().DefinedTypes.Where(type => typeof(BasePlugin).IsAssignableFrom(type));
         foreach (var pluginType in pluginTypes)
         {
             if (Activator.CreateInstance(pluginType) is not BasePlugin pluginInstance) continue;

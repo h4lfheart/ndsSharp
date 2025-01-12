@@ -154,7 +154,7 @@ public class MDLModel : DeserializableWithName
         var polygonDataList = reader.ReadNameListPrimitive<uint>();
         var polygons = reader.ReadArray(polygonDataList.Count, () => reader.ReadObject<MDLPolygon>());
 
-        foreach (var (polygon, (name, _)) in polygons.Zip(polygonDataList))
+        foreach (var (polygon, (name, _)) in polygons.Zip(polygonDataList, (polygon, pair) => (polygon, pair)))
         {
             polygon.Name = name;
             
