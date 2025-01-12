@@ -1,6 +1,4 @@
-using ndsSharp.Core.Plugins;
-
-namespace ndsSharp.Plugins.HGSS;
+namespace ndsSharp.Core.Plugins.HGSS;
 
 public class HGSSPlugin : BasePlugin
 {

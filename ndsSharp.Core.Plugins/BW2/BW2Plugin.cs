@@ -1,12 +1,9 @@
-using System.Text.RegularExpressions;
 using ndsSharp.Core.Objects.Exports.Textures;
-using ndsSharp.Core.Plugins;
-using ndsSharp.Plugins.BW2.Area;
-using ndsSharp.Plugins.BW2.Building;
-using ndsSharp.Plugins.BW2.Map;
-using ndsSharp.Plugins.BW2.Text;
+using ndsSharp.Core.Plugins.BW2.Area;
+using ndsSharp.Core.Plugins.BW2.Building;
+using ndsSharp.Core.Plugins.BW2.Map;
 
-namespace ndsSharp.Plugins.BW2;
+namespace ndsSharp.Core.Plugins.BW2;
 
 public class BW2Plugin : BasePlugin
 {

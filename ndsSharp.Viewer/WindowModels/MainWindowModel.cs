@@ -22,7 +22,6 @@ using ndsSharp.Core.Objects.Exports.Sounds;
 using ndsSharp.Core.Objects.Exports.Textures;
 using ndsSharp.Core.Plugins;
 using ndsSharp.Core.Providers;
-using ndsSharp.Plugins;
 using ndsSharp.Viewer.Models;
 using ndsSharp.Viewer.Models.App;
 using ndsSharp.Viewer.Models.Files;

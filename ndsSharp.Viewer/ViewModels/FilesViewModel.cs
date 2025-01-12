@@ -17,7 +17,6 @@ using ndsSharp.Core.Conversion.Textures.Images;
 using ndsSharp.Core.Objects.Exports.Meshes;
 using ndsSharp.Core.Objects.Exports.Textures;
 using ndsSharp.Core.Providers;
-using ndsSharp.Plugins;
 using ndsSharp.Viewer.Models;
 using ndsSharp.Viewer.Models.App;
 using ndsSharp.Viewer.Models.Files;

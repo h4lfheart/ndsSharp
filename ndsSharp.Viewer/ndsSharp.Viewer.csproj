@@ -7,7 +7,6 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <RootNamespace>ndsSharp.Viewer</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

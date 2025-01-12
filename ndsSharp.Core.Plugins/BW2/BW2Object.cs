@@ -1,7 +1,7 @@
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Objects;
 
-namespace ndsSharp.Plugins.BW2;
+namespace ndsSharp.Core.Plugins.BW2;
 
 public class BW2Object : BaseDeserializable
 {

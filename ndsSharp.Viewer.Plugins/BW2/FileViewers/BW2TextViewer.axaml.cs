@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ndsSharp.Plugins.BW2.Text;
+using ndsSharp.Core.Plugins.BW2.Text;
 using ndsSharp.Viewer.Shared.Extensions;
 using ndsSharp.Viewer.Shared.Plugins;
 

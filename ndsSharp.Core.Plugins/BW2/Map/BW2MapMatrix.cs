@@ -1,9 +1,8 @@
-using System.Collections;
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Mathematics;
 using ndsSharp.Core.Objects;
 
-namespace ndsSharp.Plugins.BW2.Map;
+namespace ndsSharp.Core.Plugins.BW2.Map;
 
 public class BW2MapMatrix : BaseDeserializable
 {

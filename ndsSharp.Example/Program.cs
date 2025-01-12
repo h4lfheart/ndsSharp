@@ -1,6 +1,6 @@
-﻿using ndsSharp.Core.Providers;
-using ndsSharp.Plugins;
-using ndsSharp.Plugins.HGSS.Map;
+﻿using ndsSharp.Core.Plugins;
+using ndsSharp.Core.Plugins.HGSS.Map;
+using ndsSharp.Core.Providers;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()

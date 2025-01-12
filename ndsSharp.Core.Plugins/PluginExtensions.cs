@@ -1,9 +1,8 @@
 using System.Reflection;
 using ndsSharp.Core.Extensions;
-using ndsSharp.Core.Plugins;
 using ndsSharp.Core.Providers;
 
-namespace ndsSharp.Plugins;
+namespace ndsSharp.Core.Plugins;
 
 public static class PluginExtensions
 {

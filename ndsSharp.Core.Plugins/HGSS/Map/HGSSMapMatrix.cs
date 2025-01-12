@@ -3,7 +3,7 @@ using ndsSharp.Core.Data;
 using ndsSharp.Core.Mathematics;
 using ndsSharp.Core.Objects;
 
-namespace ndsSharp.Plugins.HGSS.Map;
+namespace ndsSharp.Core.Plugins.HGSS.Map;
 
 public class HGSSMapMatrix : BaseDeserializable
 {
