@@ -1,4 +1,7 @@
+using ndsSharp.Core.Conversion.Textures.Colors;
+using ndsSharp.Core.Conversion.Textures.Colors.Types;
 using ndsSharp.Core.Data;
+using ndsSharp.Core.Extensions;
 
 namespace ndsSharp.Core.Objects.Exports.Meshes.Model;
 
@@ -7,6 +10,10 @@ public class MDLMaterial : DeserializableWithName
     public string TextureName;
     public string PaletteName;
 
+    public Color Diffuse;
+    public Color Ambient;
+    public Color Specular;
+    public Color Emissive;
     public float Alpha;
     
     public ushort Tag;
@@ -41,10 +48,18 @@ public class MDLMaterial : DeserializableWithName
     {
         Tag = reader.Read<ushort>();
         Length = reader.Read<ushort>();
+        
         DiffuseAmbient = reader.Read<int>();
+        Diffuse = BGR555.Instance.ProvideColor((ushort) DiffuseAmbient.Bits(0, 15));
+        Ambient = BGR555.Instance.ProvideColor((ushort) DiffuseAmbient.Bits(16, 31));
+        
         SpecularEmissive = reader.Read<int>();
+        Specular = BGR555.Instance.ProvideColor((ushort) SpecularEmissive.Bits(0, 15));
+        Emissive = BGR555.Instance.ProvideColor((ushort) SpecularEmissive.Bits(16, 31));
+        
         PolyAttr = reader.Read<uint>();
-        Alpha = (PolyAttr >> 16 & 0b_11111) / 31.0f;
+        Alpha = PolyAttr.Bits(16,21) / 31.0f;
+        
         PolyAttrMask = reader.Read<uint>();
         TextureVRAMOffset = reader.Read<ushort>();
         TextureImageParam = reader.Read<ushort>();

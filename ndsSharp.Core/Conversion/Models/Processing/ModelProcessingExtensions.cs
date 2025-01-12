@@ -108,6 +108,10 @@ public static class ModelProcessingExtensions
                     FlipV = materialData.FlipV,
                     RepeatU = materialData.RepeatU,
                     RepeatV = materialData.RepeatV,
+                    Diffuse = materialData.Diffuse,
+                    Ambient = materialData.Ambient,
+                    Specular = materialData.Specular,
+                    Emissive = materialData.Emissive,
                     Alpha = materialData.Alpha
                 };
                 model.Materials.Add(material);
