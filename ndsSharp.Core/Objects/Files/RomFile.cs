@@ -9,6 +9,7 @@ public class RomFile
     public string Path;
     public string Name => Path.SubstringAfterLast("/");
     public string Extension => Path.SubstringAfterLast(".");
+    public string NameWithoutExtension => Path.SubstringAfterLast("/").SubstringBeforeLast(".");
     
     public Type? FileType => FileTypeRegistry.GetTypeOrDefault(Extension);
 

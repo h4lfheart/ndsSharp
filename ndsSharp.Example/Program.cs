@@ -1,4 +1,7 @@
-﻿using ndsSharp.Core.Plugins;
+﻿using ndsSharp.Core.Objects.Exports.Meshes;
+using ndsSharp.Core.Objects.Exports.Palettes;
+using ndsSharp.Core.Plugins;
+using ndsSharp.Core.Plugins.BW2.Text;
 using ndsSharp.Core.Plugins.HGSS.Map;
 using ndsSharp.Core.Providers;
 using Serilog;
@@ -7,7 +10,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateLogger();
 
-var provider = new NdsFileProvider("C:/hgss.nds")
+var provider = new NdsFileProvider("C:/b2.nds")
 {
     UnpackNARCFiles = true,
     UnpackSDATFiles = true
@@ -16,5 +19,8 @@ var provider = new NdsFileProvider("C:/hgss.nds")
 provider.Initialize();
 provider.LoadPlugins();
 
-var matrix = provider.LoadObject<HGSSMapMatrix>("a/0/4/1/0.matrix");
-Log.Information("ae");
+var paletteFiles = provider.GetAllFilesOfType<NCLR>();
+foreach (var paletteFile in paletteFiles)
+{
+    var palette = provider.LoadObject<NCLR>(paletteFile);
+}

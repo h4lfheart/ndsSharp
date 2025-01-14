@@ -28,6 +28,6 @@ public abstract partial class BaseFileViewerModel : WindowModelBase
 
     public virtual void Load(BaseDeserializable obj)
     {
-        TitleString = $"{Title} - {obj.Owner!.Path}";
+        TitleString = $"{Title} - {obj.File!.Path}";
     }
 }

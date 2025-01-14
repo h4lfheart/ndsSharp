@@ -168,7 +168,7 @@ public class NdsFileProvider : IFileProvider
             throw new ParserException($"Type mismatch for {file.Path}. Expected {file.FileType?.Name}, got {type.Name}");
         }
         
-        return CreateReader(file).ReadObject(type, dataModifier: obj => obj.Owner = file);
+        return CreateReader(file).ReadObject(type, dataModifier: obj => obj.File = file);
     }
     
     public bool TryLoadObject<T>(string path, out T data) where T : BaseDeserializable, new() => TryLoadObject(Files[path], out data);
