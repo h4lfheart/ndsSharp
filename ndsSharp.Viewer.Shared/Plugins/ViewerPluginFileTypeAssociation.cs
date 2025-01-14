@@ -5,18 +5,18 @@ namespace ndsSharp.Viewer.Shared.Plugins;
 
 public partial class ViewerPluginFileTypeAssociation : ObservableObject
 {
-    [ObservableProperty] private string[] _extensions;
+    [ObservableProperty] private Type[] _fileTypes;
     [ObservableProperty] private Type _previewWindowType;
 
-    public ViewerPluginFileTypeAssociation(string extension, Type previewWindowType)
+    public ViewerPluginFileTypeAssociation(Type fileType, Type previewWindowType)
     {
-        Extensions = [extension];
-        PreviewWindowType = previewWindowType;
+        _fileTypes = [fileType];
+        _previewWindowType = previewWindowType;
     }
     
-    public ViewerPluginFileTypeAssociation(string[] extensions, Type previewWindowType)
+    public ViewerPluginFileTypeAssociation(Type[] fileTypes, Type previewWindowType)
     {
-        Extensions = extensions;
+        _fileTypes = fileTypes;
         PreviewWindowType = previewWindowType;
     }
 }

@@ -31,7 +31,7 @@ public class NdsObject : BaseDeserializable
     public override void Deserialize(DataReader reader)
     {
         ReadMagic = reader.ReadString(4).TrimEnd('0');
-        if (!string.IsNullOrEmpty(Magic) &&  ReadMagic != Magic)
+        if (!string.IsNullOrEmpty(Magic) && !(ReadMagic == Magic || ReadMagic.Flip() == Magic))
         {
             throw new ParserException($"{Magic} has invalid magic: {ReadMagic}");
         }

@@ -62,43 +62,7 @@ public partial class FilesViewModel : ViewModelBase
     [RelayCommand]
     public async Task Export()
     {
-        var targetItem = SelectedFlatViewItems.FirstOrDefault();
-        if (targetItem is null) return;
-        
-        if (await BrowseFolderDialog() is not { } outPath) return;
-
-        var targetFile = MainWM.Provider.Files[targetItem.Path];
-        switch (targetFile.Type)
-        {
-            case "btx":
-            case "nsbtx":
-            {
-                var btx = MainWM.Provider.LoadObject<BTX>(targetFile);
-                foreach (var texture in btx.TextureData.Textures)
-                {
-                    await texture.ToImage().SaveAsPngAsync(Path.Combine(outPath, $"{texture.Name}.png"));
-                }
-                
-                break;
-            }
-            case "bmd":
-            case "nsbmd":
-            {
-                var bmd = MainWM.Provider.LoadObject<BMD>(targetFile);
-                foreach (var model in bmd.ExtractModels())
-                {
-                    model.SaveToDirectory(outPath, MeshExportType.OBJ);
-                }
-                
-                break;
-            }
-            default:
-            {
-                MainWM.Message("Unsupported Exporter", $"Files with the extension \"{targetFile.Type}\" cannot be exported.");
-                
-                break;
-            }
-        }
+        throw new NotImplementedException();
     }
 
     [RelayCommand]
@@ -113,7 +77,7 @@ public partial class FilesViewModel : ViewModelBase
         var targetFile = MainWM.Provider.Files[targetItem.Path];
         foreach (var fileTypeAssociation in PluginsVM.PluginFileTypeAssociations)
         {
-            if (fileTypeAssociation.Extensions.All(extension => !targetFile.Type.Equals(extension, StringComparison.OrdinalIgnoreCase))) continue;
+            if (fileTypeAssociation.FileTypes.All(type => targetFile.FileType != type)) continue;
                     
             if (fileTypeAssociation.PreviewWindowType.BaseType?.GenericTypeArguments.FirstOrDefault() is not { } viewerModelType) continue;
             if (viewerModelType.BaseType?.GenericTypeArguments.FirstOrDefault() is not { } assetType) continue;
@@ -129,7 +93,7 @@ public partial class FilesViewModel : ViewModelBase
 
         if (!foundFileType)
         {
-            MainWM.Message("Unsupported Previewer", $"Files with the extension \"{targetFile.Type}\" cannot be previewed.");
+            MainWM.Message("Unsupported Previewer", $"Files with the type \"{targetFile.FileType.Name}\" cannot be previewed.");
         }
     }
 

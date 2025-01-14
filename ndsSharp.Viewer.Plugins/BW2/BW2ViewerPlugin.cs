@@ -1,4 +1,5 @@
 using ndsSharp.Core.Plugins.BW2;
+using ndsSharp.Core.Plugins.BW2.Text;
 using ndsSharp.Viewer.Plugins.BW2.Windows;
 using ndsSharp.Viewer.Shared.Plugins;
 using BW2TextViewer = ndsSharp.Viewer.Plugins.BW2.FileViewers.BW2TextViewer;
@@ -14,6 +15,6 @@ public class BW2ViewerPlugin : BaseViewerPlugin<BW2Plugin>
 
     public override List<ViewerPluginFileTypeAssociation> FileTypeAssociations { get; } =
     [
-        new("text", typeof(BW2TextViewer))
+        new(typeof(BW2Text), typeof(BW2TextViewer))
     ];
 }

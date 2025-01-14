@@ -2,6 +2,7 @@ using ndsSharp.Core.Objects.Exports.Textures;
 using ndsSharp.Core.Plugins.BW2.Area;
 using ndsSharp.Core.Plugins.BW2.Building;
 using ndsSharp.Core.Plugins.BW2.Map;
+using ndsSharp.Core.Plugins.BW2.Text;
 
 namespace ndsSharp.Core.Plugins.BW2;
 
@@ -11,12 +12,12 @@ public class BW2Plugin : BasePlugin
 
     public override PluginFileTypeAssociation[] FileTypeAssociations { get; } =
     [
-        new("text", pathMatches: ["a/0/0/2", "a/0/0/3"]),
-        new("map", pathMatches: ["a/0/0/8"]),
-        new("matrix", pathMatches: ["a/0/0/9"]),
-        new("headers", pathMatches: ["a/0/1/2"]),
-        new("buildings", pathMatches: ["a/2/2/5", "a/2/2/6"]),
-        new("areas", pathMatches: ["a/0/1/3"]),
+        new(typeof(BW2Text), "text", pathMatches: ["a/0/0/2", "a/0/0/3"]),
+        new(typeof(BW2Map), "map", pathMatches: ["a/0/0/8"]),
+        new(typeof(BW2MapMatrix), "matrix", pathMatches: ["a/0/0/9"]),
+        new(typeof(BW2MapHeaderContainer), "headers", pathMatches: ["a/0/1/2"]),
+        new(typeof(BW2MapBuildingContainer), "buildings", pathMatches: ["a/2/2/5", "a/2/2/6"]),
+        new(typeof(BW2AreaContainer), "areas", pathMatches: ["a/0/1/3"]),
     ];
 
     public BW2MapHeaderContainer HeaderContainer;

@@ -119,10 +119,10 @@ public class NdsFileProvider : IFileProvider
                 var fileName = nameTable.FilesById[id];
                 if (!fileName.Contains('.')) // detect extension
                 {
-                    var extension = _reader.PeekString(4, pointer.Offset).TrimEnd('0').ToLower();
-                    if (FileTypeRegistry.Contains(extension))
+                    var readExtension = _reader.PeekString(4, pointer.Offset).TrimEnd('0').ToLower();
+                    if (FileTypeRegistry.TryGetExtension(readExtension, out var realExtension))
                     {
-                        fileName += $".{extension}";
+                        fileName += $".{realExtension}";
                     }
                     else
                     {
@@ -150,19 +150,26 @@ public class NdsFileProvider : IFileProvider
         return Plugins.GetValueOrDefault(type);
     }
     
-    public IEnumerable<RomFile> GetAllFilesOfType<T>() where T : NdsObject, new()
+    public IEnumerable<RomFile> GetAllFilesOfType<T>() where T : BaseDeserializable, new()
     {
-        var accessor = new T();
-        return Files.Values.Where(file => file.Type.Equals(accessor.Magic, StringComparison.OrdinalIgnoreCase));
+        return Files.Values.Where(file => file.FileType == typeof(T));
     }
     
     public T LoadObject<T>(string path) where T : BaseDeserializable, new() => LoadObject<T>(Files[path]);
     
-    public T LoadObject<T>(RomFile file) where T : BaseDeserializable, new() => CreateReader(file).ReadObject<T>(dataModifier: obj => obj.Owner = file);
+    public T LoadObject<T>(RomFile file) where T : BaseDeserializable, new() => (T) LoadObject(file, typeof(T));
     
     public BaseDeserializable LoadObject(string path, Type type) => LoadObject(Files[path], type);
-    
-    public BaseDeserializable LoadObject(RomFile file, Type type) => CreateReader(file).ReadObject(type, dataModifier: obj => obj.Owner = file);
+
+    public BaseDeserializable LoadObject(RomFile file, Type type)
+    {
+        if (file.FileType != type)
+        {
+            throw new ParserException($"Type mismatch for {file.Path}. Expected {file.FileType?.Name}, got {type.Name}");
+        }
+        
+        return CreateReader(file).ReadObject(type, dataModifier: obj => obj.Owner = file);
+    }
     
     public bool TryLoadObject<T>(string path, out T data) where T : BaseDeserializable, new() => TryLoadObject(Files[path], out data);
     
@@ -187,22 +194,4 @@ public class NdsFileProvider : IFileProvider
     }
     
     public DataReader CreateReader(string path) => CreateReader(Files[path]);
-
-    public void LogFileStats()
-    {
-        var fileBreakdown = new Dictionary<string, int>();
-        foreach (var (path, file) in Files)
-        {
-            fileBreakdown.TryAdd(file.Type, 0);
-            fileBreakdown[file.Type]++;
-        }
-
-        fileBreakdown = fileBreakdown.OrderByDescending(x => x.Value).ToDictionary();
-
-        Log.Information("Total Files: {Count}", Files.Count);
-        foreach (var (type, count) in fileBreakdown)
-        {
-            Log.Information("{Type}: {Count}", type, count);
-        }
-    }
 }

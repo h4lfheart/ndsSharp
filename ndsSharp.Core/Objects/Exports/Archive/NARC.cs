@@ -34,10 +34,10 @@ public class NARC : NdsObject, IFileProvider
             {
                 fileName = id.ToString();
                 
-                var extension = Image.Reader.PeekString(4, pointer.Offset).TrimEnd('0').ToLower();
-                if (FileTypeRegistry.Contains(extension))
+                var readExtension = Image.Reader.PeekString(4, pointer.Offset).TrimEnd('0').ToLower();
+                if (FileTypeRegistry.TryGetExtension(readExtension, out var realExtension))
                 {
-                    fileName += $".{extension}";
+                    fileName += $".{realExtension}";
                 }
                 else
                 {

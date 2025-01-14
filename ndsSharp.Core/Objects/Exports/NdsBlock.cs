@@ -1,4 +1,5 @@
 using ndsSharp.Core.Data;
+using ndsSharp.Core.Extensions;
 
 namespace ndsSharp.Core.Objects.Exports;
 
@@ -19,7 +20,7 @@ public class NdsBlock : BaseDeserializable
     public override void Deserialize(DataReader reader)
     {
         ReadMagic = reader.ReadString(4, Owner.IsLittleEndian).Trim().TrimEnd('0');
-        if (!string.IsNullOrEmpty(Magic) && ReadMagic != Magic)
+        if (!string.IsNullOrEmpty(Magic) && !(ReadMagic == Magic || ReadMagic.Flip() == Magic))
         {
             throw new ParserException($"{Magic} has invalid magic: {ReadMagic}");
         }
