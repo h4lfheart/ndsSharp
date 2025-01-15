@@ -17,9 +17,9 @@ public class PLTT : NdsBlock
     {
         base.Deserialize(reader);
 
-        Format = reader.Read<TextureFormat>();
+        Format = reader.ReadEnum<TextureFormat, ushort>();
 
-        reader.Position += 7;
+        reader.Position += 6;
 
         var dataLength = reader.Read<uint>();
         
