@@ -24,7 +24,7 @@ public class PLTT : NdsBlock
         var dataLength = reader.Read<uint>();
         
         var dataOffset = reader.Read<uint>();
-        reader.Position = (int) dataOffset;
+        reader.Position = (int) dataOffset + HEADER_SIZE;
 
         var colorCount = Format switch
         {

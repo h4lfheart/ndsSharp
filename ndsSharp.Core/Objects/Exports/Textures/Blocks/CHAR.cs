@@ -11,8 +11,11 @@ namespace ndsSharp.Core.Objects.Exports.Textures.Blocks;
 
 public class CHAR : NdsBlock
 {
-    public short Width;
-    public short Height;
+    public short TileWidth;
+    public short TileHeight;
+    public int Width => TileWidth > 0 ? TileWidth * 8 : -1;
+    public int Height => TileHeight > 0 ? TileHeight * 8 : -1;
+    
     public TextureFormat TextureFormat;
     public CharacterFormat CharacterFormat;
     public bool IsSwizzled;
@@ -25,21 +28,21 @@ public class CHAR : NdsBlock
     {
         base.Deserialize(reader);
 
-        Width = reader.Read<short>();
-        Height = reader.Read<short>();
+        TileHeight = reader.Read<short>();
+        TileWidth = reader.Read<short>();
         TextureFormat = reader.ReadEnum<TextureFormat, uint>();
 
-        CharacterFormat = reader.Read<CharacterFormat>();
+        CharacterFormat = reader.ReadEnum<CharacterFormat>();
 
         reader.Position += sizeof(ushort);
 
         var flags = reader.Read<uint>();
-        IsSwizzled = (flags & 1) == 1;
+        IsSwizzled = (flags & 1) == 0;
         
         var dataLength = reader.Read<uint>();
         
         var dataOffset = reader.Read<uint>();
-        reader.Position = (int) dataOffset;
+        reader.Position = (int) dataOffset + HEADER_SIZE;
 
         var pixelCount = (int) (dataLength * 8 / TextureFormat.BitsPerPixel());
         Pixels = TextureFormat switch
@@ -56,7 +59,7 @@ public class CHAR : NdsBlock
         {
             if (Width == -1) throw new NotSupportedException("Cannot un-swizzle texture with a width of -1");
             
-            PixelSwizzler.UnSwizzle(ref Pixels, Width * 8);
+            PixelSwizzler.UnSwizzle(ref Pixels, Width);
         }
     }
 }

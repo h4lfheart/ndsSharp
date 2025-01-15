@@ -2,6 +2,9 @@ using ndsSharp.Core.Conversion.Textures.Images.Types;
 using ndsSharp.Core.Conversion.Textures.Palettes;
 using ndsSharp.Core.Conversion.Textures.Pixels.Colored;
 using ndsSharp.Core.Conversion.Textures.Pixels.Indexed;
+using ndsSharp.Core.Extensions;
+using ndsSharp.Core.Objects.Exports.Palettes;
+using ndsSharp.Core.Objects.Exports.Textures;
 using ndsSharp.Core.Objects.Rom;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -19,6 +22,21 @@ public static class ImageExtensions
             IndexedPaletteImage indexedPaletteImage => indexedPaletteImage.ToImage(),
             ColoredImage coloredImage => coloredImage.ToImage()
         };
+    }
+
+    public static Image<Rgba32> ToImage(this NCGR ncgr, NCLR nclr, bool isFirstColorTransparent = false)
+    {
+        var characterData = ncgr.CharacterData;
+        
+        var meta = new ImageMetaData(
+            Width: characterData.Width > 0 ? characterData.Width : 32,
+            Height: characterData.Height > 0 ? characterData.Height : characterData.Pixels.Length / 32,
+            Format: ncgr.CharacterData.TextureFormat,
+            IsFirstColorTransparent: isFirstColorTransparent
+        );
+        
+        var image = new IndexedPaletteImage(ncgr.File!.Name, characterData.Pixels, nclr.PaletteData.Palettes, meta);
+        return image.ToImage();
     }
     
     private delegate void PixelRef(ref Rgba32 pixel, int index);
@@ -65,7 +83,7 @@ public static class ImageExtensions
                 case IndexedPixel indexedPixel:
                 {
                     var palette = palettes[indexedPixel.PaletteIndex];
-                    var pixelColor = palette.Colors[System.Math.Min(indexedPixel.Index, palette.Colors.Count - 1)]; 
+                    var pixelColor = palette.Colors[Math.Min(indexedPixel.Index, palette.Colors.Count - 1)]; 
                     
                     color = pixelColor.ToPixel<Rgba32>();
                     if (indexedPixel.Alpha != 255)

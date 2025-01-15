@@ -15,7 +15,7 @@ public class NdsBlock : BaseDeserializable
     
     public virtual string Magic => string.Empty;
 
-    private const int HEADER_SIZE = 8; // 4 char magic + file size
+    protected const int HEADER_SIZE = 8; // 4 char magic + file size
     
     public override void Deserialize(DataReader reader)
     {
