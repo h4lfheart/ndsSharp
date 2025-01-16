@@ -19,7 +19,7 @@ public static class PixelExtensions
         return deserializer.Deserialize(reader, count);
     }
     
-    public static IndexedPaletteImage Combine(this NCGR ncgr, NCLR nclr, bool isFirstColorTransparent = false)
+    public static IndexedPaletteImage CombineWith(this NCGR ncgr, NCLR nclr, bool isFirstColorTransparent = false)
     {
         var characterData = ncgr.CharacterData;
         
@@ -30,6 +30,6 @@ public static class PixelExtensions
             IsFirstColorTransparent: isFirstColorTransparent
         );
         
-        return new IndexedPaletteImage(ncgr.File!.Name, characterData.Pixels, nclr.PaletteData.Palettes, meta);
+        return new IndexedPaletteImage(ncgr.File?.Name ?? "Texture", characterData.Pixels, nclr.PaletteData.Palettes, meta);
     }
 }

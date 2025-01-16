@@ -1,13 +1,12 @@
-﻿using ndsSharp.Core.Conversion.Textures.Cells;
+﻿using System.Diagnostics;
+using ndsSharp.Core.Conversion.Textures.Cells;
 using ndsSharp.Core.Conversion.Textures.Images;
 using ndsSharp.Core.Conversion.Textures.Pixels;
+using ndsSharp.Core.Objects.Exports.Archive;
 using ndsSharp.Core.Objects.Exports.Cells;
-using ndsSharp.Core.Objects.Exports.Meshes;
 using ndsSharp.Core.Objects.Exports.Palettes;
 using ndsSharp.Core.Objects.Exports.Textures;
 using ndsSharp.Core.Plugins;
-using ndsSharp.Core.Plugins.BW2.Text;
-using ndsSharp.Core.Plugins.HGSS.Map;
 using ndsSharp.Core.Providers;
 using Serilog;
 using SixLabors.ImageSharp;
@@ -18,19 +17,22 @@ Log.Logger = new LoggerConfiguration()
 
 var provider = new NdsFileProvider("C:/b2.nds")
 {
-    UnpackNARCFiles = true,
-    UnpackSDATFiles = true
+    UnpackNARCFiles = true
 };
 
 provider.Initialize();
 provider.LoadPlugins();
 
-var palette = provider.LoadObject<NCLR>("a/0/3/0/4.nclr");
-var texture = provider.LoadObject<NCGR>("a/0/3/0/5.ncgr");
-var cell = provider.LoadObject<NCER>("a/0/3/0/2.ncer");
+var compressedFiles = provider.Files.Where(x => x.Value.Compression is not null).ToArray();
+Log.Information("There are {Length} total compressed files", compressedFiles.Length);
+Log.Information("Took {TotalSeconds}s to check for these patterns", NARC.CompressTimer.Elapsed.TotalSeconds);
 
-var cellImages = cell.ExtractCells(texture, palette);
-foreach (var cellImage in cellImages)
-{
-    cellImage.ToImage().SaveAsPng($"C:/Art/Cells/{cellImage.Name}.png");
-}
+var compressedTexture = provider.LoadObject<NCGR>("a/0/5/1/0.ncgr");
+var palette = provider.LoadObject<NCLR>("a/0/5/1/18.nclr");
+
+compressedTexture.CombineWith(palette, true).ToImage().SaveAsPng("C:/Art/Cells/Base.png");
+
+var cells = provider.LoadObject<NCER>("a/0/5/1/4.ncer");
+cells.ExtractCells(compressedTexture, palette).ForEach(image => image.ToImage().SaveAsPng($"C:/Art/Cells/{image.Name}.png"));
+
+Debugger.Break();

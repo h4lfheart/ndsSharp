@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Reflection;
+using AuroraLib.Compression.Algorithms;
 using ndsSharp.Core.Data;
+using ndsSharp.Core.Data.Reader;
 using ndsSharp.Core.Extensions;
 using ndsSharp.Core.Objects;
 using ndsSharp.Core.Objects.Exports;
@@ -65,7 +67,10 @@ public class NdsFileProvider : IFileProvider
                 foreach (var (path, file) in narc.Files)
                 {
                     var newPath = basePath + $"/{path}";
-                    Files[newPath] = new RomFile(newPath, file.Pointer.GlobalFrom(narc.Image.Reader), narcFile);
+                    Files[newPath] = new RomFile(newPath, file.Pointer.GlobalFrom(narc.Image.Reader), narcFile)
+                    {
+                        Compression = file.Compression
+                    };
                 }
                 
                 Files.Remove(narcFile.Path);
@@ -117,9 +122,11 @@ public class NdsFileProvider : IFileProvider
             if (id >= nameTable.FirstId)
             {
                 var fileName = nameTable.FilesById[id];
+                
+                var compression = Compression.GetCompression(_reader, pointer);
                 if (!fileName.Contains('.')) // detect extension
                 {
-                    var readExtension = _reader.PeekString(4, pointer.Offset).TrimEnd('0').ToLower();
+                    var readExtension = _reader.PeekString(4).TrimEnd('0').ToLower();
                     if (FileTypeRegistry.TryGetExtension(readExtension, out var realExtension))
                     {
                         fileName += $".{realExtension}";
@@ -130,7 +137,10 @@ public class NdsFileProvider : IFileProvider
                     }
                 }
 
-                Files[fileName] = new RomFile(fileName, pointer);
+                Files[fileName] = new RomFile(fileName, pointer)
+                {
+                    Compression = compression
+                };
             }
             else
             {
@@ -167,8 +177,18 @@ public class NdsFileProvider : IFileProvider
         {
             throw new ParserException($"Type mismatch for {file.Path}. Expected {file.FileType?.Name}, got {type.Name}");
         }
+
+        var reader = CreateReader(file);
+        if (file.Compression is not null)
+        {
+            var compressedStream = new MemoryReaderStream(reader);
+            var uncompressedStream = new MemoryStream();
+            file.Compression.Decompress(compressedStream, uncompressedStream);
+
+            reader = new DataReader(uncompressedStream.GetBuffer());
+        }
         
-        return CreateReader(file).ReadObject(type, dataModifier: obj => obj.File = file);
+        return reader.ReadObject(type, dataModifier: obj => obj.File = file);
     }
     
     public bool TryLoadObject<T>(string path, out T data) where T : BaseDeserializable, new() => TryLoadObject(Files[path], out data);

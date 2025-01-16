@@ -1,3 +1,4 @@
+using AuroraLib.Compression.Interfaces;
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Extensions;
 using ndsSharp.Core.Objects.Exports;
@@ -12,6 +13,8 @@ public class RomFile
     public string NameWithoutExtension => Path.SubstringAfterLast("/").SubstringBeforeLast(".");
     
     public Type? FileType => FileTypeRegistry.GetTypeOrDefault(Extension);
+
+    public ICompressionAlgorithm? Compression;
 
     public RomFile? Owner;
 

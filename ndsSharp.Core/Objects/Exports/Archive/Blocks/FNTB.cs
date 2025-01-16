@@ -1,7 +1,7 @@
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Objects.Files;
 
-namespace ndsSharp.Core.Objects.Exports.Archive;
+namespace ndsSharp.Core.Objects.Exports.Archive.Blocks;
 
 public class FNTB : NdsBlock
 {

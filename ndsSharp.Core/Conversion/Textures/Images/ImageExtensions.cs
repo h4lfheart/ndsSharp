@@ -98,6 +98,19 @@ public static class ImageExtensions
             pixel = color;
         });
 
+        bitmap.Mutate(context =>
+        {
+            if (metaData.FlipU)
+            {
+                context.Flip(FlipMode.Horizontal);
+            }
+
+            if (metaData.FlipV)
+            {
+                context.Flip(FlipMode.Vertical);
+            }
+        });
+
         return bitmap;
     }
     
