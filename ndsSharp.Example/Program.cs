@@ -1,4 +1,6 @@
-﻿using ndsSharp.Core.Conversion.Textures.Images;
+﻿using ndsSharp.Core.Conversion.Textures.Cells;
+using ndsSharp.Core.Conversion.Textures.Images;
+using ndsSharp.Core.Conversion.Textures.Pixels;
 using ndsSharp.Core.Objects.Exports.Cells;
 using ndsSharp.Core.Objects.Exports.Meshes;
 using ndsSharp.Core.Objects.Exports.Palettes;
@@ -23,8 +25,12 @@ var provider = new NdsFileProvider("C:/b2.nds")
 provider.Initialize();
 provider.LoadPlugins();
 
-var palette = provider.LoadObject<NCLR>("a/0/0/0/0.nclr");
-var texture = provider.LoadObject<NCGR>("a/0/0/0/2.ncgr");
+var palette = provider.LoadObject<NCLR>("a/0/3/0/4.nclr");
+var texture = provider.LoadObject<NCGR>("a/0/3/0/5.ncgr");
+var cell = provider.LoadObject<NCER>("a/0/3/0/2.ncer");
 
-var image = texture.ToImage(palette, true);
-image.SaveAsPng("C:/Art/test.png");
+var cellImages = cell.ExtractCells(texture, palette);
+foreach (var cellImage in cellImages)
+{
+    cellImage.ToImage().SaveAsPng($"C:/Art/Cells/{cellImage.Name}.png");
+}

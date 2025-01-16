@@ -57,9 +57,7 @@ public class CHAR : NdsBlock
 
         if (IsSwizzled)
         {
-            if (Width == -1) throw new NotSupportedException("Cannot un-swizzle texture with a width of -1");
-            
-            PixelSwizzler.UnSwizzle(ref Pixels, Width);
+            PixelSwizzler.UnSwizzle(ref Pixels, Width > 0 ? Width : 32);
         }
     }
 }

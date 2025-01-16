@@ -23,21 +23,6 @@ public static class ImageExtensions
             ColoredImage coloredImage => coloredImage.ToImage()
         };
     }
-
-    public static Image<Rgba32> ToImage(this NCGR ncgr, NCLR nclr, bool isFirstColorTransparent = false)
-    {
-        var characterData = ncgr.CharacterData;
-        
-        var meta = new ImageMetaData(
-            Width: characterData.Width > 0 ? characterData.Width : 32,
-            Height: characterData.Height > 0 ? characterData.Height : characterData.Pixels.Length / 32,
-            Format: ncgr.CharacterData.TextureFormat,
-            IsFirstColorTransparent: isFirstColorTransparent
-        );
-        
-        var image = new IndexedPaletteImage(ncgr.File!.Name, characterData.Pixels, nclr.PaletteData.Palettes, meta);
-        return image.ToImage();
-    }
     
     private delegate void PixelRef(ref Rgba32 pixel, int index);
     
