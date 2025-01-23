@@ -1,7 +1,7 @@
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Objects;
 
-namespace ndsSharp.Plugins.BW2.Map;
+namespace ndsSharp.Core.Plugins.BW2.Map;
 
 public class BW2MapHeaderContainer : BaseDeserializable
 {

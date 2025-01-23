@@ -2,7 +2,7 @@ using System.Numerics;
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Objects;
 
-namespace ndsSharp.Plugins.BW2.Building;
+namespace ndsSharp.Core.Plugins.BW2.Building;
 
 public class BW2MapBuildingDefinition : BaseDeserializable
 {

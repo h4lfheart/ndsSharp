@@ -3,8 +3,9 @@ using ndsSharp.Core.Objects.Files;
 
 namespace ndsSharp.Core.Plugins;
 
-public class PluginFileTypeAssociation(string extension, string[]? pathMatches = null, Regex[]? regexMatches = null, string[]? magicMatches = null)
+public class PluginFileTypeAssociation(Type fileType, string extension, string[]? pathMatches = null, Regex[]? regexMatches = null, string[]? magicMatches = null)
 {
+    public Type FileType = fileType;
     public string Extension = extension;
     public string[] PathMatches = pathMatches ?? [];
     public Regex[] RegexMatches = regexMatches ?? [];

@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Extensions;
+using ndsSharp.Core.Objects.Exports.Archive.Blocks;
 using ndsSharp.Core.Objects.Files;
 using ndsSharp.Core.Providers;
 using Serilog;
@@ -15,6 +17,8 @@ public class NARC : NdsObject, IFileProvider
     [Block] public FATB AllocationTable;
     [Block] public FNTB NameTable;
     [Block] public FIMG Image;
+
+    public static readonly Stopwatch CompressTimer = new();
 
     public override void Deserialize(DataReader reader)
     {
@@ -33,20 +37,28 @@ public class NARC : NdsObject, IFileProvider
             else
             {
                 fileName = id.ToString();
-                
-                var extension = Image.Reader.PeekString(4, pointer.Offset).TrimEnd('0').ToLower();
-                if (FileTypeRegistry.Contains(extension))
+            }
+            
+            CompressTimer.Start();
+            var compression = Compression.GetCompression(Image.Reader, pointer);
+            CompressTimer.Stop();
+            if (!fileName.Contains('.')) // detect extension
+            {
+                var readExtension = Image.Reader.PeekString(4).TrimEnd('0').ToLower();
+                if (FileTypeRegistry.TryGetExtension(readExtension, out var realExtension))
                 {
-                    fileName += $".{extension}";
+                    fileName += $".{realExtension}";
                 }
                 else
                 {
                     fileName += ".bin";
                 }
             }
-            
-            
-            Files[fileName] = new RomFile(fileName, pointer);
+
+            Files[fileName] = new RomFile(fileName, pointer)
+            {
+                Compression = compression
+            };
         }
     }
 

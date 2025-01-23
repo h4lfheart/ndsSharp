@@ -1,6 +1,6 @@
-using ndsSharp.Core.Plugins;
+using ndsSharp.Core.Plugins.HGSS.Map;
 
-namespace ndsSharp.Plugins.HGSS;
+namespace ndsSharp.Core.Plugins.HGSS;
 
 public class HGSSPlugin : BasePlugin
 {
@@ -8,6 +8,6 @@ public class HGSSPlugin : BasePlugin
     
     public override PluginFileTypeAssociation[] FileTypeAssociations { get; } =
     [
-        new("matrix", pathMatches: ["a/0/4/1"]),
+        new(typeof(HGSSMapMatrix), "matrix", pathMatches: ["a/0/4/1"]),
     ];
 }

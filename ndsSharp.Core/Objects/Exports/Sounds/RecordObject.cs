@@ -12,7 +12,7 @@ public abstract class RecordObject<TInfoType> : NdsObject where TInfoType : Base
     {
         base.Deserialize(reader);
 
-        if (Owner is not SDATRomFile sdatRomFile) return;
+        if (File is not SDATRomFile sdatRomFile) return;
         
         Info = (TInfoType) sdatRomFile.SoundInfo;
         RecordId = sdatRomFile.RecordId;

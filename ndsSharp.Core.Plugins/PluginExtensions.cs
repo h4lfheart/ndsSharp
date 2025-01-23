@@ -1,9 +1,9 @@
 using System.Reflection;
 using ndsSharp.Core.Extensions;
-using ndsSharp.Core.Plugins;
+using ndsSharp.Core.Objects.Exports;
 using ndsSharp.Core.Providers;
 
-namespace ndsSharp.Plugins;
+namespace ndsSharp.Core.Plugins;
 
 public static class PluginExtensions
 {
@@ -16,6 +16,11 @@ public static class PluginExtensions
             if (pluginInstance.GameCodes.Length > 0 && !pluginInstance.GameCodes.Contains(provider.Header.GameCode)) continue;
 
             pluginInstance.Provider = provider;
+
+            foreach (var fileTypeAssociation in pluginInstance.FileTypeAssociations)
+            {
+                FileTypeRegistry.Register(fileTypeAssociation.Extension, fileTypeAssociation.FileType);
+            }
 
             foreach (var file in provider.Files.Values.ToArray())
             {

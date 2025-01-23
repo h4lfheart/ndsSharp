@@ -9,8 +9,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ndsSharp.Core\ndsSharp.Core.csproj" />
-      <ProjectReference Include="..\ndsSharp.Core.Plugins\ndsSharp.Core.Plugins.csproj" />
+        <ProjectReference Include="..\ndsSharp.Core\ndsSharp.Core.csproj" />
+        <ProjectReference Include="..\ndsSharp.Core.Plugins\ndsSharp.Core.Plugins.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AuroraLib.Compression" Version="1.3.0.1" />
     </ItemGroup>
 
 </Project>

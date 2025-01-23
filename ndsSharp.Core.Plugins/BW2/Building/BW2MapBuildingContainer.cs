@@ -2,7 +2,7 @@ using ndsSharp.Core.Data;
 using ndsSharp.Core.Objects;
 using ndsSharp.Core.Objects.Exports.Meshes;
 
-namespace ndsSharp.Plugins.BW2.Building;
+namespace ndsSharp.Core.Plugins.BW2.Building;
 
 public class BW2MapBuildingContainer : BW2Object
 {

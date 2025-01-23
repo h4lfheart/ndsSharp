@@ -2,6 +2,9 @@ using ndsSharp.Core.Conversion.Textures.Images.Types;
 using ndsSharp.Core.Conversion.Textures.Palettes;
 using ndsSharp.Core.Conversion.Textures.Pixels.Colored;
 using ndsSharp.Core.Conversion.Textures.Pixels.Indexed;
+using ndsSharp.Core.Extensions;
+using ndsSharp.Core.Objects.Exports.Palettes;
+using ndsSharp.Core.Objects.Exports.Textures;
 using ndsSharp.Core.Objects.Rom;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -65,7 +68,7 @@ public static class ImageExtensions
                 case IndexedPixel indexedPixel:
                 {
                     var palette = palettes[indexedPixel.PaletteIndex];
-                    var pixelColor = palette.Colors[System.Math.Min(indexedPixel.Index, palette.Colors.Count - 1)]; 
+                    var pixelColor = palette.Colors[Math.Min(indexedPixel.Index, palette.Colors.Count - 1)]; 
                     
                     color = pixelColor.ToPixel<Rgba32>();
                     if (indexedPixel.Alpha != 255)
@@ -93,6 +96,19 @@ public static class ImageExtensions
             }
 
             pixel = color;
+        });
+
+        bitmap.Mutate(context =>
+        {
+            if (metaData.FlipU)
+            {
+                context.Flip(FlipMode.Horizontal);
+            }
+
+            if (metaData.FlipV)
+            {
+                context.Flip(FlipMode.Vertical);
+            }
         });
 
         return bitmap;

@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Reflection;
+using AuroraLib.Compression.Algorithms;
 using ndsSharp.Core.Data;
+using ndsSharp.Core.Data.Reader;
 using ndsSharp.Core.Extensions;
 using ndsSharp.Core.Objects;
 using ndsSharp.Core.Objects.Exports;
@@ -65,7 +67,10 @@ public class NdsFileProvider : IFileProvider
                 foreach (var (path, file) in narc.Files)
                 {
                     var newPath = basePath + $"/{path}";
-                    Files[newPath] = new RomFile(newPath, file.Pointer.GlobalFrom(narc.Image.Reader), narcFile);
+                    Files[newPath] = new RomFile(newPath, file.Pointer.GlobalFrom(narc.Image.Reader), narcFile)
+                    {
+                        Compression = file.Compression
+                    };
                 }
                 
                 Files.Remove(narcFile.Path);
@@ -118,12 +123,14 @@ public class NdsFileProvider : IFileProvider
             if (id >= nameTable.FirstId)
             {
                 var fileName = nameTable.FilesById[id];
+                
+                var compression = Compression.GetCompression(_reader, pointer);
                 if (!fileName.Contains('.')) // detect extension
                 {
-                    var extension = _reader.PeekString(4, pointer.Offset).TrimEnd('0').ToLower();
-                    if (FileTypeRegistry.Contains(extension))
+                    var readExtension = _reader.PeekString(4).TrimEnd('0').ToLower();
+                    if (FileTypeRegistry.TryGetExtension(readExtension, out var realExtension))
                     {
-                        fileName += $".{extension}";
+                        fileName += $".{realExtension}";
                     }
                     else
                     {
@@ -131,7 +138,10 @@ public class NdsFileProvider : IFileProvider
                     }
                 }
 
-                Files[fileName] = new RomFile(fileName, pointer);
+                Files[fileName] = new RomFile(fileName, pointer)
+                {
+                    Compression = compression
+                };
             }
             else
             {
@@ -151,19 +161,36 @@ public class NdsFileProvider : IFileProvider
         return Plugins.GetValueOrDefault(type);
     }
     
-    public IEnumerable<RomFile> GetAllFilesOfType<T>() where T : NdsObject, new()
+    public IEnumerable<RomFile> GetAllFilesOfType<T>() where T : BaseDeserializable, new()
     {
-        var accessor = new T();
-        return Files.Values.Where(file => file.Type.Equals(accessor.Magic, StringComparison.OrdinalIgnoreCase));
+        return Files.Values.Where(file => file.FileType == typeof(T));
     }
     
     public T LoadObject<T>(string path) where T : BaseDeserializable, new() => LoadObject<T>(Files[path]);
     
-    public T LoadObject<T>(RomFile file) where T : BaseDeserializable, new() => CreateReader(file).ReadObject<T>(dataModifier: obj => obj.Owner = file);
+    public T LoadObject<T>(RomFile file) where T : BaseDeserializable, new() => (T) LoadObject(file, typeof(T));
     
     public BaseDeserializable LoadObject(string path, Type type) => LoadObject(Files[path], type);
-    
-    public BaseDeserializable LoadObject(RomFile file, Type type) => CreateReader(file).ReadObject(type, dataModifier: obj => obj.Owner = file);
+
+    public BaseDeserializable LoadObject(RomFile file, Type type)
+    {
+        if (file.FileType != type)
+        {
+            throw new ParserException($"Type mismatch for {file.Path}. Expected {file.FileType?.Name}, got {type.Name}");
+        }
+
+        var reader = CreateReader(file);
+        if (file.Compression is not null)
+        {
+            var compressedStream = new MemoryReaderStream(reader);
+            var uncompressedStream = new MemoryStream();
+            file.Compression.Decompress(compressedStream, uncompressedStream);
+
+            reader = new DataReader(uncompressedStream.GetBuffer());
+        }
+        
+        return reader.ReadObject(type, dataModifier: obj => obj.File = file);
+    }
     
     public bool TryLoadObject<T>(string path, out T data) where T : BaseDeserializable, new() => TryLoadObject(Files[path], out data);
     

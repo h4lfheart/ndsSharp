@@ -176,7 +176,7 @@ public class TextureInfo : BaseDeserializable
     }
 }
 
-public enum TextureFormat : byte
+public enum TextureFormat
 {
     None = 0,
     A3I5 = 1,

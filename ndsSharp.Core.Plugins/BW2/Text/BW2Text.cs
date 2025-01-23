@@ -1,9 +1,7 @@
-using System.Globalization;
-using System.Text;
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Objects;
 
-namespace ndsSharp.Plugins.BW2.Text;
+namespace ndsSharp.Core.Plugins.BW2.Text;
 
 public class BW2Text : BaseDeserializable
 {

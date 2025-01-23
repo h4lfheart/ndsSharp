@@ -6,7 +6,7 @@ namespace ndsSharp.Core.Objects;
 
 public abstract class BaseDeserializable
 {
-    public RomFile? Owner;
+    public RomFile? File;
     public abstract void Deserialize(DataReader reader);
 }
 

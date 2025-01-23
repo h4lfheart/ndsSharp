@@ -130,6 +130,14 @@ public class DataReader : MemoryReader
         return (T) Read(primitiveType);
     }
     
+    public TEnumType ReadEnum<TEnumType, TPrimitiveType>() where TEnumType : Enum where TPrimitiveType : struct
+    {
+        var numberValue = Read<TPrimitiveType>();
+        var underlyingType = Enum.GetUnderlyingType(typeof(TEnumType));
+        var convertedValue = Convert.ChangeType(numberValue, underlyingType);
+        return (TEnumType) convertedValue;
+    }
+    
     public T Peek<T>(Func<T> func)
     {
         var originalPos = Position;

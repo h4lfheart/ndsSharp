@@ -8,7 +8,9 @@ public static class StringExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Flip(this string str)
     {
-        return new string(str.Reverse().ToArray());
+        var characters = str.ToCharArray();
+        Array.Reverse(characters);
+        return new string(characters);
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -31,7 +31,7 @@ public class NdsObject : BaseDeserializable
     public override void Deserialize(DataReader reader)
     {
         ReadMagic = reader.ReadString(4).TrimEnd('0');
-        if (!string.IsNullOrEmpty(Magic) &&  ReadMagic != Magic)
+        if (!string.IsNullOrEmpty(Magic) && !(ReadMagic == Magic || ReadMagic.Flip() == Magic))
         {
             throw new ParserException($"{Magic} has invalid magic: {ReadMagic}");
         }
@@ -53,7 +53,7 @@ public class NdsObject : BaseDeserializable
                 reader.Position = (int) offset;
                 
                 var (extension, length) = reader.Peek(() => (reader.ReadString(4, IsLittleEndian).TrimEnd('0'), reader.Read<uint>()));
-                var pointer = new DataPointer((int) offset, (int) length);
+                var pointer = new DataPointer((int) offset, (int) Math.Min(length, reader.Length - offset));
                 if (FileTypeRegistry.TryGetType(extension, GetType(), out var type))
                 {
                     Blocks.Add(reader.LoadPointer(pointer).ReadObject<NdsBlock>(type, block => block.Owner = this));
@@ -73,7 +73,7 @@ public class NdsObject : BaseDeserializable
                 var offset = reader.Position;
             
                 var (extension, length) = reader.Peek(() => (reader.ReadString(4, IsLittleEndian).Trim().TrimEnd('0'), reader.Read<uint>()));
-                var pointer = new DataPointer(offset, (int) length);
+                var pointer = new DataPointer(offset, (int) Math.Min(length, reader.Length - offset));
                 if (FileTypeRegistry.TryGetType(extension, GetType(), out var type))
                 {
                     Blocks.Add(reader.LoadPointer(pointer).ReadObject<NdsBlock>(type, block => block.Owner = this));

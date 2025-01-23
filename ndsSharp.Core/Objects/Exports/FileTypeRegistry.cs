@@ -1,4 +1,5 @@
 using System.Reflection;
+using ndsSharp.Core.Extensions;
 
 namespace ndsSharp.Core.Objects.Exports;
 
@@ -43,22 +44,38 @@ public class FileTypeRegistry
 
         }
     }
-
-    public static bool Contains(string str)
+    
+    public static void Register(string extension, Type fileType)
     {
-        return Types.Any(kvp => kvp.Key.Equals(str, StringComparison.OrdinalIgnoreCase));
+        Types.Add(new KeyValuePair<string, Type>(extension, fileType));
+    }
+    
+    public static bool TryGetExtension(string str, out string extension)
+    {
+        extension = Types.FirstOrDefault(kvp => kvp.Key.Equals(str, StringComparison.OrdinalIgnoreCase)
+                                                || kvp.Key.Equals(str.Flip(), StringComparison.OrdinalIgnoreCase)).Key?.ToLower()!;
+        return extension is not null;
+    }
+    
+    public static Type? GetTypeOrDefault(string str, Type? defaultType = null)
+    {
+        return TryGetType(str, out var foundType) ? foundType : defaultType;
     }
     
     public static bool TryGetType(string str, out Type type)
     {
-        type = Types.FirstOrDefault(kvp => kvp.Key.Equals(str)).Value;
+        type = Types.FirstOrDefault(kvp => kvp.Key.Equals(str, StringComparison.OrdinalIgnoreCase)
+                                           || kvp.Key.Equals(str.Flip(), StringComparison.OrdinalIgnoreCase)).Value;
         return type is not null;
     }
     
     public static bool TryGetType(string str, Type ownerType, out Type type)
     {
-        type = Types.FirstOrDefault(kvp => kvp.Key.Equals(str) && kvp.Value.DeclaringType == ownerType).Value;
-        type ??= Types.FirstOrDefault(kvp => kvp.Key.Equals(str)).Value;
+        type = Types.FirstOrDefault(kvp => kvp.Value.DeclaringType == ownerType 
+                                           && (kvp.Key.Equals(str, StringComparison.OrdinalIgnoreCase) 
+                                               || kvp.Key.Equals(str.Flip(), StringComparison.OrdinalIgnoreCase))).Value;
+        type ??= Types.FirstOrDefault(kvp => kvp.Key.Equals(str, StringComparison.OrdinalIgnoreCase)
+                 || kvp.Key.Equals(str.Flip(), StringComparison.OrdinalIgnoreCase)).Value;
         return type is not null;
     }
 }

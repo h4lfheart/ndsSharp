@@ -1,4 +1,5 @@
 using ndsSharp.Core.Data;
+using ndsSharp.Core.Extensions;
 
 namespace ndsSharp.Core.Objects.Exports;
 
@@ -14,12 +15,12 @@ public class NdsBlock : BaseDeserializable
     
     public virtual string Magic => string.Empty;
 
-    private const int HEADER_SIZE = 8; // 4 char magic + file size
+    protected const int HEADER_SIZE = 8; // 4 char magic + file size
     
     public override void Deserialize(DataReader reader)
     {
         ReadMagic = reader.ReadString(4, Owner.IsLittleEndian).Trim().TrimEnd('0');
-        if (!string.IsNullOrEmpty(Magic) && ReadMagic != Magic)
+        if (!string.IsNullOrEmpty(Magic) && !(ReadMagic == Magic || ReadMagic.Flip() == Magic))
         {
             throw new ParserException($"{Magic} has invalid magic: {ReadMagic}");
         }
