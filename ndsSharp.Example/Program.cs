@@ -1,8 +1,5 @@
-﻿using System.Diagnostics;
-using ndsSharp.Core.Conversion.Textures.Cells;
+﻿using ndsSharp.Core.Conversion.Textures.Cells;
 using ndsSharp.Core.Conversion.Textures.Images;
-using ndsSharp.Core.Conversion.Textures.Pixels;
-using ndsSharp.Core.Objects.Exports.Archive;
 using ndsSharp.Core.Objects.Exports.Cells;
 using ndsSharp.Core.Objects.Exports.Palettes;
 using ndsSharp.Core.Objects.Exports.Textures;
@@ -11,28 +8,31 @@ using ndsSharp.Core.Providers;
 using Serilog;
 using SixLabors.ImageSharp;
 
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateLogger();
+namespace ndsSharp.Example;
 
-var provider = new NdsFileProvider("C:/b2.nds")
+public static class Program
 {
-    UnpackNARCFiles = true
-};
+    public static void Main()
+    {
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateLogger();
 
-provider.Initialize();
-provider.LoadPlugins();
+        var provider = new NdsFileProvider("C:/b2.nds")
+        {
+            UnpackNARCFiles = true
+        };
 
-var compressedFiles = provider.Files.Where(x => x.Value.Compression is not null).ToArray();
-Log.Information("There are {Length} total compressed files", compressedFiles.Length);
-Log.Information("Took {TotalSeconds}s to check for these patterns", NARC.CompressTimer.Elapsed.TotalSeconds);
+        provider.Initialize();
+        provider.LoadPlugins();
 
-var compressedTexture = provider.LoadObject<NCGR>("a/0/5/1/0.ncgr");
-var palette = provider.LoadObject<NCLR>("a/0/5/1/18.nclr");
+        var ncgr = provider.LoadObject<NCGR>("a/0/3/0/5.ncgr");
+        var nclr = provider.LoadObject<NCLR>("a/0/3/0/4.nclr");
+        var ncer = provider.LoadObject<NCER>("a/0/3/0/0.ncer");
 
-compressedTexture.CombineWith(palette, true).ToImage().SaveAsPng("C:/Art/Cells/Base.png");
-
-var cells = provider.LoadObject<NCER>("a/0/5/1/4.ncer");
-cells.ExtractCells(compressedTexture, palette).ForEach(image => image.ToImage().SaveAsPng($"C:/Art/Cells/{image.Name}.png"));
-
-Debugger.Break();
+        foreach (var indexedPaletteImage in ncer.ExtractCells(ncgr, nclr))
+        {
+            indexedPaletteImage.ToImage().SaveAsPng($"C:/Art/Cells/{indexedPaletteImage.Name}.png");
+        }
+    }
+}

@@ -13,8 +13,8 @@ public class CHAR : NdsBlock
 {
     public short TileWidth;
     public short TileHeight;
-    public int Width => TileWidth > 0 ? TileWidth * 8 : -1;
-    public int Height => TileHeight > 0 ? TileHeight * 8 : -1;
+    public int Width => TileWidth > 0 ? TileWidth * 8 : 32;
+    public int Height => TileHeight > 0 ? TileHeight * 8 : Pixels.Length / Width;
     
     public TextureFormat TextureFormat;
     public CharacterFormat CharacterFormat;
@@ -57,7 +57,7 @@ public class CHAR : NdsBlock
 
         if (IsSwizzled)
         {
-            PixelSwizzler.UnSwizzle(ref Pixels, Width > 0 ? Width : 32);
+            PixelSwizzler.UnSwizzle(ref Pixels, Width);
         }
     }
 }

@@ -46,7 +46,7 @@ public static class CellExtensions
                 var objectHeight = cellObject.TileHeight * 8;
                 
                 var tileCount = cellObject.TileWidth * cellObject.TileHeight;
-                var cellPixels = pixelCells.GetRange(cellObject.TileIndex, tileCount);
+                var cellPixels = pixelCells.Skip(cellObject.TileIndex * 4).Take(tileCount).ToArray();
 
                 var objectPixels = new IPixel[objectWidth * objectHeight];
                 for (var tileIndex = 0; tileIndex < tileCount; tileIndex++)
