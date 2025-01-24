@@ -18,9 +18,9 @@ public class BW2MapBuildingDefinition : BaseDeserializable
         BuildingType = reader.Read<ushort>();
         
         DoorID = reader.Read<ushort>();
-        DoorLocation.X = reader.Read<ushort>() / 4096f;
-        DoorLocation.Y = reader.Read<ushort>() / 4096f;
-        DoorLocation.Z = reader.Read<ushort>() / 4096f;
+        DoorLocation.X = reader.Read<ushort>();
+        DoorLocation.Y = reader.Read<ushort>();
+        DoorLocation.Z = reader.Read<ushort>();
 
         reader.Position += 7;
 
