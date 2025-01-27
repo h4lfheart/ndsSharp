@@ -174,7 +174,7 @@ public class NdsFileProvider : IFileProvider
 
     public BaseDeserializable LoadObject(RomFile file, Type type)
     {
-        if (file.FileType != type)
+        if (file.FileType is not null && file.FileType != type)
         {
             throw new ParserException($"Type mismatch for {file.Path}. Expected {file.FileType?.Name}, got {type.Name}");
         }

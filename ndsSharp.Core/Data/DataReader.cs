@@ -173,4 +173,12 @@ public class DataReader : MemoryReader
     
     public float ReadIntAsFloat() => Read<int>().ToFloat(1, 19, 12);
     public float ReadShortAsFloat() => FloatExtensions.ToFloat(Read<ushort>(), 1, 3, 12);
+
+    public void Align(int amount)
+    {
+        if (Position % amount != 0)
+        {
+            Position += amount - Position % amount;
+        }
+    }
 }

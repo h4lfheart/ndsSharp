@@ -17,9 +17,6 @@ public class NARC : NdsObject, IFileProvider
     [Block] public FATB AllocationTable;
     [Block] public FNTB NameTable;
     [Block] public FIMG Image;
-
-    public static readonly Stopwatch CompressTimer = new();
-
     public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
@@ -39,9 +36,7 @@ public class NARC : NdsObject, IFileProvider
                 fileName = id.ToString();
             }
             
-            CompressTimer.Start();
             var compression = Compression.GetCompression(Image.Reader, pointer);
-            CompressTimer.Stop();
             if (!fileName.Contains('.')) // detect extension
             {
                 var readExtension = Image.Reader.PeekString(4).TrimEnd('0').ToLower();
