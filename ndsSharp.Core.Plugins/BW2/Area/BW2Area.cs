@@ -8,7 +8,7 @@ public class BW2Area : BaseDeserializable
     public ushort BuildingContainerIndex;
     public ushort TexturesIndex;
     public byte TextureAnimIndex;
-    public byte PaletteAnimIndex;
+    public byte FlipbookAnimIndex;
     public bool IsExterior;
     public byte LightIndex;
     public byte OutlineType;
@@ -20,7 +20,7 @@ public class BW2Area : BaseDeserializable
         BuildingContainerIndex = reader.Read<ushort>();
         TexturesIndex = reader.Read<ushort>();
         TextureAnimIndex = reader.Read<byte>();
-        PaletteAnimIndex = reader.Read<byte>();
+        FlipbookAnimIndex = reader.Read<byte>();
         IsExterior = reader.Read<byte>() == 1;
         LightIndex = reader.Read<byte>();
         OutlineType = reader.Read<byte>();

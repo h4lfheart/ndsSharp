@@ -76,8 +76,8 @@ public partial class BW2MatrixWindowModel : BasePluginWindowModel
 
             var mapTextures = Plugin.GetMapTextures(area, area.IsExterior ? TargetSeason : ESeason.Spring);
                
-            var buildingContainer = Plugin.GetMapBuildingContainer(area);
-            var buildingTextures = Plugin.GetMapBuildingTextures(area);
+            var buildingContainer = Plugin.GetAreaBuildingContainer(area);
+            var buildingTextures = Plugin.GetAreaBuildingTextures(area);
 
             var mapBaseModel = map.Model.ExtractModels(overrideTextureData: mapTextures.TextureData).First();
             var mapBaseActor = new Actor(mapBaseModel, new Vector3(x * 512, 0, y * 512));
