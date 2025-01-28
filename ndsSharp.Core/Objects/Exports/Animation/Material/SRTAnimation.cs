@@ -28,41 +28,85 @@ public class SRTAnimation : DeserializableWithName
 
             for (var channelIndex = 0; channelIndex < channelInfos.Length; channelIndex++)
             {
-                var channelType = channelIndex switch
-                {
-                    3 => SRTChannelType.TranslationU,
-                    4 => SRTChannelType.TranslationV,
-                    _ => SRTChannelType.None
-                };
-
+                var channelType = (SRTChannelType) channelIndex;
                 var channelInfo = channelInfos[channelIndex];
 
-                if (channelType == SRTChannelType.None)
+                if (channelType == SRTChannelType.Rotation)
                 {
-                    track.Channels[channelIndex] = new SRTChannel
+                    track.Channels[channelType] = new SRTChannel
                     {
                         FrameCount = channelInfo.FrameCount,
-                        ChannelType = channelType
+                        Samples = ReadRotationSamples(reader, channelInfo)
                     };
-                    continue;
                 }
-                
-                reader.Position = (int) channelInfo.Offset;
-
-                var channel = new SRTChannel
+                else
                 {
-                    FrameCount = channelInfo.FrameCount,
-                    ChannelType = channelType,
-                    Samples = reader
-                        .ReadArray<ushort>(channelInfo.FrameCount)
-                        .Select(value => FloatExtensions.ToFloat(value, 1, 10, 5))
-                        .ToArray()
-                };
-
-                track.Channels[channelIndex] = channel;
+                    track.Channels[channelType] = new SRTChannel
+                    {
+                        FrameCount = channelInfo.FrameCount,
+                        Samples = ReadFloatSamples(reader, channelInfo)
+                    };
+                }
             }
             
             Tracks.Add(track);
         }
+    }
+
+    public float[] ReadFloatSamples(DataReader reader, SRTChannelInfo channelInfo)
+    {
+        var isShortData = channelInfo.Flags.Bit(12) == 1;
+        var isConstant = channelInfo.Flags.Bit(13) == 1;
+        
+        float[] samples;
+        if (isConstant) // const
+        {
+            samples = [channelInfo.OffsetOrConst / 4096f];
+        }
+        else // offset
+        {
+            reader.Position = (int) channelInfo.OffsetOrConst;
+
+            if (isShortData)
+            {
+                samples = reader
+                    .ReadArray<short>(channelInfo.FrameCount)
+                    .Select(value => value / 4096f)
+                    .ToArray();
+            }
+            else
+            {
+                samples = reader
+                    .ReadArray<int>(channelInfo.FrameCount)
+                    .Select(value => value / 4096f)
+                    .ToArray();
+            }
+            
+        }
+        
+
+        return samples;
+    }
+    
+    public float[] ReadRotationSamples(DataReader reader, SRTChannelInfo channelInfo)
+    {
+        var isConstant = channelInfo.Flags.Bit(13) == 1;
+        
+        float[] samples;
+        if (isConstant) // const
+        {
+            samples = [MathF.Atan2((channelInfo.OffsetOrConst & 0xFFFF) / 4096f, (channelInfo.OffsetOrConst >> 16 & 0xFFFF) / 4096f)];
+        }
+        else // offset
+        {
+            reader.Position = (int) channelInfo.OffsetOrConst;
+
+            samples = reader
+                .ReadArray(channelInfo.FrameCount, () => (reader.Read<short>(), reader.Read<short>()))
+                .Select(values => MathF.Atan2(values.Item1 / 4096f, values.Item2 / 4096f))
+                .ToArray();
+        }
+        
+        return samples;
     }
 }

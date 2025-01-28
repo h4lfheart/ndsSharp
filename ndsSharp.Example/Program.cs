@@ -30,4 +30,4 @@ if (header is null) return;
 var area = plugin.GetArea(header.AreaIndex);
 
 var materialAnimation = plugin.GetAreaMaterialAnimation(area);
-Log.Information("ae");
+Log.Information("Done!");
