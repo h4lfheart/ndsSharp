@@ -21,10 +21,7 @@ provider.LoadPlugins();
 var plugin = provider.GetPluginInterface<BW2Plugin>()!;
 var matrix = plugin.GetMatrix(0);
 
-var mapIndex = matrix.Maps[1, 23];
-var map = plugin.GetMap(mapIndex);
-
-var headerIndex = matrix.HasHeaders ? matrix.Headers[1, 23] : -1;
+var headerIndex = matrix.HasHeaders ? matrix.Headers[4, 21] : -1;
 var header = headerIndex != -1 
     ? plugin.GetMapHeader(headerIndex) 
     : plugin.HeaderContainer.Headers.FirstOrDefault(header => header.MatrixIndex == 0);
@@ -32,6 +29,5 @@ if (header is null) return;
 
 var area = plugin.GetArea(header.AreaIndex);
 
-var mapTextures = plugin.GetMapTextures(area);
-var flipbookTextures = plugin.GetAreaPattern(area);
+var materialAnimation = plugin.GetAreaMaterialAnimation(area);
 Log.Information("ae");

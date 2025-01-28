@@ -1,3 +1,4 @@
+using ndsSharp.Core.Objects.Exports.Animation;
 using ndsSharp.Core.Objects.Exports.Textures;
 using ndsSharp.Core.Plugins.BW2.Area;
 using ndsSharp.Core.Plugins.BW2.Building;
@@ -66,9 +67,14 @@ public class BW2Plugin : BasePlugin
         return Provider.LoadObject<BTX>($"{path}/{area.BuildingContainerIndex}.btx");
     }
     
-    public BW2AreaPatternContainer GetAreaPattern(BW2Area area)
+    public BW2AreaPatternContainer GetAreaPatternAnimation(BW2Area area)
     {
-        return Provider.LoadObject<BW2AreaPatternContainer>($"a/0/6/9/{area.FlipbookAnimIndex}.bin");
+        return Provider.LoadObject<BW2AreaPatternContainer>($"a/0/6/9/{area.PatternAnimIndex}.bin");
+    }
+    
+    public BTA GetAreaMaterialAnimation(BW2Area area)
+    {
+        return Provider.LoadObject<BTA>($"a/0/6/8/{area.MaterialAnimIndex}.bta");
     }
 }
 
