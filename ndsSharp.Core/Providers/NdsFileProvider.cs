@@ -190,8 +190,20 @@ public class NdsFileProvider : IFileProvider
         
         return reader.ReadObject(type, dataModifier: obj => obj.File = file);
     }
-    
-    public bool TryLoadObject<T>(string path, out T data) where T : BaseDeserializable, new() => TryLoadObject(Files[path], out data);
+
+    public bool TryLoadObject<T>(string path, out T data) where T : BaseDeserializable, new()
+    {
+        data = null!;
+        try
+        {
+            return TryLoadObject(Files[path], out data);
+        }
+        catch (Exception e)
+        {
+            Log.Error(e.ToString());
+            return false;
+        }
+    }
     
     public bool TryLoadObject<T>(RomFile file, out T data) where T : BaseDeserializable, new()
     {
