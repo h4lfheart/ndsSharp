@@ -67,14 +67,16 @@ public class BW2Plugin : BasePlugin
         return Provider.LoadObject<BTX>($"{path}/{area.BuildingContainerIndex}.btx");
     }
     
-    public BW2AreaPatternContainer GetAreaPatternAnimation(BW2Area area)
+    public BW2AreaPatternContainer? GetAreaPatternAnimation(BW2Area area)
     {
-        return Provider.LoadObject<BW2AreaPatternContainer>($"a/0/6/9/{area.PatternAnimIndex}.bin");
+        Provider.TryLoadObject<BW2AreaPatternContainer>($"a/0/6/9/{area.PatternAnimIndex}.bin", out var pattern);
+        return pattern;
     }
     
-    public BTA GetAreaMaterialAnimation(BW2Area area)
+    public BTA? GetAreaMaterialAnimation(BW2Area area)
     {
-        return Provider.LoadObject<BTA>($"a/0/6/8/{area.MaterialAnimIndex}.bta");
+        Provider.TryLoadObject<BTA>($"a/0/6/8/{area.MaterialAnimIndex}.bta", out var bta);
+        return bta;
     }
 }
 
