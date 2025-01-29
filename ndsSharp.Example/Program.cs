@@ -1,38 +1,33 @@
-﻿using ndsSharp.Core.Conversion.Textures.Cells;
-using ndsSharp.Core.Conversion.Textures.Images;
-using ndsSharp.Core.Objects.Exports.Cells;
-using ndsSharp.Core.Objects.Exports.Palettes;
-using ndsSharp.Core.Objects.Exports.Textures;
+﻿using System.Numerics;
+using ndsSharp.Core.Conversion.Models;
+using ndsSharp.Core.Conversion.Models.Processing;
 using ndsSharp.Core.Plugins;
+using ndsSharp.Core.Plugins.BW2;
 using ndsSharp.Core.Providers;
 using Serilog;
-using SixLabors.ImageSharp;
 
-namespace ndsSharp.Example;
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
 
-public static class Program
+var provider = new NdsFileProvider("C:/b2.nds")
 {
-    public static void Main()
-    {
-        Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console()
-            .CreateLogger();
+    UnpackNARCFiles = true
+};
 
-        var provider = new NdsFileProvider("C:/b2.nds")
-        {
-            UnpackNARCFiles = true
-        };
+provider.Initialize();
+provider.LoadPlugins();
 
-        provider.Initialize();
-        provider.LoadPlugins();
+var plugin = provider.GetPluginInterface<BW2Plugin>()!;
+var matrix = plugin.GetMatrix(0);
 
-        var ncgr = provider.LoadObject<NCGR>("a/0/3/0/5.ncgr");
-        var nclr = provider.LoadObject<NCLR>("a/0/3/0/4.nclr");
-        var ncer = provider.LoadObject<NCER>("a/0/3/0/0.ncer");
+var headerIndex = matrix.HasHeaders ? matrix.Headers[4, 21] : -1;
+var header = headerIndex != -1 
+    ? plugin.GetMapHeader(headerIndex) 
+    : plugin.HeaderContainer.Headers.FirstOrDefault(header => header.MatrixIndex == 0);
+if (header is null) return;
 
-        foreach (var indexedPaletteImage in ncer.ExtractCells(ncgr, nclr))
-        {
-            indexedPaletteImage.ToImage().SaveAsPng($"C:/Art/Cells/{indexedPaletteImage.Name}.png");
-        }
-    }
-}
+var area = plugin.GetArea(header.AreaIndex);
+
+var materialAnimation = plugin.GetAreaMaterialAnimation(area);
+Log.Information("Done!");
