@@ -1,7 +1,9 @@
+using System.Diagnostics;
 using System.Numerics;
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Objects;
 using ndsSharp.Core.Objects.Exports;
+using Serilog;
 
 namespace ndsSharp.Core.Plugins.BW2.Building;
 
@@ -25,11 +27,13 @@ public class BW2MapBuildingDefinition : BaseDeserializable
         DoorLocation.Y = reader.Read<short>();
         DoorLocation.Z = reader.Read<short>();
 
-        reader.Position += 7;
+        reader.Position += 4;
 
-        var subFileCount = reader.Read<byte>();
         reader.ReadWithZeroedPosition(() =>
         {
+            reader.Position += 3;
+
+            var subFileCount = reader.Read<byte>();
             var subFileOffsets = reader.ReadArray<int>(subFileCount);
 
             reader.Position += sizeof(uint) * (4 - subFileCount); // max subFile count is 4, skip extra unused offsets
@@ -42,6 +46,10 @@ public class BW2MapBuildingDefinition : BaseDeserializable
                 if (FileTypeRegistry.TryGetType(extension, out var fileType))
                 {
                     SubFiles.Add((NdsObject) reader.ReadObject(fileType, zeroPosition: true));
+                }
+                else
+                {
+                    Log.Information("Unknown sub-block with header {extension}", extension);
                 }
             }
         });
