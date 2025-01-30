@@ -21,13 +21,16 @@ provider.LoadPlugins();
 var plugin = provider.GetPluginInterface<BW2Plugin>()!;
 var matrix = plugin.GetMatrix(0);
 
-var headerIndex = matrix.HasHeaders ? matrix.Headers[4, 21] : -1;
+var headerIndex = matrix.HasHeaders ? matrix.Headers[23, 18] : -1;
 var header = headerIndex != -1 
     ? plugin.GetMapHeader(headerIndex) 
     : plugin.HeaderContainer.Headers.FirstOrDefault(header => header.MatrixIndex == 0);
 if (header is null) return;
 
 var area = plugin.GetArea(header.AreaIndex);
+
+var buildingContainer = plugin.GetAreaBuildingContainer(area);
+var buildingTextures = plugin.GetAreaBuildingTextures(area);
 
 var materialAnimation = plugin.GetAreaMaterialAnimation(area);
 Log.Information("Done!");
