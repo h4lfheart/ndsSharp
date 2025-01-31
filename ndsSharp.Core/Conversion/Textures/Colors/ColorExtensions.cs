@@ -4,6 +4,12 @@ namespace ndsSharp.Core.Conversion.Textures.Colors;
 
 public static class ColorExtensions
 {
+    public static Color ReadColor<T>(this DataReader reader) where T : ColorDeserializer, new()
+    {
+        var deserializer = new T();
+        return deserializer.Deserialize(reader);
+    }
+    
     public static Color[] ReadColors<T>(this DataReader reader, int colorCount) where T : ColorDeserializer, new()
     {
         var deserializer = new T();

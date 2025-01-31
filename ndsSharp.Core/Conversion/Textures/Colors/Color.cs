@@ -26,7 +26,11 @@ public class Color
         pixelColor.FromVector4(ToVector4());
         return pixelColor;
     }
-    
+
+    public string ToHex()
+    {
+        return $"#{R:X2}{G:X2}{B:X2}{A:X2}";
+    }
 
     public override string ToString()
     {

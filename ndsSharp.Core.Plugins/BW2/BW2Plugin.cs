@@ -78,6 +78,12 @@ public class BW2Plugin : BasePlugin
         Provider.TryLoadObject<BTA>($"a/0/6/8/{area.MaterialAnimIndex}.bta", out var bta);
         return bta;
     }
+    
+    public BW2AreaLightingContainer? GetAreaLightingContainer(BW2Area area)
+    {
+        Provider.TryLoadObject<BW2AreaLightingContainer>($"a/0/6/0/{area.MaterialAnimIndex}.bin", out var lightingContainer);
+        return lightingContainer;
+    }
 }
 
 public enum ESeason
