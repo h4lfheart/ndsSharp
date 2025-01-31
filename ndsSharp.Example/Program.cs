@@ -31,6 +31,6 @@ var area = plugin.GetArea(header.AreaIndex);
 
 var buildingContainer = plugin.GetAreaBuildingContainer(area);
 var buildingTextures = plugin.GetAreaBuildingTextures(area);
-
 var materialAnimation = plugin.GetAreaMaterialAnimation(area);
+var lightingContainer = plugin.GetAreaLightingContainer(area);
 Log.Information("Done!");
