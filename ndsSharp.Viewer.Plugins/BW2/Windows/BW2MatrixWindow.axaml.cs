@@ -68,13 +68,13 @@ public partial class BW2MatrixWindowModel : BasePluginWindowModel
 
             var headerIndex = matrix.HasHeaders ? matrix.Headers[x, y] : -1;
             var header = headerIndex != -1 
-                ? Plugin.GetMapHeader(headerIndex) 
-                : Plugin.HeaderContainer.Headers.FirstOrDefault(header => header.MatrixIndex == matrixIndex);
+                ? Plugin.GetZone(headerIndex) 
+                : Plugin.ZoneContainer.Headers.FirstOrDefault(header => header.MatrixIndex == matrixIndex);
             if (header is null) continue;
             
             var area = Plugin.GetArea(header.AreaIndex);
 
-            var mapTextures = Plugin.GetMapTextures(area, area.IsExterior ? TargetSeason : ESeason.Spring);
+            var mapTextures = Plugin.GetAreaMapTextures(area, area.IsExterior ? TargetSeason : ESeason.Spring);
                
             var buildingContainer = Plugin.GetAreaBuildingContainer(area);
             var buildingTextures = Plugin.GetAreaBuildingTextures(area);

@@ -10,4 +10,8 @@
       <ProjectReference Include="..\ndsSharp.Core\ndsSharp.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="BW2\Misc\" />
+    </ItemGroup>
+
 </Project>
