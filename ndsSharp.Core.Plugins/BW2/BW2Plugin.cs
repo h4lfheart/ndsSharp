@@ -3,7 +3,9 @@ using ndsSharp.Core.Objects.Exports.Textures;
 using ndsSharp.Core.Plugins.BW2.Area;
 using ndsSharp.Core.Plugins.BW2.Building;
 using ndsSharp.Core.Plugins.BW2.Map;
+using ndsSharp.Core.Plugins.BW2.Misc;
 using ndsSharp.Core.Plugins.BW2.Text;
+using ndsSharp.Core.Plugins.BW2.Zone;
 
 namespace ndsSharp.Core.Plugins.BW2;
 
@@ -18,15 +20,17 @@ public class BW2Plugin : BasePlugin
         new(typeof(BW2MapMatrix), "matrix", pathMatches: ["a/0/0/9"])
     ];
 
-    public BW2MapHeaderContainer HeaderContainer;
+    public BW2ZoneContainer ZoneContainer;
     private BW2AreaContainer _areaContainer;
+    private BW2NPCRegistry _npcRegistry;
 
     public override void OnLoaded()
     {
         base.OnLoaded();
 
-        HeaderContainer = Provider.LoadObject<BW2MapHeaderContainer>("a/0/1/2/0.bin");
+        ZoneContainer = Provider.LoadObject<BW2ZoneContainer>("a/0/1/2/0.bin");
         _areaContainer = Provider.LoadObject<BW2AreaContainer>("a/0/1/3.bin");
+        _npcRegistry = Provider.LoadObject<BW2NPCRegistry>("a/0/4/7/0.bin");
     }
 
     public BW2MapMatrix GetMatrix(int index)
@@ -38,10 +42,21 @@ public class BW2Plugin : BasePlugin
     {
         return Provider.LoadObject<BW2Map>($"a/0/0/8/{index}.map");
     }
-
-    public BW2MapHeader GetMapHeader(int index)
+    
+    public BW2NPC GetNPC(int index)
     {
-        return HeaderContainer.Headers[index];
+        return _npcRegistry.NPCs[index];
+    }
+
+    
+    public BW2Zone GetZone(int index)
+    {
+        return ZoneContainer.Headers[index];
+    }
+    
+    public BW2ZoneEntityContainer GetZoneEntities(int index)
+    {
+        return Provider.LoadObject<BW2ZoneEntityContainer>($"a/1/2/6/{index}.bin");
     }
 
     public BW2Area GetArea(int index)
@@ -49,7 +64,7 @@ public class BW2Plugin : BasePlugin
         return _areaContainer.Areas[index];
     }
 
-    public BTX GetMapTextures(BW2Area area, ESeason season = ESeason.Spring)
+    public BTX GetAreaMapTextures(BW2Area area, ESeason season = ESeason.Spring)
     {
         return Provider.LoadObject<BTX>(
             $"a/0/1/4/{area.TexturesIndex + (int) (area.IsExterior ? season : ESeason.Spring)}.btx");

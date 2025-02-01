@@ -2,9 +2,9 @@ using ndsSharp.Core.Data;
 using ndsSharp.Core.Extensions;
 using ndsSharp.Core.Objects;
 
-namespace ndsSharp.Core.Plugins.BW2.Map;
+namespace ndsSharp.Core.Plugins.BW2.Zone;
 
-public class BW2MapHeader : BaseDeserializable
+public class BW2Zone : BaseDeserializable
 {
     public byte MapType;
     
@@ -19,7 +19,7 @@ public class BW2MapHeader : BaseDeserializable
     public ushort AutumnMusicIndex;
     public ushort WinterMusicIndex;
 
-    public ushort ZoneIndex;
+    public ushort EntityIndex;
     public ushort ParentZoneIndex;
     
     public ushort NameIndex;
@@ -45,7 +45,7 @@ public class BW2MapHeader : BaseDeserializable
 
         reader.Position += 2;
 
-        ZoneIndex = reader.Read<ushort>();
+        EntityIndex = reader.Read<ushort>();
         ParentZoneIndex = reader.Read<ushort>();
 
         NameIndex = reader.Read<ushort>().Bits(0, 14);
