@@ -34,7 +34,7 @@ public static class BW2ModelExtensions
             
             section.Faces.Add(new Face("Terrain_Material")
             {
-                VertexIndices = [vertexIndex + 0, vertexIndex + 1, vertexIndex + 3]
+                VertexIndices = [vertexIndex + 3, vertexIndex + 1, vertexIndex + 0]
             });
             
             section.Faces.Add(new Face("Terrain_Material")
