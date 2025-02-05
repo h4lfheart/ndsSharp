@@ -38,7 +38,6 @@ public class BW2Map : BW2Object
             {
                 PermissionsOffset = FileOffsets[1];
                 ActorsOffset = FileOffsets[2];
-                TerrainOffset = FileOffsets[3];
                 break;
             }
             case "GC":
