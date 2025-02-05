@@ -6,13 +6,13 @@ namespace ndsSharp.Core.Plugins.BW2;
 public class BW2Object : BaseDeserializable
 {
     public string Magic;
-    public uint[] FileOffsets = [];
+    public int[] FileOffsets = [];
     
     public override void Deserialize(DataReader reader)
     {
         Magic = reader.ReadString(2);
 
         var fileCount = reader.Read<ushort>();
-        FileOffsets = reader.ReadArray<uint>(fileCount);
+        FileOffsets = reader.ReadArray<int>(fileCount);
     }
 }

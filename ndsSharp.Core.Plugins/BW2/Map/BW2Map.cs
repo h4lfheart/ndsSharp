@@ -1,83 +1,77 @@
+using System.Diagnostics;
+using System.Numerics;
 using ndsSharp.Core.Data;
 using ndsSharp.Core.Mathematics;
 using ndsSharp.Core.Objects;
 using ndsSharp.Core.Objects.Exports.Meshes;
+using ndsSharp.Core.Plugins.BW2.Map.Data;
 
 namespace ndsSharp.Core.Plugins.BW2.Map;
 
 public class BW2Map : BW2Object
 {
     public BMD Model;
-    
-    public List<BW2MapActor> Actors = [];
+    public BW2MapActor[] Actors = [];
+    public BW2PermissionsData Permissions;
+    public BW2TerrainData Terrain;
 
-    public Matrix<byte> TerrainMatrix = new(32, 32);
-    public Matrix<byte> Terrain2Matrix = new(32, 32);
-    public Matrix<byte> HeightMatrix = new(32, 32);
-    public Matrix<byte> Height2Matrix = new(32, 32);
-    public Matrix<byte> FlagsMatrix = new(32, 32);
-    public Matrix<byte> CollisionMatrix = new(32, 32);
-    public Matrix<byte> ShadowMatrix = new(32, 32);
+    private int ModelOffset = -1;
+    private int PermissionsOffset = -1;
+    private int ActorsOffset = -1;
+    private int TerrainOffset = -1;
     
     public override void Deserialize(DataReader reader)
     {
         base.Deserialize(reader);
-        
-        ReadModel(reader);
-        ReadPermissions(reader);
-        ReadActors(reader);
-    }
 
-    private void ReadModel(DataReader reader)
-    {
-        var modelOffset = FileOffsets[0];
-        
-        reader.Position = (int) modelOffset;
-        Model = reader.ReadObject<BMD>(zeroPosition: true);
-    }
-    
-    private void ReadPermissions(DataReader reader)
-    {
-        if (Magic == "NG") return;
-        
-        var permissionOffset = FileOffsets[1];
-        
-        reader.Position = (int) permissionOffset;
-
-        reader.Position += 4; // what is this
-        
-        for (var y = 0; y < 32; y++)
+        ModelOffset = FileOffsets[0];
+        switch (Magic)
         {
-            for (var x = 0; x < 32; x++)
+            case "NG":
             {
-                TerrainMatrix[x, y] = reader.Read<byte>();
-                Terrain2Matrix[x, y] = reader.Read<byte>();
-                HeightMatrix[x, y] = reader.Read<byte>();
-                Height2Matrix[x, y] = reader.Read<byte>();
-                FlagsMatrix[x, y] = reader.Read<byte>();
-                reader.Position += sizeof(byte);
-                CollisionMatrix[x, y] = reader.Read<byte>();
-                ShadowMatrix[x, y] = reader.Read<byte>();
+                ActorsOffset = FileOffsets[1];
+                TerrainOffset = FileOffsets[2];
+                break;
+            }
+            case "WB":
+            case "DR":
+            {
+                PermissionsOffset = FileOffsets[1];
+                ActorsOffset = FileOffsets[2];
+                TerrainOffset = FileOffsets[3];
+                break;
+            }
+            case "GC":
+            { 
+                PermissionsOffset = FileOffsets[1];
+                TerrainOffset = FileOffsets[2];
+                ActorsOffset = FileOffsets[3];
+                break;
             }
         }
-    }
 
-    private void ReadActors(DataReader reader)
-    {
-        var actorsOffset = Magic switch
+        if (ModelOffset != -1)
         {
-            "NG" => FileOffsets[1],
-            "WB" => FileOffsets[2],
-            "DR" => FileOffsets[2],
-            _ => FileOffsets[3]
-        };
+            reader.Position = ModelOffset;
+            Model = reader.ReadObject<BMD>(zeroPosition: true);
+        }
 
-        reader.Position = (int) actorsOffset;
-
-        var actorCount = reader.Read<uint>();
-        for (var buildingIndex = 0; buildingIndex < actorCount; buildingIndex++)
+        if (PermissionsOffset != -1)
         {
-            Actors.Add(reader.ReadObject<BW2MapActor>());
+            reader.Position = PermissionsOffset;
+            Permissions = reader.ReadObject<BW2PermissionsData>();
+        }
+
+        if (ActorsOffset != -1)
+        {
+            reader.Position = ActorsOffset;
+            Actors = reader.ReadArray(() => reader.ReadObject<BW2MapActor>());
+        }
+
+        if (TerrainOffset != -1)
+        {
+            reader.Position = TerrainOffset;
+            Terrain = reader.ReadObject<BW2TerrainData>();
         }
     }
 }
