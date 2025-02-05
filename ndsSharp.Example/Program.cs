@@ -25,6 +25,6 @@ provider.LoadPlugins();
 var plugin = provider.GetPluginInterface<BW2Plugin>()!;
 var matrix = plugin.GetMatrix(0);
 
-var map = plugin.GetMap(matrix.Maps[19, 23]);
-map.Terrain.ExtractTerrainModel().SaveModel("C:/Art/terrain.obj", MeshExportType.OBJ);
+var map = plugin.GetMap(matrix.Maps[18, 23]);
+map.Terrain?.ExtractTerrainModel().SaveModel("C:/Art/terrain.obj", MeshExportType.OBJ);
 Log.Information("Done!");
