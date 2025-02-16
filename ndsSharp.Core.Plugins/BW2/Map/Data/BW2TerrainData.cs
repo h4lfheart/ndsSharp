@@ -16,7 +16,7 @@ public class BW2TerrainData : BaseDeserializable
         var width = reader.Read<ushort>();
         var height = reader.Read<ushort>();
 
-        var maximumCornerIndex = 0;
+        var maximumCornerIndex = -1;
         for (var y = 0; y < height; y++)
         {
             for (var x = 0; x < width; x++)

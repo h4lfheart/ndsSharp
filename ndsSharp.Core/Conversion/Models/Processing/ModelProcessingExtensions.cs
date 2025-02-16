@@ -104,6 +104,7 @@ public static class ModelProcessingExtensions
                 {
                     Name = materialData.Name,
                     Texture = textureData?.Textures.FirstOrDefault(texture => texture.Name.Equals(materialData.TextureName, StringComparison.OrdinalIgnoreCase)),
+                    TextureName = materialData.TextureName,
                     FlipU = materialData.FlipU,
                     FlipV = materialData.FlipV,
                     RepeatU = materialData.RepeatU,

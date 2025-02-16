@@ -84,7 +84,7 @@ public partial class BW2MatrixWindowModel : BasePluginWindowModel
             boundingBox.Extend(mapBaseActor.Location);
             modelQueue.Enqueue(mapBaseActor);
 
-            if (map.Actors.Count > 0)
+            if (map.Actors.Length > 0)
             {
                 foreach (var mapActor in map.Actors)
                 {

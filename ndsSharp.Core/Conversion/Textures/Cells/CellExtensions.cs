@@ -10,12 +10,12 @@ namespace ndsSharp.Core.Conversion.Textures.Cells;
 
 public static class CellExtensions
 {
-    public static List<IndexedPaletteImage> ExtractCells(this NCER ncer, NCGR ncgr, NCLR nclr, bool firstColorIsTransparent = true)
+    public static List<IndexedPaletteImage> ExtractCells(this NCER cellData, NCGR graphic, NCLR palette, bool firstColorIsTransparent = true)
     {
-        var pixels = ncgr.CharacterData.Pixels;
+        var pixels = graphic.CharacterData.Pixels;
         
-        var xTiles = ncgr.CharacterData.Width / 8;
-        var yTiles = ncgr.CharacterData.Height / 8;
+        var xTiles = graphic.CharacterData.Width / 8;
+        var yTiles = graphic.CharacterData.Height / 8;
 
         var pixelCells = new List<IPixel[]>();
         for (var yTile = 0; yTile < yTiles; yTile++)
@@ -27,7 +27,7 @@ public static class CellExtensions
                 {
                     for (var x = 0; x < 8; x++)
                     {
-                        tilePixels[y * 8 + x] = pixels[(yTile * 8 + y) * ncgr.CharacterData.Width + (xTile * 8 + x)];
+                        tilePixels[y * 8 + x] = pixels[(yTile * 8 + y) * graphic.CharacterData.Width + (xTile * 8 + x)];
                     }
                 }
                 
@@ -36,12 +36,12 @@ public static class CellExtensions
         }
 
         var outputImages = new List<IndexedPaletteImage>();
-        for (var cellIndex = 0; cellIndex < ncer.CellData.Cells.Count; cellIndex++)
+        for (var cellIndex = 0; cellIndex < cellData.CellData.Cells.Count; cellIndex++)
         {
-            var cell = ncer.CellData.Cells[cellIndex];
+            var cell = cellData.CellData.Cells[cellIndex];
             for (var objectIndex = 0; objectIndex < cell.ObjectCount; objectIndex++)
             {
-                var cellObject = ncer.CellData.CellObjects[(int) (objectIndex + cell.ObjectAttributeIndex)];
+                var cellObject = cellData.CellData.CellObjects[(int) (objectIndex + cell.ObjectAttributeIndex)];
                 var objectWidth = cellObject.TileWidth * 8;
                 var objectHeight = cellObject.TileHeight * 8;
                 
@@ -66,10 +66,10 @@ public static class CellExtensions
                 }
 
                 var image = new IndexedPaletteImage(
-                    $"{ncgr.File!.NameWithoutExtension}_Cell_{cellIndex}_Object_{objectIndex}",
+                    $"{graphic.File!.NameWithoutExtension}_Cell_{cellIndex}_Object_{objectIndex}",
                     objectPixels.ToArray(),
-                    nclr.PaletteData.Palettes,
-                    new ImageMetaData(objectWidth, objectHeight, ncgr.CharacterData.TextureFormat,
+                    palette.PaletteData.Palettes,
+                    new ImageMetaData(objectWidth, objectHeight, graphic.CharacterData.TextureFormat,
                         FlipU: cellObject.FlipHorizontal,
                         FlipV: cellObject.FlipVertical,
                         IsFirstColorTransparent: firstColorIsTransparent)

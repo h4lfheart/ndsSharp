@@ -7,6 +7,7 @@ public class Material
 {
     public string Name;
     public BaseImage? Texture;
+    public string TextureName;
     public bool RepeatU;
     public bool RepeatV;
     public bool FlipU;
