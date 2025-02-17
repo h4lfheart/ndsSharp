@@ -15,6 +15,8 @@ public class MDLMaterial : DeserializableWithName
     public Color Specular;
     public Color Emissive;
     public float Alpha;
+    public uint PolygonID;
+    public bool[] LightToggles = new bool[4];
     
     public ushort Tag;
     public ushort Length;
@@ -58,7 +60,12 @@ public class MDLMaterial : DeserializableWithName
         Emissive = BGR555.Instance.ProvideColor((ushort) SpecularEmissive.Bits(16, 31));
         
         PolyAttr = reader.Read<uint>();
+        for (var bit = 0; bit < 4; bit++)
+        {
+            LightToggles[bit] = PolyAttr.Bit(bit) == 1;
+        }
         Alpha = PolyAttr.Bits(16,21) / 31.0f;
+        PolygonID = PolyAttr.Bits(24, 30);
         
         PolyAttrMask = reader.Read<uint>();
         TextureVRAMOffset = reader.Read<ushort>();

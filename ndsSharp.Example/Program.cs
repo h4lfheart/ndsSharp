@@ -32,4 +32,12 @@ var graphic = provider.LoadObject<NCGR>("a/2/8/7/8.ncgr");
 var screen = provider.LoadObject<NSCR>("a/2/8/7/12.nscr");
 screen.ExtractScreenImage(graphic, palette, firstColorIsTransparent: true).ToImage().SaveAsPng($"C:/Art/{screen.File!.Name}.png");
 
+var plugin = provider.GetPluginInterface<BW2Plugin>()!;
+var matrix = plugin.GetMatrix(0);
+
+var map = plugin.GetMap(matrix.Maps[20, 5]);
+var zone = plugin.GetZone(matrix.Headers[20, 5]);
+var area = plugin.GetArea(zone.AreaIndex);
+var buildings = plugin.GetAreaBuildingContainer(area);
+
 Log.Information("Done!");
