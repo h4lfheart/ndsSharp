@@ -70,25 +70,35 @@ public static class ModelProcessingExtensions
                             break;
                         }
                         case PolygonType.TRI_STRIP:
+                        {
+                            for (var vtxCounter = 0; vtxCounter < polygon.Vertices.Count - 2; vtxCounter++)
+                            {
+                                var face = new Face(section.MaterialName);
+                                face.AddIndex(vertexIndex + vtxCounter);
+                                face.AddIndex(vertexIndex + vtxCounter + 1);
+                                face.AddIndex(vertexIndex + vtxCounter + 2);
+
+                                section.Faces.Add(face);
+                            }
+                            
+                            vertexIndex += polygon.Vertices.Count;
+                            break;
+                        }
                         case PolygonType.QUAD_STRIP:
                         {
-                            for (var vtxCounter = 0; vtxCounter + 2 < polygon.Vertices.Count; vtxCounter += 2)
+                            for (var vtxCounter = 0; vtxCounter < polygon.Vertices.Count - 3; vtxCounter += 2)
                             {
                                 var firstFace = new Face(section.MaterialName);
-                                firstFace.AddIndex(vertexIndex + vtxCounter);
+                                firstFace.AddIndex(vertexIndex + vtxCounter + 0);
                                 firstFace.AddIndex(vertexIndex + vtxCounter + 1);
-                                firstFace.AddIndex(vertexIndex + vtxCounter + 2);
+                                firstFace.AddIndex(vertexIndex + vtxCounter + 3);
                                 section.Faces.Add(firstFace);
 
-                                if (vtxCounter + 3 < polygon.Vertices.Count)
-                                {
-                                    var extraFace = new Face(section.MaterialName);
-                                    extraFace.AddIndex(vertexIndex + vtxCounter + 1);
-                                    extraFace.AddIndex(vertexIndex + vtxCounter + 3);
-                                    extraFace.AddIndex(vertexIndex + vtxCounter + 2);
-                                    section.Faces.Add(extraFace);
-                                }
-                                
+                                var secondFace = new Face(section.MaterialName);
+                                secondFace.AddIndex(vertexIndex + vtxCounter + 0);
+                                secondFace.AddIndex(vertexIndex + vtxCounter + 3);
+                                secondFace.AddIndex(vertexIndex + vtxCounter + 2);
+                                section.Faces.Add(secondFace);
                             }
                             
                             vertexIndex += polygon.Vertices.Count;
@@ -100,21 +110,9 @@ public static class ModelProcessingExtensions
 
             foreach (var materialData in modelData.Materials)
             {
-                var material = new Material
-                {
-                    Name = materialData.Name,
-                    Texture = textureData?.Textures.FirstOrDefault(texture => texture.Name.Equals(materialData.TextureName, StringComparison.OrdinalIgnoreCase)),
-                    TextureName = materialData.TextureName,
-                    FlipU = materialData.FlipU,
-                    FlipV = materialData.FlipV,
-                    RepeatU = materialData.RepeatU,
-                    RepeatV = materialData.RepeatV,
-                    Diffuse = materialData.Diffuse,
-                    Ambient = materialData.Ambient,
-                    Specular = materialData.Specular,
-                    Emissive = materialData.Emissive,
-                    Alpha = materialData.Alpha
-                };
+                var material = Material.FromMDL(materialData);
+                material.Texture = textureData?.Textures.FirstOrDefault(texture =>
+                    texture.Name.Equals(materialData.TextureName, StringComparison.OrdinalIgnoreCase));
                 model.Materials.Add(material);
             }
             
