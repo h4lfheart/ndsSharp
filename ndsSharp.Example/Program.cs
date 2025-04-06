@@ -35,9 +35,13 @@ screen.ExtractScreenImage(graphic, palette, firstColorIsTransparent: true).ToIma
 var plugin = provider.GetPluginInterface<BW2Plugin>()!;
 var matrix = plugin.GetMatrix(0);
 
-var map = plugin.GetMap(matrix.Maps[20, 5]);
-var zone = plugin.GetZone(matrix.Headers[20, 5]);
+var map = plugin.GetMap(matrix.Maps[19, 19]);
+var zone = plugin.GetZone(matrix.Headers[19, 19]);
 var area = plugin.GetArea(zone.AreaIndex);
 var buildings = plugin.GetAreaBuildingContainer(area);
+
+map.Model.ExtractModels().First().SaveModel("C:/Art/test.obj", MeshExportType.OBJ);
+
+var texture = plugin.GetAreaMapTextures(area);
 
 Log.Information("Done!");
