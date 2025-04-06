@@ -74,9 +74,18 @@ public static class ModelProcessingExtensions
                             for (var vtxCounter = 0; vtxCounter < polygon.Vertices.Count - 2; vtxCounter++)
                             {
                                 var face = new Face(section.MaterialName);
-                                face.AddIndex(vertexIndex + vtxCounter);
-                                face.AddIndex(vertexIndex + vtxCounter + 1);
-                                face.AddIndex(vertexIndex + vtxCounter + 2);
+                                if (vtxCounter % 2 == 0)
+                                {
+                                    face.AddIndex(vertexIndex + vtxCounter);
+                                    face.AddIndex(vertexIndex + vtxCounter + 1);
+                                    face.AddIndex(vertexIndex + vtxCounter + 2);
+                                }
+                                else
+                                {
+                                    face.AddIndex(vertexIndex + vtxCounter);
+                                    face.AddIndex(vertexIndex + vtxCounter + 2);
+                                    face.AddIndex(vertexIndex + vtxCounter + 1);
+                                }
 
                                 section.Faces.Add(face);
                             }

@@ -7,8 +7,8 @@ public class A5I3 : BaseIndexed
     protected override IPixel ProvidePixel(byte value)
     {
         var pixel = new IndexedPixel();
-        pixel.Index = (ushort) (value & 0x7);
-        pixel.Alpha = (byte) (((value >> 3) << 5) * 8);
+        pixel.Index = (ushort) (value & 0b111);
+        pixel.Alpha = (byte) ((value >> 3) * (255f / 0b11111));
         return pixel;
     }
 }
