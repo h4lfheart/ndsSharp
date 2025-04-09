@@ -96,7 +96,7 @@ public class BW2Plugin : BasePlugin
     
     public BW2AreaLightingContainer? GetAreaLightingContainer(BW2Area area)
     {
-        Provider.TryLoadObject<BW2AreaLightingContainer>($"a/0/6/0/{area.MaterialAnimIndex}.bin", out var lightingContainer);
+        Provider.TryLoadObject<BW2AreaLightingContainer>($"a/0/6/0/{area.LightIndex}.bin", out var lightingContainer);
         return lightingContainer;
     }
 }

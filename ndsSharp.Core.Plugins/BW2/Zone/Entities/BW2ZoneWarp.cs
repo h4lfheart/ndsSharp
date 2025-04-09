@@ -24,12 +24,12 @@ public class BW2ZoneWarp : BaseDeserializable
     
     public override void Deserialize(DataReader reader)
     {
-        TargetZoneIndex = reader.Read<byte>();
-        TargetWarpIndex = reader.Read<byte>();
+        TargetZoneIndex = reader.Read<ushort>();
+        TargetWarpIndex = reader.Read<ushort>();
         EnterDirection = reader.ReadEnum<BW2WarpEnterDirection>();
         TransitionType = reader.Read<byte>();
         
-        UsesRailPosition = reader.Read<ushort>() != 0;
+        UsesRailPosition = reader.Read<ushort>() == 1;
         if (UsesRailPosition)
         {
             RailLineIndex = reader.Read<ushort>();
@@ -44,7 +44,7 @@ public class BW2ZoneWarp : BaseDeserializable
         }
 
         Width = reader.Read<short>();
-        Width = reader.Read<short>();
+        Height = reader.Read<short>();
         reader.Position += sizeof(ushort);
     }
 }

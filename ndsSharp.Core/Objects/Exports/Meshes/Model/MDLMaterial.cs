@@ -17,6 +17,8 @@ public class MDLMaterial : DeserializableWithName
     public float Alpha;
     public uint PolygonID;
     public bool[] LightToggles = new bool[4];
+    public bool RenderBackFace;
+    public bool RenderFrontFace;
     
     public ushort Tag;
     public ushort Length;
@@ -64,6 +66,8 @@ public class MDLMaterial : DeserializableWithName
         {
             LightToggles[bit] = PolyAttr.Bit(bit) == 1;
         }
+        RenderBackFace = PolyAttr.Bit(6) == 1;
+        RenderFrontFace = PolyAttr.Bit(7) == 1;
         Alpha = PolyAttr.Bits(16,21) / 31.0f;
         PolygonID = PolyAttr.Bits(24, 30);
         

@@ -22,6 +22,8 @@ public class Material
 
     public bool[] LightToggles;
     public uint PolygonID;
+    public bool RenderBackFace;
+    public bool RenderFrontFace;
 
     public static Material FromMDL(MDLMaterial materialData)
     {
@@ -39,7 +41,9 @@ public class Material
             Emissive = materialData.Emissive,
             Alpha = materialData.Alpha,
             LightToggles = materialData.LightToggles,
-            PolygonID = materialData.PolygonID
+            PolygonID = materialData.PolygonID,
+            RenderBackFace = materialData.RenderBackFace,
+            RenderFrontFace = materialData.RenderFrontFace
         };
     }
 
