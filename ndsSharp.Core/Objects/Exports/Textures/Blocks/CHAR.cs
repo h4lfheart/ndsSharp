@@ -30,6 +30,7 @@ public class CHAR : NdsBlock
 
         TileHeight = reader.Read<short>();
         TileWidth = reader.Read<short>();
+
         TextureFormat = reader.ReadEnum<TextureFormat, uint>();
 
         CharacterFormat = reader.ReadEnum<CharacterFormat>();
@@ -54,6 +55,14 @@ public class CHAR : NdsBlock
             TextureFormat.A5I3 => reader.ReadPixels<A5I3>(pixelCount),
             TextureFormat.A1BGR5 => reader.ReadPixels<A1BGR555>(pixelCount)
         };
+        
+        
+        if (TileWidth == -1 || TileHeight == -1)
+        {
+            TileWidth = 4;
+            TileHeight = (short) (Pixels.Length / (8 * 8 * TileWidth));
+        }
+
 
         if (IsSwizzled)
         {

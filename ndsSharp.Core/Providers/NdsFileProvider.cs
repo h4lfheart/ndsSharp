@@ -23,8 +23,11 @@ public class NdsFileProvider : IFileProvider
     public RomHeader Header;
     public RomBanner Banner;
 
+    public bool CacheObjects = false;
     public bool UnpackNARCFiles = false;
     public bool UnpackSDATFiles = false;
+
+    private Dictionary<RomFile, BaseDeserializable> _objectCache = [];
 
     private AllocationTable _allocationTable;
     private NameTable _nameTable;
@@ -174,6 +177,11 @@ public class NdsFileProvider : IFileProvider
 
     public BaseDeserializable LoadObject(RomFile file, Type type)
     {
+        if (_objectCache.TryGetValue(file, out var cachedObject))
+        {
+            return cachedObject;
+        }
+        
         if (file.FileType is not null && file.FileType != type)
         {
             throw new ParserException($"Type mismatch for {file.Path}. Expected {file.FileType?.Name}, got {type.Name}");
@@ -188,8 +196,15 @@ public class NdsFileProvider : IFileProvider
 
             reader = new DataReader(uncompressedStream.GetBuffer());
         }
+
+        var obj = reader.ReadObject(type, dataModifier: obj => obj.File = file);
+
+        if (CacheObjects)
+        {
+            _objectCache.Add(file, obj);
+        }
         
-        return reader.ReadObject(type, dataModifier: obj => obj.File = file);
+        return obj;
     }
 
     public bool TryLoadObject<T>(string path, out T data) where T : BaseDeserializable, new()
@@ -220,11 +235,29 @@ public class NdsFileProvider : IFileProvider
             return false;
         }
     }
-
+    
+    public DataReader CreateReader(string path) => CreateReader(Files[path]);
+    
     public DataReader CreateReader(RomFile file)
     {
         return _reader.LoadPointer(file.Pointer);
     }
     
-    public DataReader CreateReader(string path) => CreateReader(Files[path]);
+    public bool TryCreateReader(string path, out DataReader reader) => TryCreateReader(Files[path], out reader);
+    
+    public bool TryCreateReader(RomFile file, out DataReader reader)
+    {
+        reader = null!;
+        try
+        {
+            reader = CreateReader(file);
+            return true;
+        }
+        catch (Exception e)
+        {
+            Log.Error(e.ToString());
+            return false;
+        }
+    }
+    
 }
