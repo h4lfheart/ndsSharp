@@ -6,10 +6,8 @@ namespace ndsSharp.Core.Plugins.BW2.Map.Data;
 
 public class BW2PermissionsData : BaseDeserializable
 {
-    public Matrix<byte> TerrainMatrix;
-    public Matrix<byte> Terrain2Matrix;
-    public Matrix<byte> HeightMatrix;
-    public Matrix<byte> Height2Matrix;
+    public Matrix<ushort> TerrainMatrix;
+    public Matrix<ushort> HeightMatrix;
     public Matrix<byte> FlagsMatrix;
     public Matrix<byte> CollisionMatrix;
     public Matrix<byte> ShadowMatrix;
@@ -19,10 +17,8 @@ public class BW2PermissionsData : BaseDeserializable
         var width = reader.Read<ushort>();
         var height = reader.Read<ushort>();
         
-        TerrainMatrix = new Matrix<byte>(width, height);
-        Terrain2Matrix = new Matrix<byte>(width, height);
-        HeightMatrix = new Matrix<byte>(width, height);
-        Height2Matrix = new Matrix<byte>(width, height);
+        TerrainMatrix = new Matrix<ushort>(width, height);
+        HeightMatrix = new Matrix<ushort>(width, height);
         FlagsMatrix = new Matrix<byte>(width, height);
         CollisionMatrix = new Matrix<byte>(width, height);
         ShadowMatrix = new Matrix<byte>(width, height);
@@ -31,10 +27,8 @@ public class BW2PermissionsData : BaseDeserializable
         {
             for (var x = 0; x < width; x++)
             {
-                TerrainMatrix[x, y] = reader.Read<byte>();
-                Terrain2Matrix[x, y] = reader.Read<byte>();
-                HeightMatrix[x, y] = reader.Read<byte>();
-                Height2Matrix[x, y] = reader.Read<byte>();
+                TerrainMatrix[x, y] = reader.Read<ushort>();
+                HeightMatrix[x, y] = reader.Read<ushort>();
                 FlagsMatrix[x, y] = reader.Read<byte>();
                 reader.Position += sizeof(byte);
                 CollisionMatrix[x, y] = reader.Read<byte>();

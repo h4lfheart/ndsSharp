@@ -1,3 +1,5 @@
+using ndsSharp.Core.Conversion.Textures.Colors;
+using ndsSharp.Core.Conversion.Textures.Colors.Types;
 using ndsSharp.Core.Objects.Exports.Animation;
 using ndsSharp.Core.Objects.Exports.Textures;
 using ndsSharp.Core.Plugins.BW2.Area;
@@ -98,6 +100,11 @@ public class BW2Plugin : BasePlugin
     {
         Provider.TryLoadObject<BW2AreaLightingContainer>($"a/0/6/0/{area.MaterialAnimIndex}.bin", out var lightingContainer);
         return lightingContainer;
+    }
+
+    public Color[] GetAreaOutlineColors(BW2Area area)
+    {
+        return Provider.TryCreateReader($"a/0/1/5/{area.OutlineIndex}.bin", out var reader) ? reader.ReadColors<BGR555>(8) : [];
     }
 }
 

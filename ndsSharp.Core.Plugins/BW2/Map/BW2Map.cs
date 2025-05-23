@@ -13,12 +13,14 @@ public class BW2Map : BW2Object
     public BMD Model;
     public BW2MapActor[] Actors = [];
     public BW2PermissionsData Permissions;
+    public BW2PermissionsData ExtraPermissions;
     public BW2TerrainData Terrain;
+    public BW2TerrainData ExtraTerrain;
 
     private int ModelOffset = -1;
-    private int PermissionsOffset = -1;
     private int ActorsOffset = -1;
-    private int TerrainOffset = -1;
+    private int PermissionsOffset = -1;
+    private int ExtraPermissionsOffset = -1;
     
     public override void Deserialize(DataReader reader)
     {
@@ -30,12 +32,11 @@ public class BW2Map : BW2Object
             case "NG":
             {
                 ActorsOffset = FileOffsets[1];
-                TerrainOffset = FileOffsets[2];
                 break;
             }
             case "WB":
             {
-                TerrainOffset = FileOffsets[1];
+                PermissionsOffset = FileOffsets[1];
                 ActorsOffset = FileOffsets[2];
                 break;
             }
@@ -48,7 +49,7 @@ public class BW2Map : BW2Object
             case "GC":
             { 
                 PermissionsOffset = FileOffsets[1];
-                TerrainOffset = FileOffsets[2];
+                ExtraPermissionsOffset = FileOffsets[2];
                 ActorsOffset = FileOffsets[3];
                 break;
             }
@@ -59,23 +60,30 @@ public class BW2Map : BW2Object
             reader.Position = ModelOffset;
             Model = reader.ReadObject<BMD>(zeroPosition: true);
         }
-
-        if (PermissionsOffset != -1)
-        {
-            reader.Position = PermissionsOffset;
-            Permissions = reader.ReadObject<BW2PermissionsData>();
-        }
-
+        
         if (ActorsOffset != -1)
         {
             reader.Position = ActorsOffset;
             Actors = reader.ReadArray(() => reader.ReadObject<BW2MapActor>());
         }
 
-        if (TerrainOffset != -1)
+        if (PermissionsOffset != -1)
         {
-            reader.Position = TerrainOffset;
+            reader.Position = PermissionsOffset;
+            Permissions = reader.ReadObject<BW2PermissionsData>();
+            
+            reader.Position = PermissionsOffset;
             Terrain = reader.ReadObject<BW2TerrainData>();
         }
+        
+        if (ExtraPermissionsOffset != -1)
+        {
+            reader.Position = ExtraPermissionsOffset;
+            ExtraPermissions = reader.ReadObject<BW2PermissionsData>();
+
+            reader.Position = ExtraPermissionsOffset;
+            ExtraTerrain =reader.ReadObject<BW2TerrainData>();
+        }
+        
     }
 }

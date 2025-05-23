@@ -57,6 +57,13 @@ public class BW2TerrainTile : BaseDeserializable
         Height = reader.Read<ushort>();
         reader.Position += sizeof(uint);
     }
+
+    public override bool Equals(object? obj)
+    {
+        var other = (BW2TerrainTile)obj;
+        return HeightType == other.HeightType && Slope == other.Slope && Height == other.Height && X == other.X &&
+               Y == other.Y;
+    }
 }
 
 public class BW2TerrainCorner : BaseDeserializable

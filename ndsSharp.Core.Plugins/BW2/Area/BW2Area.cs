@@ -11,7 +11,7 @@ public class BW2Area : BaseDeserializable
     public byte PatternAnimIndex;
     public bool IsExterior;
     public byte LightIndex;
-    public byte OutlineType;
+    public byte OutlineIndex;
     
     public const int SIZE = 10;
     
@@ -23,7 +23,7 @@ public class BW2Area : BaseDeserializable
         PatternAnimIndex = reader.Read<byte>();
         IsExterior = reader.Read<byte>() == 1;
         LightIndex = reader.Read<byte>();
-        OutlineType = reader.Read<byte>();
+        OutlineIndex = reader.Read<byte>();
         reader.Position += 1;
     }
 }
