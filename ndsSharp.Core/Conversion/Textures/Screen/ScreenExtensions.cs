@@ -12,7 +12,7 @@ namespace ndsSharp.Core.Conversion.Textures.Screen;
 
 public static class ScreenExtensions
 {
-    public static IndexedPaletteImage ExtractScreenImage(this NSCR screen, NCGR graphic, NCLR palette, bool firstColorIsTransparent = true)
+    public static IndexedPaletteImage ExtractScreenImage(this NSCR screen, NCGR graphic, NCLR palette, int? paletteOverride = null, bool firstColorIsTransparent = true)
     {
         var xTiles = graphic.CharacterData.Width / 8;
         var yTiles = graphic.CharacterData.Height / 8;
@@ -50,7 +50,7 @@ public static class ScreenExtensions
                     var pixel = tilePixels[(tile.FlipV ? 7 - y : y) * 8 + (tile.FlipU ? 7 - x : x)];
                     if (pixel is IndexedPixel indexedPixel)
                     {
-                        indexedPixel.PaletteIndex = tile.PaletteIndex;
+                        indexedPixel.PaletteIndex = (byte) (paletteOverride ?? tile.PaletteIndex);
                     }
                     
                     screenPixels[(tileY + y) * screen.ScreenData.Width + (tileX + x)] = pixel;
