@@ -25,6 +25,7 @@ public class BW2Plugin : BasePlugin
     public BW2ZoneContainer ZoneContainer;
     private BW2AreaContainer _areaContainer;
     private BW2NPCRegistry _npcRegistry;
+    private BW2MapReplaceContainer _replaceContainer;
 
     public override void OnLoaded()
     {
@@ -33,6 +34,8 @@ public class BW2Plugin : BasePlugin
         ZoneContainer = Provider.LoadObject<BW2ZoneContainer>("a/0/1/2/0.bin");
         _areaContainer = Provider.LoadObject<BW2AreaContainer>("a/0/1/3.bin");
         _npcRegistry = Provider.LoadObject<BW2NPCRegistry>("a/0/4/7/0.bin");
+
+        _replaceContainer = Provider.LoadObject<BW2MapReplaceContainer>("a/0/1/0/0.bin");
     }
 
     public BW2MapMatrix GetMatrix(int index)
@@ -106,6 +109,39 @@ public class BW2Plugin : BasePlugin
     {
         return Provider.TryCreateReader($"a/0/1/5/{area.OutlineIndex}.bin", out var reader) ? reader.ReadColors<BGR555>(8) : [];
     }
+    
+    public int GetOverrideMatrixIndex(ushort matrixIndex, EGameVersion gameVersion, ESeason season)
+    {
+        var replacementData = _replaceContainer.Replacements
+            .FirstOrDefault(replacement => replacement.MatrixIndex == matrixIndex && replacement.IsMatrixReplacement);
+        
+        return replacementData?.Condition switch
+        {
+            BW2MapReplacement.CONDITION_SEASON => replacementData.Values[(int) season],
+            BW2MapReplacement.CONDITION_VERSION => replacementData.Values[(int) gameVersion],
+            _ => matrixIndex
+        };
+    }
+
+    public int GetOverrideMapIndex(ushort matrixIndex, ushort mapIndex, EGameVersion gameVersion, ESeason season)
+    {
+        var replacementData = _replaceContainer.Replacements
+            .Where(replacement => replacement.MatrixIndex == matrixIndex && !replacement.IsMatrixReplacement)
+            .FirstOrDefault(replacement => replacement.Values[0] == mapIndex);
+        
+        return replacementData?.Condition switch
+        {
+            BW2MapReplacement.CONDITION_SEASON => replacementData.Values[(int) season],
+            BW2MapReplacement.CONDITION_VERSION => replacementData.Values[(int) gameVersion],
+            _ => mapIndex
+        };
+    }
+}
+
+public enum EGameVersion
+{
+    Black2,
+    White2
 }
 
 public enum ESeason

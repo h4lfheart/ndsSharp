@@ -92,8 +92,9 @@ public class NdsFileProvider : IFileProvider
                 }
                 
                 var basePath = sdatFile.Path.Replace(".sdat", string.Empty);
-                foreach (var soundType in Enum.GetValues<SoundFileType>())
+                foreach (var soundTypeObject in Enum.GetValues(typeof(SoundFileType)))
                 {
+                    if (soundTypeObject is not SoundFileType soundType) continue;
                     if (soundType is SoundFileType.GroupPlayer or SoundFileType.StreamPlayer or SoundFileType.Group) continue;
                     
                     var typeName = soundType.GetDescription();
@@ -241,8 +242,20 @@ public class NdsFileProvider : IFileProvider
     {
         return _reader.LoadPointer(file.Pointer);
     }
-    
-    public bool TryCreateReader(string path, out DataReader reader) => TryCreateReader(Files[path], out reader);
+
+    public bool TryCreateReader(string path, out DataReader reader)
+    {
+        reader = null!;
+        try
+        {
+            return TryCreateReader(Files[path], out reader);
+        }
+        catch (Exception e)
+        {
+            Log.Error(e.ToString());
+            return false;
+        }
+    }
     
     public bool TryCreateReader(RomFile file, out DataReader reader)
     {

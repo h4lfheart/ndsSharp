@@ -24,7 +24,7 @@ public class BW2Zone : BaseDeserializable
     
     public ushort NameIndex;
     
-    public const int HEADER_SIZE = 48;
+    public const int SIZE = 48;
     
     public override void Deserialize(DataReader reader)
     {
