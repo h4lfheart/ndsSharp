@@ -9,7 +9,7 @@ public class BW2ZoneContainer : BaseDeserializable
     
     public override void Deserialize(DataReader reader)
     {
-        var fileCount = reader.Length / BW2Zone.HEADER_SIZE;
+        var fileCount = reader.Length / BW2Zone.SIZE;
         for (var fileIndex = 0; fileIndex < fileCount; fileIndex++)
         {
             Headers.Add(reader.ReadObject<BW2Zone>());

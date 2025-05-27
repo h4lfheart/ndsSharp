@@ -242,8 +242,20 @@ public class NdsFileProvider : IFileProvider
     {
         return _reader.LoadPointer(file.Pointer);
     }
-    
-    public bool TryCreateReader(string path, out DataReader reader) => TryCreateReader(Files[path], out reader);
+
+    public bool TryCreateReader(string path, out DataReader reader)
+    {
+        reader = null!;
+        try
+        {
+            return TryCreateReader(Files[path], out reader);
+        }
+        catch (Exception e)
+        {
+            Log.Error(e.ToString());
+            return false;
+        }
+    }
     
     public bool TryCreateReader(RomFile file, out DataReader reader)
     {
