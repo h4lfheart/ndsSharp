@@ -1,3 +1,4 @@
+using System.Numerics;
 using ndsSharp.Core.Conversion.Textures.Colors;
 using ndsSharp.Core.Conversion.Textures.Images;
 using ndsSharp.Core.Objects.Exports.Meshes.Model;
@@ -13,6 +14,9 @@ public class Material
     public bool RepeatV;
     public bool FlipU;
     public bool FlipV;
+
+    public Vector2 Position;
+    public Vector2 Scale;
 
     public Color Diffuse;
     public Color Ambient;
@@ -42,6 +46,8 @@ public class Material
             Alpha = materialData.Alpha,
             LightToggles = materialData.LightToggles,
             PolygonID = materialData.PolygonID,
+            Position = new Vector2(materialData.TransU > 0 ? materialData.TransU / 4096f : 1, materialData.TransV > 0 ? materialData.TransV / 4096f : 1),
+            Scale = new Vector2(materialData.ScaleU > 0 ? materialData.ScaleU / 4096f : 1, materialData.ScaleV > 0 ? materialData.ScaleV / 4096f : 1),
             RenderBackFace = materialData.RenderBackFace,
             RenderFrontFace = materialData.RenderFrontFace
         };

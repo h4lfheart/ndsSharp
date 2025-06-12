@@ -110,7 +110,7 @@ public class BW2Plugin : BasePlugin
         return Provider.TryCreateReader($"a/0/1/5/{area.OutlineIndex}.bin", out var reader) ? reader.ReadColors<BGR555>(8) : [];
     }
     
-    public int GetOverrideMatrixIndex(ushort matrixIndex, EGameVersion gameVersion, ESeason season)
+    public int GetOverrideMatrixIndex(int matrixIndex, EGameVersion gameVersion, ESeason season)
     {
         var replacementData = _replaceContainer.Replacements
             .FirstOrDefault(replacement => replacement.MatrixIndex == matrixIndex && replacement.IsMatrixReplacement);
@@ -123,7 +123,7 @@ public class BW2Plugin : BasePlugin
         };
     }
 
-    public int GetOverrideMapIndex(ushort matrixIndex, ushort mapIndex, EGameVersion gameVersion, ESeason season)
+    public int GetOverrideMapIndex(int matrixIndex, int mapIndex, EGameVersion gameVersion, ESeason season)
     {
         var replacementData = _replaceContainer.Replacements
             .Where(replacement => replacement.MatrixIndex == matrixIndex && !replacement.IsMatrixReplacement)
